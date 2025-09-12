@@ -115,6 +115,7 @@
                             <!-- Annex items will be populated by JS -->
                         </div>
                     </div>
+                    <div id="annex-details" class="mt-2 text-sm text-gray-600 p-3 bg-gray-50 rounded-md border border-gray-200 hidden"></div>
                 </div>
             </div>
             <div class="mt-8 flex justify-between">
@@ -354,11 +355,55 @@ document.addEventListener('DOMContentLoaded', function () {
     
     // Mock data for suppliers with associated annexes
     const suppliers = [
-        { name: 'Klauso ūkis, UAB', address: 'Domeikų g. 8, Domeikių k., Žagarės sen., Joniškio r. sav., Šiaulių apskr., LT-84374', email: 'info@klauso.ukis.lt', location: 'Joniškio r. sav.', annexes: ['SUT00595-P1', 'SUT00642-P1', 'SUT00642-P2'], quantity: '150t' },
-        { name: 'Pauliaus Jurgeliūno ūkis', address: 'Liepų g. 1, Kėdainiai, LT-57345', email: 'info@jurgeliuno.ukis.lt', location: 'Kėdainių r. sav.', annexes: ['SUT00627-P3'], quantity: '100t' },
-        { name: 'UAB „Drąsutaičiai“', address: 'Parko g. 15, Drąsutaičiai, Pakruojo r. sav., LT-83451', email: 'info@drasutaiciai.lt', location: 'Pakruojo r. sav.', annexes: ['SUT00588-P2', 'SUT00588-P4'], quantity: '250t' },
-        { name: 'Vilkėno ūkis PŪB', address: 'Vilkėno g. 3, Šilutės r. sav., LT-99145', email: 'info@vilkeno.ukis.lt', location: 'Šilutės r. sav.', annexes: ['SUT00711-P1'], quantity: '120t' },
-        { name: 'Nemuno ūkis PŪB', address: 'Nemuno g. 101, Jurbarko r. sav., LT-74123', email: 'info@nemuno.ukis.lt', location: 'Jurbarko r. sav.', annexes: ['SUT00725-P1', 'SUT00725-P2'], quantity: '300t' }
+        {
+            name: 'Klauso ūkis, UAB',
+            address: 'Domeikų g. 8, Domeikių k., Žagarės sen., Joniškio r. sav., Šiaulių apskr., LT-84374',
+            email: 'info@klauso.ukis.lt',
+            location: 'Joniškio r. sav.',
+            annexes: [
+                { nr: 'SUT00595-P1', date: '2025-10-15', quantity: '150t', status: 'aktyvus' },
+                { nr: 'SUT00642-P1', date: '2025-11-01', quantity: '200t', status: 'aktyvus' },
+                { nr: 'SUT00642-P2', date: '2025-11-20', quantity: '50t', status: 'vykdomas' }
+            ]
+        },
+        {
+            name: 'Pauliaus Jurgeliūno ūkis',
+            address: 'Liepų g. 1, Kėdainiai, LT-57345',
+            email: 'info@jurgeliuno.ukis.lt',
+            location: 'Kėdainių r. sav.',
+            annexes: [
+                { nr: 'SUT00627-P3', date: '2025-09-30', quantity: '100t', status: 'aktyvus' }
+            ]
+        },
+        {
+            name: 'UAB „Drąsutaičiai“',
+            address: 'Parko g. 15, Drąsutaičiai, Pakruojo r. sav., LT-83451',
+            email: 'info@drasutaiciai.lt',
+            location: 'Pakruojo r. sav.',
+            annexes: [
+                { nr: 'SUT00588-P2', date: '2025-10-01', quantity: '250t', status: 'aktyvus' },
+                { nr: 'SUT00588-P4', date: '2025-10-25', quantity: '175t', status: 'pasyvus' }
+            ]
+        },
+        {
+            name: 'Vilkėno ūkis PŪB',
+            address: 'Vilkėno g. 3, Šilutės r. sav., LT-99145',
+            email: 'info@vilkeno.ukis.lt',
+            location: 'Šilutės r. sav.',
+            annexes: [
+                { nr: 'SUT00711-P1', date: '2026-01-15', quantity: '120t', status: 'aktyvus' }
+            ]
+        },
+        {
+            name: 'Nemuno ūkis PŪB',
+            address: 'Nemuno g. 101, Jurbarko r. sav., LT-74123',
+            email: 'info@nemuno.ukis.lt',
+            location: 'Jurbarko r. sav.',
+            annexes: [
+                { nr: 'SUT00725-P1', date: '2025-12-05', quantity: '300t', status: 'aktyvus' },
+                { nr: 'SUT00725-P2', date: '2025-12-20', quantity: '150t', status: 'aktyvus' }
+            ]
+        }
     ];
     let selectedSupplier = null;
     let selectedAnnex = null;
@@ -377,6 +422,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const annexContainer = document.getElementById('annex-container');
     const annexSearchInput = document.getElementById('annex-search');
     const annexDropdown = document.getElementById('annex-dropdown');
+    const annexDetailsDiv = document.getElementById('annex-details');
     const pickupDateInput = document.getElementById('pickup-date');
     const generateLabelsBtn = document.getElementById('generate-labels-btn');
     const omnivaStickerPreview = document.getElementById('omniva-sticker-preview');
@@ -406,7 +452,8 @@ document.addEventListener('DOMContentLoaded', function () {
         
         if (currentStep === 2) {
              currentSampleNumber = 'BJ25 M' + sampleCounter++;
-             const initialQuantity = selectedSupplier.quantity || '150t';
+             const selectedAnnexData = selectedSupplier.annexes.find(a => a.nr === selectedAnnex);
+             const initialQuantity = selectedAnnexData ? selectedAnnexData.quantity : 'N/A';
              quantityInput.value = initialQuantity;
              document.querySelectorAll('.label-quantity').forEach(el => el.textContent = initialQuantity);
         }
@@ -435,6 +482,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const resetAnnex = () => {
         annexContainer.classList.add('hidden');
+        annexDetailsDiv.classList.add('hidden');
         annexSearchInput.value = '';
         selectedAnnex = null;
         validateStep2();
@@ -586,10 +634,29 @@ document.addEventListener('DOMContentLoaded', function () {
         annexDropdown.innerHTML = '';
         annexes.forEach(annex => {
             const item = document.createElement('div');
-            item.textContent = annex;
+            item.classList.add('flex', 'justify-between', 'items-center', 'w-full', 'p-2', 'text-sm', 'cursor-pointer', 'border-b', 'hover:bg-gray-100');
+            item.innerHTML = `
+                <span class="font-semibold text-red-500 w-1/4">${annex.nr}</span>
+                <span class="text-gray-600 w-1/4"><strong class="font-medium">Priedo data:</strong> ${annex.date}</span>
+                <span class="text-gray-600 w-1/4"><strong class="font-medium">Kiekis:</strong> ${annex.quantity}</span>
+                <span class="w-1/4 text-right"><strong class="font-medium">Statusas:</strong> <span class="font-semibold ${annex.status === 'aktyvus' ? 'text-green-600' : 'text-yellow-600'}">${annex.status}</span></span>
+            `;
             item.addEventListener('click', function() {
-                annexSearchInput.value = annex;
-                selectedAnnex = annex;
+                annexSearchInput.value = annex.nr;
+                selectedAnnex = annex.nr;
+                
+                const selectedAnnexData = selectedSupplier.annexes.find(a => a.nr === selectedAnnex);
+                if (selectedAnnexData) {
+                    annexDetailsDiv.innerHTML = `
+                        <strong>Priedo data:</strong> ${selectedAnnexData.date} | 
+                        <strong>Kiekis:</strong> ${selectedAnnexData.quantity} | 
+                        <strong>Statusas:</strong> <span class="font-semibold ${selectedAnnexData.status === 'aktyvus' ? 'text-green-600' : 'text-yellow-600'}">${selectedAnnexData.status}</span>
+                    `;
+                    annexDetailsDiv.classList.remove('hidden');
+                    quantityInput.value = selectedAnnexData.quantity;
+                    document.querySelectorAll('.label-quantity').forEach(el => el.textContent = selectedAnnexData.quantity);
+                }
+
                 annexDropdown.classList.add('hidden');
                 validateStep2();
             });
