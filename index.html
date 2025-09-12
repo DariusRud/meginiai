@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mėginių Paėmimo Prototipas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .step-card {
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+        .hidden-step {
+            display: none;
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        .visible-step {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+        }
+        .autocomplete-items div, .dropdown-items div {
+            padding: 10px;
+            cursor: pointer;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+        .autocomplete-items div:hover, .dropdown-items div:hover {
+            background-color: #e9e9e9;
+        }
+        .autocomplete-active {
+            background-color: DodgerBlue !important;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <div class="w-full max-w-3xl mx-auto p-4">
+        
+        <!-- Progress Bar -->
+        <div class="px-4 sm:px-0">
+             <div class="flex items-center justify-center mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 256 256" class="text-blue-600 mr-3"><path fill="currentColor" d="M216 72h-12.82A63.95 63.95 0 0 0 89.67 48.27L72.24 35.84A8 8 0 0 0 60.27 32H40a8 8 0 0 0 0 16h17.73l17.43 12.43A64.12 64.12 0 0 0 80 128a63.38 63.38 0 0 0 4.28 22.88a32 32 0 1 0 15.44 15.44A64 64 0 0 0 216 136V80a8 8 0 0 0-8-8M56 200a16 16 0 1 1 16 16a16 16 0 0 1-16-16m152-72h-72a56 56 0 0 1-52.2-35.34A56.24 56.24 0 0 1 136 80h72Z"/></svg>
+                <h1 class="text-2xl font-bold text-gray-800">Mėginių Siuntimo Procesas</h1>
+            </div>
+            <div class="relative w-full bg-gray-200 rounded-full h-2.5 mb-6">
+                <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 20%; transition: width 0.3s ease-in-out;"></div>
+            </div>
+        </div>
+
+        <!-- Step 1: Scenario Selection -->
+        <div id="step-1" class="step-card bg-white p-8 rounded-xl shadow-lg visible-step">
+            <h2 class="text-xl font-semibold text-gray-700 mb-1">1. Scenarijaus Pasirinkimas</h2>
+            <p class="text-gray-500 mb-6">Pasirinkite mėginio siuntimo scenarijų.</p>
+            <div id="scenarioOptions" class="space-y-3">
+                <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-500 transition-all">
+                    <input type="radio" name="scenario" value="farm-vm" class="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500">
+                    <span class="ml-4 text-gray-800 font-medium">Ūkis -> Viking Malt (VM)</span>
+                </label>
+                <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-500 transition-all">
+                    <input type="radio" name="scenario" value="elevator-vm" class="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500">
+                    <span class="ml-4 text-gray-800 font-medium">Elevatorius -> Viking Malt (VM)</span>
+                </label>
+                <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-500 transition-all">
+                    <input type="radio" name="scenario" value="elevator-biliunai" class="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500">
+                    <span class="ml-4 text-gray-800 font-medium">Elevatorius -> BILIŪNAI Elevatorius</span>
+                </label>
+                 <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-500 transition-all">
+                    <input type="radio" name="scenario" value="elevator-office" class="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500">
+                    <span class="ml-4 text-gray-800 font-medium">Elevatorius -> Ofisas</span>
+                </label>
+            </div>
+            <div class="mt-8 text-right">
+                <button id="btn-step1-next" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>Toliau</button>
+            </div>
+        </div>
+
+        <!-- Step 2: Data Input -->
+        <div id="step-2" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
+            <h2 class="text-xl font-semibold text-gray-700 mb-1">2. Duomenų įvedimas</h2>
+            <p class="text-gray-500 mb-6">Įveskite siuntėjo informaciją ir pasirinkite sutarties priedą.</p>
+            <div class="space-y-6">
+                <div class="relative">
+                    <label for="supplier" class="block text-sm font-medium text-gray-700 mb-1">Iš kur siunčiama (Tiekėjas)</label>
+                    <input type="text" id="supplier" name="supplier" autocomplete="off" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Pradėkite vesti ūkio pavadinimą...">
+                    <div id="autocomplete-list" class="absolute z-20 w-full bg-white border border-gray-300 rounded-b-md shadow-lg hidden autocomplete-items"></div>
+                    <div id="supplier-address" class="mt-2 text-sm text-gray-600 p-3 bg-gray-50 rounded-md border border-gray-200 hidden"></div>
+                </div>
+                <!-- Annex dropdown - initially hidden -->
+                <div id="annex-container" class="hidden">
+                    <label for="annex-search" class="block text-sm font-medium text-gray-700">Priedo numeris</label>
+                    <div class="relative mt-1">
+                        <input type="text" id="annex-search" placeholder="Pasirinkite arba ieškokite..." autocomplete="off" class="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                             <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M10 3a.75.75 0 01.53.22l3.5 3.5a.75.75 0 01-1.06 1.06L10 4.81 6.53 8.28a.75.75 0 01-1.06-1.06l3.5-3.5A.75.75 0 0110 3zm-3.72 9.28a.75.75 0 011.06 0L10 15.19l2.47-2.47a.75.75 0 111.06 1.06l-3.5 3.5a.75.75 0 01-1.06 0l-3.5-3.5a.75.75 0 010-1.06z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div id="annex-dropdown" class="absolute hidden z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto dropdown-items">
+                            <!-- Annex items will be populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 flex justify-between">
+                <button class="btn-back bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-300">Atgal</button>
+                <button id="btn-step2-next" class="btn-next bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400" disabled>Toliau</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Label Generation -->
+        <div id="step-3" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
+            <h2 class="text-xl font-semibold text-gray-700 mb-1">3. Etikečių formavimas</h2>
+            <p class="text-gray-500 mb-6">Sistema sugeneravo lipdukus. Patikrinkite ir, jei reikia, pakoreguokite informaciją.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Sample Label -->
+                <div class="border-2 border-dashed rounded-lg p-4 bg-gray-50">
+                    <h3 class="font-bold text-center text-gray-800 mb-2">Mėginio lipdukas</h3>
+                     <div class="bg-white p-4 rounded-md shadow-sm border">
+                        <div class="text-center mb-3 pb-3 border-b">
+                            <p class="font-bold text-lg">BALTIJOS JAVAI</p>
+                            <p class="text-xs text-gray-600">Siuntėjas: UAB "Baltijos javai"</p>
+                            <p class="text-xs text-gray-600">Svirbygalos g. 19, Lithuania</p>
+                        </div>
+                        <div class="space-y-1 text-sm">
+                            <p><span class="font-semibold">Pavyzdžio Nr:</span> <span id="label-sample-nr">BJ24 M228</span></p>
+                            <p><span class="font-semibold">Paėmimo data:</span> <span id="label-date">2025 09 15</span></p>
+                            <p><span class="font-semibold">Veislė:</span> <span id="label-variety">Laureate</span></p>
+                            <p><span class="font-semibold">Paėmimo vieta:</span> <span id="label-location">Joniškio r. sav.</span></p>
+                            <p><span class="font-semibold">Kiekis:</span> <span id="label-quantity">150t</span></p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Omniva Label -->
+                <div class="border-2 border-dashed rounded-lg p-4 bg-gray-50">
+                     <h3 class="font-bold text-center text-gray-800 mb-2">Omniva lipdukas</h3>
+                    <div class="bg-white p-4 rounded-md shadow-sm border">
+                        <div class="flex justify-between items-start pb-2 border-b">
+                            <div>
+                                <p class="font-bold text-lg">OMNIVA</p>
+                                <p class="text-xs">Siunta - Kurjeris</p>
+                            </div>
+                            <p id="omniva-date" class="text-sm font-mono">2025-09-15</p>
+                        </div>
+                        <div class="grid grid-cols-5 gap-2 mt-2">
+                            <div class="col-span-1 text-xs font-bold transform -rotate-90 origin-center self-center text-center">SIUNTĖJAS</div>
+                            <div class="col-span-4 text-xs">
+                                <p class="font-bold" id="omniva-sender-name">Klauso ūkis, UAB</p>
+                                <p id="omniva-sender-address">Domeikų g. 8, Žagarės sen.</p>
+                                <p id="omniva-sender-full-address">Joniškio r. sav., Šiaulių apskr., LT-84374</p>
+                            </div>
+                        </div>
+                         <div class="grid grid-cols-5 gap-2 mt-2 pt-2 border-t">
+                            <div class="col-span-1 text-xs font-bold transform -rotate-90 origin-center self-center text-center">GAVĖJAS</div>
+                            <div class="col-span-4 text-xs">
+                                <p class="font-bold">UAB Viking Malt</p>
+                                <p>Dovydas</p>
+                                <p>Panevėžio m. Pramonės g. 2</p>
+                                <p>LT-35289, Panevėžys</p>
+                            </div>
+                        </div>
+                        <div class="mt-3 pt-3 border-t text-center">
+                            <p class="text-sm font-bold">CC780308494EE</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 flex justify-between">
+                <button class="btn-back bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-300">Atgal</button>
+                <button class="btn-next bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700">Toliau</button>
+            </div>
+        </div>
+
+        <!-- Step 4: Email Sending -->
+        <div id="step-4" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
+            <h2 class="text-xl font-semibold text-gray-700 mb-1">4. El. laiško siuntimas</h2>
+            <p class="text-gray-500 mb-6">Patikrinkite suformuotą el. laišką ūkiui ir prisegtus dokumentus.</p>
+            <div class="border rounded-lg overflow-hidden bg-white shadow-sm">
+                <div class="p-4 border-b bg-gray-50">
+                    <p class="text-sm"><span class="font-medium text-gray-500">Kam:</span> <span id="email-to" class="text-gray-800">info@klauso.ukis.lt</span></p>
+                    <p class="text-sm"><span class="font-medium text-gray-500">Tema:</span> <span class="text-gray-800">Mėginio paėmimas pagal sutartį <span id="email-contract">SUT00595-P1</span></span></p>
+                </div>
+                <div class="p-4 text-sm text-gray-700 leading-relaxed">
+                    <p>Sveiki,</p><br>
+                    <p>Kurjeris atvyks <span id="email-date" class="font-semibold">2025 09 15</span> | <span class="font-semibold">12:00-13:30</span> | <span id="email-address" class="font-semibold">Domeikų g. 8, Domeikių k., Žagarės sen., Joniškio r. sav., Šiaulių apskr., LT-84374</span>.</p>
+                    <p>Primename, kad <span class="font-bold">adreso kortelės</span> lipdukas klijuojamas ant siuntos kurjeriui.</p>
+                    <p class="font-bold text-red-600 mt-2">Lipdukas mėginiui yra klijuojamas ant miežių mėginio pavyzdžio (2 kg). Svarbu: jeigu mėginys bus be lipduko, kuris yra sukurtas jus identifikuoti, tyrimas laboratorijoje nebus atliekamas.</p>
+                    <br>
+                    <p>Pagarbiai/Kind regards,</p>
+                    <p class="font-semibold">Renata Bernotienė</p>
+                    <p>Logistikos administratorė</p>
+                    <p>UAB "Baltijos javai"</p>
+                </div>
+                <div class="p-4 border-t bg-gray-50">
+                    <h4 class="text-sm font-semibold mb-2 text-gray-600">Prisegtukai (2):</h4>
+                    <div class="flex space-x-3">
+                        <div class="flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-full">
+                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                            meginio_lipdukas.pdf
+                        </div>
+                        <div class="flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-full">
+                             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                            omniva_siunta.pdf
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 flex justify-between">
+                <button class="btn-back bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-300">Atgal</button>
+                <button class="btn-next bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700">Siųsti</button>
+            </div>
+        </div>
+
+        <!-- Step 5: Confirmation -->
+        <div id="step-5" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
+            <div class="text-center">
+                <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
+                    <svg class="h-10 w-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800">Sėkmingai išsiųsta!</h2>
+                <p class="text-gray-500 mt-2 mb-6">Laiškas ir dokumentai buvo sėkmingai išsiųsti tiekėjui.</p>
+            </div>
+             <div class="mt-8">
+                <h3 class="text-lg font-semibold text-gray-700 mb-4">Anksčiau išsiųstų mėginių sąrašas</h3>
+                <div class="overflow-x-auto border rounded-lg">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tiekėjas</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sutarties priedas</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statusas</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body" class="bg-white divide-y divide-gray-200">
+                             <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">2025-09-10</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">Pauliaus Jurgeliūno ūkis</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">SUT00627-P3</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Išsiųsta</span></td>
+                            </tr>
+                             <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">2025-09-08</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">UAB „Drąsutaičiai“</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">SUT00588-P2</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Išsiųsta</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="mt-8 text-center">
+                <button id="btn-restart" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700">Pradėti iš naujo</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    let currentStep = 1;
+    const totalSteps = 5;
+    
+    // Mock data for suppliers with associated annexes
+    const suppliers = [
+        { name: 'Klauso ūkis, UAB', address: 'Domeikų g. 8, Domeikių k., Žagarės sen., Joniškio r. sav., Šiaulių apskr., LT-84374', email: 'info@klauso.ukis.lt', location: 'Joniškio r. sav.', annexes: ['SUT00595-P1', 'SUT00642-P1', 'SUT00642-P2'] },
+        { name: 'Pauliaus Jurgeliūno ūkis', address: 'Liepų g. 1, Kėdainiai, LT-57345', email: 'info@jurgeliuno.ukis.lt', location: 'Kėdainių r. sav.', annexes: ['SUT00627-P3'] },
+        { name: 'UAB „Drąsutaičiai“', address: 'Parko g. 15, Drąsutaičiai, Pakruojo r. sav., LT-83451', email: 'info@drasutaiciai.lt', location: 'Pakruojo r. sav.', annexes: ['SUT00588-P2', 'SUT00588-P4'] },
+        { name: 'Vilkėno ūkis PŪB', address: 'Vilkėno g. 3, Šilutės r. sav., LT-99145', email: 'info@vilkeno.ukis.lt', location: 'Šilutės r. sav.', annexes: ['SUT00711-P1'] },
+        { name: 'Nemuno ūkis PŪB', address: 'Nemuno g. 101, Jurbarko r. sav., LT-74123', email: 'info@nemuno.ukis.lt', location: 'Jurbarko r. sav.', annexes: ['SUT00725-P1', 'SUT00725-P2'] }
+    ];
+    let selectedSupplier = null;
+    let selectedAnnex = null;
+
+    // --- DOM Elements ---
+    const steps = document.querySelectorAll('.step-card');
+    const progressBar = document.getElementById('progressBar');
+    const nextButtons = document.querySelectorAll('.btn-next');
+    const backButtons = document.querySelectorAll('.btn-back');
+    const step1NextBtn = document.getElementById('btn-step1-next');
+    const step2NextBtn = document.getElementById('btn-step2-next');
+    const scenarioRadios = document.querySelectorAll('input[name="scenario"]');
+    const supplierInput = document.getElementById('supplier');
+    const supplierAddressDiv = document.getElementById('supplier-address');
+    const autocompleteList = document.getElementById('autocomplete-list');
+    const annexContainer = document.getElementById('annex-container');
+    const annexSearchInput = document.getElementById('annex-search');
+    const annexDropdown = document.getElementById('annex-dropdown');
+
+    // --- Functions ---
+    const updateProgressBar = () => {
+        const progress = ((currentStep -1) / (totalSteps - 1)) * 100;
+        progressBar.style.width = `${progress}%`;
+    };
+
+    const showStep = (stepNumber) => {
+        steps.forEach((step, index) => {
+            step.classList.toggle('visible-step', index + 1 === stepNumber);
+            step.classList.toggle('hidden-step', index + 1 !== stepNumber);
+        });
+        currentStep = stepNumber;
+        updateProgressBar();
+    };
+    
+    const updateUIData = () => {
+        if (!selectedSupplier || !selectedAnnex) return;
+        const today = new Date();
+        const deliveryDate = new Date(today.setDate(today.getDate() + 3));
+        const formattedDateLT = deliveryDate.toLocaleDateString('lt-LT');
+        const formattedDateISO = deliveryDate.toISOString().split('T')[0];
+        
+        const addressParts = selectedSupplier.address.split(',');
+
+        // Step 3 - Labels
+        document.getElementById('label-date').textContent = formattedDateLT;
+        document.getElementById('omniva-date').textContent = formattedDateISO;
+        document.getElementById('label-location').textContent = selectedSupplier.location;
+        document.getElementById('omniva-sender-name').textContent = selectedSupplier.name;
+        document.getElementById('omniva-sender-address').textContent = addressParts.slice(0, 2).join(',');
+        document.getElementById('omniva-sender-full-address').textContent = addressParts.slice(2).join(',').trim();
+
+
+        // Step 4 - Email
+        document.getElementById('email-to').textContent = selectedSupplier.email;
+        document.getElementById('email-contract').textContent = selectedAnnex;
+        document.getElementById('email-date').textContent = formattedDateLT;
+        document.getElementById('email-address').textContent = selectedSupplier.address;
+    };
+    
+    const validateStep2 = () => {
+        step2NextBtn.disabled = !(selectedSupplier && selectedAnnex && supplierInput.value === selectedSupplier.name);
+    };
+
+    const resetAnnex = () => {
+        annexContainer.classList.add('hidden');
+        annexSearchInput.value = '';
+        selectedAnnex = null;
+        validateStep2();
+    };
+    
+    // --- Event Listeners ---
+    nextButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            if (currentStep < totalSteps) {
+                updateUIData();
+                if (currentStep === 4) { // After clicking "Send"
+                    const historyTable = document.getElementById('history-table-body');
+                    const newRow = historyTable.insertRow(0); // Insert at the top
+                    newRow.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${new Date().toISOString().split('T')[0]}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${selectedSupplier.name}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${selectedAnnex}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Išsiųsta</span></td>
+                    `;
+                }
+                showStep(currentStep + 1);
+            }
+        });
+    });
+
+    backButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            if (currentStep > 1) showStep(currentStep - 1);
+        });
+    });
+
+    scenarioRadios.forEach(radio => {
+        radio.addEventListener('change', () => { step1NextBtn.disabled = false; });
+    });
+
+    step1NextBtn.addEventListener('click', () => showStep(2));
+    
+    document.getElementById('btn-restart').addEventListener('click', () => {
+        selectedSupplier = null;
+        supplierInput.value = '';
+        supplierAddressDiv.classList.add('hidden');
+        autocompleteList.classList.add('hidden');
+        resetAnnex();
+        scenarioRadios.forEach(r => r.checked = false);
+        step1NextBtn.disabled = true;
+        showStep(1);
+    });
+
+    // --- Autocomplete & Dropdown Logic ---
+    // Supplier Autocomplete
+    supplierInput.addEventListener('input', function() {
+        const val = this.value;
+        closeAllLists();
+        resetAnnex();
+        selectedSupplier = null;
+        validateStep2();
+
+        if (!val) return false;
+        
+        autocompleteList.innerHTML = '';
+        autocompleteList.classList.remove('hidden');
+
+        suppliers.forEach(supplier => {
+            if (supplier.name.toUpperCase().includes(val.toUpperCase())) {
+                const item = document.createElement('div');
+                item.innerHTML = `<strong>${supplier.name.substr(0, val.length)}</strong>${supplier.name.substr(val.length)}`;
+                item.addEventListener('click', function() {
+                    supplierInput.value = supplier.name;
+                    selectedSupplier = supplier;
+                    supplierAddressDiv.innerHTML = `<strong>Adresas:</strong> ${supplier.address}`;
+                    supplierAddressDiv.classList.remove('hidden');
+                    closeAllLists();
+                    
+                    // Populate and show annex dropdown
+                    annexContainer.classList.remove('hidden');
+                    populateAnnexDropdown(supplier.annexes);
+                });
+                autocompleteList.appendChild(item);
+            }
+        });
+    });
+    
+    // Annex Dropdown
+    function populateAnnexDropdown(annexes) {
+        annexDropdown.innerHTML = '';
+        annexes.forEach(annex => {
+            const item = document.createElement('div');
+            item.textContent = annex;
+            item.addEventListener('click', function() {
+                annexSearchInput.value = annex;
+                selectedAnnex = annex;
+                annexDropdown.classList.add('hidden');
+                validateStep2();
+            });
+            annexDropdown.appendChild(item);
+        });
+    }
+
+    annexSearchInput.addEventListener('input', function() {
+        const filter = this.value.toUpperCase();
+        const items = annexDropdown.getElementsByTagName('div');
+        for (let i = 0; i < items.length; i++) {
+            const txtValue = items[i].textContent || items[i].innerText;
+            items[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+        }
+    });
+
+    annexSearchInput.addEventListener('focus', () => annexDropdown.classList.remove('hidden'));
+
+    // Global click listener to close dropdowns
+    function closeAllLists(elmnt) {
+        autocompleteList.classList.add('hidden');
+        if (elmnt !== annexSearchInput) {
+            annexDropdown.classList.add('hidden');
+        }
+    }
+
+    document.addEventListener('click', function (e) {
+        closeAllLists(e.target);
+    });
+});
+</script>
+
+</body>
+</html>
+
