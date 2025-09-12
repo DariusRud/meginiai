@@ -36,11 +36,17 @@
             background-color: DodgerBlue !important;
             color: #ffffff;
         }
+        .barcode {
+            font-family: 'Libre Barcode 39', cursive;
+            font-size: 48px;
+            line-height: 1;
+        }
     </style>
+     <link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+39&display=swap" rel="stylesheet">
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
 
-    <div class="w-full max-w-3xl mx-auto p-4">
+    <div class="w-full max-w-4xl mx-auto p-4">
         
         <!-- Progress Bar -->
         <div class="px-4 sm:px-0">
@@ -117,55 +123,85 @@
         <div id="step-3" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
             <h2 class="text-xl font-semibold text-gray-700 mb-1">3. Etikečių formavimas</h2>
             <p class="text-gray-500 mb-6">Sistema sugeneravo lipdukus. Patikrinkite ir, jei reikia, pakoreguokite informaciją.</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-6">
                 <!-- Sample Label -->
                 <div class="border-2 border-dashed rounded-lg p-4 bg-gray-50">
                     <h3 class="font-bold text-center text-gray-800 mb-2">Mėginio lipdukas</h3>
-                     <div class="bg-white p-4 rounded-md shadow-sm border">
-                        <div class="text-center mb-3 pb-3 border-b">
-                            <p class="font-bold text-lg">BALTIJOS JAVAI</p>
-                            <p class="text-xs text-gray-600">Siuntėjas: UAB "Baltijos javai"</p>
-                            <p class="text-xs text-gray-600">Svirbygalos g. 19, Lithuania</p>
+                    <div class="grid grid-cols-2 gap-0 border bg-white shadow-sm p-2">
+                        <!-- Left Label -->
+                        <div class="p-2 border-r">
+                            <div class="text-left mb-2 pb-2">
+                                <p class="font-bold text-sm">BALTIJOS JAVAI</p>
+                                <p class="text-xs text-gray-600">Siuntėjas: UAB "Baltijos javai"</p>
+                                <p class="text-xs text-gray-600">Svirbygalos g. 19, Lithuania</p>
+                            </div>
+                            <div class="space-y-1 text-xs">
+                                <p><span class="font-semibold">Pavyzdžio Nr:</span> <span class="label-sample-nr">BJ24 M228</span></p>
+                                <p><span class="font-semibold">Paėmimo data:</span> <span class="label-date">2025 09 15</span></p>
+                                <p><span class="font-semibold">Veislė:</span> <span class="label-variety">Laureate</span></p>
+                                <p><span class="font-semibold">Paėmimo vieta:</span> <span class="label-location">Joniškio r. sav.</span></p>
+                                <p><span class="font-semibold">Kiekis:</span> <span class="label-quantity">150t</span></p>
+                            </div>
+                            <div class="mt-2 h-16 border-t border-gray-200"></div>
                         </div>
-                        <div class="space-y-1 text-sm">
-                            <p><span class="font-semibold">Pavyzdžio Nr:</span> <span id="label-sample-nr">BJ24 M228</span></p>
-                            <p><span class="font-semibold">Paėmimo data:</span> <span id="label-date">2025 09 15</span></p>
-                            <p><span class="font-semibold">Veislė:</span> <span id="label-variety">Laureate</span></p>
-                            <p><span class="font-semibold">Paėmimo vieta:</span> <span id="label-location">Joniškio r. sav.</span></p>
-                            <p><span class="font-semibold">Kiekis:</span> <span id="label-quantity">150t</span></p>
+                        <!-- Right Label -->
+                        <div class="p-2">
+                             <div class="text-left mb-2 pb-2">
+                                <p class="font-bold text-sm">BALTIJOS JAVAI</p>
+                                <p class="text-xs text-gray-600">Siuntėjas: UAB "Baltijos javai"</p>
+                                <p class="text-xs text-gray-600">Svirbygalos g. 19, Lithuania</p>
+                            </div>
+                            <div class="space-y-1 text-xs">
+                                <p><span class="font-semibold">Pavyzdžio Nr:</span> <span class="label-sample-nr">BJ24 M228</span></p>
+                                <p><span class="font-semibold">Paėmimo data:</span> <span class="label-date">2025 09 15</span></p>
+                                <p><span class="font-semibold">Veislė:</span> <span class="label-variety">Laureate</span></p>
+                                <p><span class="font-semibold">Paėmimo vieta:</span> <span class="label-location">Joniškio r. sav.</span></p>
+                                <p><span class="font-semibold">Kiekis:</span> <span class="label-quantity">150t</span></p>
+                            </div>
+                            <div class="mt-2 h-16 border-t border-gray-200"></div>
                         </div>
                     </div>
                 </div>
                 <!-- Omniva Label -->
                 <div class="border-2 border-dashed rounded-lg p-4 bg-gray-50">
                      <h3 class="font-bold text-center text-gray-800 mb-2">Omniva lipdukas</h3>
-                    <div class="bg-white p-4 rounded-md shadow-sm border">
+                    <div class="bg-white p-4 rounded-md shadow-sm border text-gray-800">
                         <div class="flex justify-between items-start pb-2 border-b">
                             <div>
-                                <p class="font-bold text-lg">OMNIVA</p>
-                                <p class="text-xs">Siunta - Kurjeris</p>
+                                <img src="https://www.omniva.lt/img/omniva-logo.svg" alt="Omniva logo" class="h-6">
+                                <p class="text-xs mt-1">Siunta - Kurjeris</p>
                             </div>
-                            <p id="omniva-date" class="text-sm font-mono">2025-09-15</p>
-                        </div>
-                        <div class="grid grid-cols-5 gap-2 mt-2">
-                            <div class="col-span-1 text-xs font-bold transform -rotate-90 origin-center self-center text-center">SIUNTĖJAS</div>
-                            <div class="col-span-4 text-xs">
-                                <p class="font-bold" id="omniva-sender-name">Klauso ūkis, UAB</p>
-                                <p id="omniva-sender-address">Domeikų g. 8, Žagarės sen.</p>
-                                <p id="omniva-sender-full-address">Joniškio r. sav., Šiaulių apskr., LT-84374</p>
+                            <div class="text-right">
+                                <svg class="w-12 h-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="currentColor" d="M140 140h28v28h-28v-28Zm-56-56H56v28h28V84Zm0 56H56v28h28v-28Zm56-56h28v28h-28V84Zm56 0h28v28h-28V84Zm-56 56h28v28h-28v-28Zm56 0h28v28h-28v-28Zm-56 56h28v28h-28v-28Zm-28-28a12 12 0 1 1-12-12a12 12 0 0 1 12 12Zm112 0h28v28h-28v-28Zm-56 56h28v28h-28v-28Zm-56-56H56v28h28v-28Zm0-56H56v28h28V84Zm168 56h28v28h-28v-28ZM40 40a16 16 0 0 0-16 16v40H8a8 8 0 0 0 0 16h16v40H8a8 8 0 0 0 0 16h16v40a16 16 0 0 0 16 16h40v16a8 8 0 0 0 16 0v-16h40v16a8 8 0 0 0 16 0v-16h40v16a8 8 0 0 0 16 0v-16h40a16 16 0 0 0 16-16v-40h16a8 8 0 0 0 0-16h-16V96h16a8 8 0 0 0 0-16h-16V56a16 16 0 0 0-16-16H56A16 16 0 0 0 40 40Zm16 16h144v144H56V56Z"/></svg>
+                                <p class="text-sm font-mono mt-1" id="omniva-date">2025-06-04</p>
                             </div>
                         </div>
-                         <div class="grid grid-cols-5 gap-2 mt-2 pt-2 border-t">
-                            <div class="col-span-1 text-xs font-bold transform -rotate-90 origin-center self-center text-center">GAVĖJAS</div>
-                            <div class="col-span-4 text-xs">
+                        <div class="grid grid-cols-6 gap-2 mt-2">
+                            <div class="col-span-1 text-xs font-bold transform -rotate-90 origin-center self-center text-center tracking-widest">SIUNTĖJAS</div>
+                            <div class="col-span-5 text-xs pl-2">
+                                <p class="font-bold">Baltijos Javai UAB</p>
+                                <p>Kauno m. Svirbygalos g. 19, LT-46280</p>
+                                <p>Kauno m. sav., Kauno apskr. Lietuva</p>
+                            </div>
+                        </div>
+                         <div class="grid grid-cols-6 gap-2 mt-2 pt-2 border-t">
+                            <div class="col-span-1 text-xs font-bold transform -rotate-90 origin-center self-center text-center tracking-widest">GAVĖJAS</div>
+                            <div class="col-span-5 text-xs pl-2">
                                 <p class="font-bold">UAB Viking Malt</p>
                                 <p>Dovydas</p>
-                                <p>Panevėžio m. Pramonės g. 2</p>
-                                <p>LT-35289, Panevėžys</p>
+                                <p>Panevėžio m. Pramonės g. 2, LT-35289, Panevėžys</p>
+                                <p class="mt-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline-block mr-1" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg>
+                                    <span>37069151153</span>
+                                </p>
                             </div>
                         </div>
-                        <div class="mt-3 pt-3 border-t text-center">
-                            <p class="text-sm font-bold">CC780308494EE</p>
+                        <div class="py-2 mt-2 border-y">
+                            <p class="text-xs font-semibold">Būtinai pasiskambinti prieš atvykstant</p>
+                        </div>
+                        <div class="mt-2 text-center">
+                            <div class="barcode">*CC780308494EE*</div>
+                            <p class="text-xs font-mono tracking-widest">CC780308494EE</p>
                         </div>
                     </div>
                 </div>
@@ -231,6 +267,7 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mėginio numeris</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tiekėjas</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sutarties priedas</th>
@@ -239,12 +276,14 @@
                         </thead>
                         <tbody id="history-table-body" class="bg-white divide-y divide-gray-200">
                              <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">BJ25 M229</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">2025-09-10</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">Pauliaus Jurgeliūno ūkis</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">SUT00627-P3</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Išsiųsta</span></td>
                             </tr>
                              <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">BJ25 M228</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">2025-09-08</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">UAB „Drąsutaičiai“</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">SUT00588-P2</td>
@@ -264,6 +303,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     let currentStep = 1;
     const totalSteps = 5;
+    let sampleCounter = 230; // Start counter for new samples
+    let currentSampleNumber = null;
     
     // Mock data for suppliers with associated annexes
     const suppliers = [
@@ -308,20 +349,23 @@ document.addEventListener('DOMContentLoaded', function () {
     
     const updateUIData = () => {
         if (!selectedSupplier || !selectedAnnex) return;
+        
+        // Generate sample number only when moving to step 3
+        if (currentStep === 2) {
+             currentSampleNumber = 'BJ25 M' + sampleCounter++;
+        }
+
         const today = new Date();
-        const deliveryDate = new Date(today.setDate(today.getDate() + 3));
+        const deliveryDate = new Date();
+        deliveryDate.setDate(today.getDate() + 3);
         const formattedDateLT = deliveryDate.toLocaleDateString('lt-LT');
         const formattedDateISO = deliveryDate.toISOString().split('T')[0];
         
-        const addressParts = selectedSupplier.address.split(',');
-
         // Step 3 - Labels
-        document.getElementById('label-date').textContent = formattedDateLT;
+        document.querySelectorAll('.label-sample-nr').forEach(el => el.textContent = currentSampleNumber);
+        document.querySelectorAll('.label-date').forEach(el => el.textContent = formattedDateLT);
         document.getElementById('omniva-date').textContent = formattedDateISO;
-        document.getElementById('label-location').textContent = selectedSupplier.location;
-        document.getElementById('omniva-sender-name').textContent = selectedSupplier.name;
-        document.getElementById('omniva-sender-address').textContent = addressParts.slice(0, 2).join(',');
-        document.getElementById('omniva-sender-full-address').textContent = addressParts.slice(2).join(',').trim();
+        document.querySelectorAll('.label-location').forEach(el => el.textContent = selectedSupplier.location);
 
 
         // Step 4 - Email
@@ -350,8 +394,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (currentStep === 4) { // After clicking "Send"
                     const historyTable = document.getElementById('history-table-body');
                     const newRow = historyTable.insertRow(0); // Insert at the top
+                    const today = new Date().toISOString().split('T')[0];
                     newRow.innerHTML = `
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${new Date().toISOString().split('T')[0]}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">${currentSampleNumber}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${today}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${selectedSupplier.name}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${selectedAnnex}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Išsiųsta</span></td>
@@ -376,6 +422,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     document.getElementById('btn-restart').addEventListener('click', () => {
         selectedSupplier = null;
+        currentSampleNumber = null;
         supplierInput.value = '';
         supplierAddressDiv.classList.add('hidden');
         autocompleteList.classList.add('hidden');
