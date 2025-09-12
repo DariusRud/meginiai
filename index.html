@@ -131,6 +131,12 @@
             </div>
             <h2 class="text-xl font-semibold text-gray-700 mb-1">3. Etikečių formavimas</h2>
             <p class="text-gray-500 mb-6">Sistema sugeneravo lipdukus. Patikrinkite ir, jei reikia, pakoreguokite informaciją.</p>
+            
+            <div class="mb-6">
+                <label for="quantity-input" class="block text-sm font-medium text-gray-700 font-bold">Kiekis:</label>
+                <input type="text" id="quantity-input" class="mt-1 block w-full max-w-xs px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="pvz., 150t">
+            </div>
+
             <div class="space-y-6">
                 <!-- Sample Label -->
                 <div class="border-2 border-dashed rounded-lg p-4 bg-gray-50">
@@ -170,49 +176,62 @@
                         </div>
                     </div>
                 </div>
-                <!-- Omniva Label -->
+                <!-- Omniva Label Section -->
                 <div class="border-2 border-dashed rounded-lg p-4 bg-gray-50">
-                     <h3 class="font-bold text-center text-gray-800 mb-2">Omniva lipdukas</h3>
-                    <div class="bg-white p-4 rounded-md shadow-sm border text-gray-800">
-                        <div class="flex justify-between items-start pb-2 border-b">
+                    <div class="text-center mb-4 border-b pb-4">
+                        <div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
                             <div>
-                                <img src="https://www.omniva.lt/img/omniva-logo.svg" alt="Omniva logo" class="h-6">
-                                <p class="text-xs mt-1">Siunta - Kurjeris</p>
+                                <label for="pickup-date" class="block text-sm font-medium text-gray-700 text-left">Kada paimti:</label>
+                                <input type="date" id="pickup-date" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                             </div>
-                            <div class="text-right">
-                                <svg class="w-12 h-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="currentColor" d="M140 140h28v28h-28v-28Zm-56-56H56v28h28V84Zm0 56H56v28h28v-28Zm56-56h28v28h-28V84Zm56 0h28v28h-28V84Zm-56 56h28v28h-28v-28Zm56 0h28v28h-28v-28Zm-56 56h28v28h-28v-28Zm-28-28a12 12 0 1 1-12-12a12 12 0 0 1 12 12Zm112 0h28v28h-28v-28Zm-56 56h28v28h-28v-28Zm-56-56H56v28h28v-28Zm0-56H56v28h28V84Zm168 56h28v28h-28v-28ZM40 40a16 16 0 0 0-16 16v40H8a8 8 0 0 0 0 16h16v40H8a8 8 0 0 0 0 16h16v40a16 16 0 0 0 16 16h40v16a8 8 0 0 0 16 0v-16h40v16a8 8 0 0 0 16 0v-16h40v16a8 8 0 0 0 16 0v-16h40a16 16 0 0 0 16-16v-40h16a8 8 0 0 0 0-16h-16V96h16a8 8 0 0 0 0-16h-16V56a16 16 0 0 0-16-16H56A16 16 0 0 0 40 40Zm16 16h144v144H56V56Z"/></svg>
-                                <p class="text-sm font-mono mt-1" id="omniva-date">2025-06-04</p>
+                            <button id="generate-labels-btn" class="self-end sm:self-center bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 mt-2 sm:mt-0 whitespace-nowrap">Generuoti Omniva etiketę</button>
+                        </div>
+                    </div>
+
+                    <div id="omniva-sticker-preview" class="hidden">
+                        <h3 class="font-bold text-center text-gray-800 mb-2">Omniva lipdukas</h3>
+                        <div class="bg-white p-4 rounded-md shadow-sm border text-gray-800">
+                            <div class="flex justify-between items-start pb-2 border-b">
+                                <div>
+                                    <img src="https://www.omniva.lt/img/omniva-logo.svg" alt="Omniva logo" class="h-6">
+                                    <p class="text-xs mt-1">Siunta - Kurjeris</p>
+                                </div>
+                                <div class="text-right">
+                                    <svg class="w-12 h-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="currentColor" d="M140 140h28v28h-28v-28Zm-56-56H56v28h28V84Zm0 56H56v28h28v-28Zm56-56h28v28h-28V84Zm56 0h28v28h-28V84Zm-56 56h28v28h-28v-28Zm56 0h28v28h-28v-28Zm-56 56h28v28h-28v-28Zm-28-28a12 12 0 1 1-12-12a12 12 0 0 1 12 12Zm112 0h28v28h-28v-28Zm-56 56h28v28h-28v-28Zm-56-56H56v28h28v-28Zm0-56H56v28h28V84Zm168 56h28v28h-28v-28ZM40 40a16 16 0 0 0-16 16v40H8a8 8 0 0 0 0 16h16v40H8a8 8 0 0 0 0 16h16v40a16 16 0 0 0 16 16h40v16a8 8 0 0 0 16 0v-16h40v16a8 8 0 0 0 16 0v-16h40v16a8 8 0 0 0 16 0v-16h40a16 16 0 0 0 16-16v-40h16a8 8 0 0 0 0-16h-16V96h16a8 8 0 0 0 0-16h-16V56a16 16 0 0 0-16-16H56A16 16 0 0 0 40 40Zm16 16h144v144H56V56Z"/></svg>
+                                    <p class="text-sm font-mono mt-1" id="omniva-date">2025-06-04</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="grid grid-cols-6 gap-2 mt-2">
-                            <div class="col-span-1 text-xs font-bold transform -rotate-90 origin-center self-center text-center tracking-widest">SIUNTĖJAS</div>
-                            <div class="col-span-5 text-xs pl-2">
-                                <p class="font-bold">Baltijos Javai UAB</p>
-                                <p>Kauno m. Svirbygalos g. 19, LT-46280</p>
-                                <p>Kauno m. sav., Kauno apskr. Lietuva</p>
+                            <div class="grid grid-cols-6 gap-2 mt-2">
+                                <div class="col-span-1 text-xs font-bold transform -rotate-90 origin-center self-center text-center tracking-widest">SIUNTĖJAS</div>
+                                <div class="col-span-5 text-xs pl-2">
+                                    <p class="font-bold">Baltijos Javai UAB</p>
+                                    <p>Kauno m. Svirbygalos g. 19, LT-46280</p>
+                                    <p>Kauno m. sav., Kauno apskr. Lietuva</p>
+                                </div>
                             </div>
-                        </div>
-                         <div class="grid grid-cols-6 gap-2 mt-2 pt-2 border-t">
-                            <div class="col-span-1 text-xs font-bold transform -rotate-90 origin-center self-center text-center tracking-widest">GAVĖJAS</div>
-                            <div class="col-span-5 text-xs pl-2">
-                                <p class="font-bold">UAB Viking Malt</p>
-                                <p>Dovydas</p>
-                                <p>Panevėžio m. Pramonės g. 2, LT-35289, Panevėžys</p>
-                                <p class="mt-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline-block mr-1" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg>
-                                    <span>37069151153</span>
-                                </p>
+                             <div class="grid grid-cols-6 gap-2 mt-2 pt-2 border-t">
+                                <div class="col-span-1 text-xs font-bold transform -rotate-90 origin-center self-center text-center tracking-widest">GAVĖJAS</div>
+                                <div class="col-span-5 text-xs pl-2">
+                                    <p class="font-bold">UAB Viking Malt</p>
+                                    <p>Dovydas</p>
+                                    <p>Panevėžio m. Pramonės g. 2, LT-35289, Panevėžys</p>
+                                    <p class="mt-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline-block mr-1" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg>
+                                        <span>37069151153</span>
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="py-2 mt-2 border-y">
-                            <p class="text-xs font-semibold">Būtinai pasiskambinti prieš atvykstant</p>
-                        </div>
-                        <div class="mt-2 text-center">
-                            <div class="barcode">*CC780308494EE*</div>
-                            <p class="text-xs font-mono tracking-widest">CC780308494EE</p>
+                            <div class="py-2 mt-2 border-y">
+                                <p class="text-xs font-semibold">Būtinai pasiskambinti prieš atvykstant</p>
+                            </div>
+                            <div class="mt-2 text-center">
+                                <div class="barcode">*CC780308494EE*</div>
+                                <p class="text-xs font-mono tracking-widest">CC780308494EE</p>
+                            </div>
                         </div>
                     </div>
                 </div>
+
             </div>
             <div class="mt-8 flex justify-between">
                 <button class="btn-back bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-300">Atgal</button>
@@ -335,11 +354,11 @@ document.addEventListener('DOMContentLoaded', function () {
     
     // Mock data for suppliers with associated annexes
     const suppliers = [
-        { name: 'Klauso ūkis, UAB', address: 'Domeikų g. 8, Domeikių k., Žagarės sen., Joniškio r. sav., Šiaulių apskr., LT-84374', email: 'info@klauso.ukis.lt', location: 'Joniškio r. sav.', annexes: ['SUT00595-P1', 'SUT00642-P1', 'SUT00642-P2'] },
-        { name: 'Pauliaus Jurgeliūno ūkis', address: 'Liepų g. 1, Kėdainiai, LT-57345', email: 'info@jurgeliuno.ukis.lt', location: 'Kėdainių r. sav.', annexes: ['SUT00627-P3'] },
-        { name: 'UAB „Drąsutaičiai“', address: 'Parko g. 15, Drąsutaičiai, Pakruojo r. sav., LT-83451', email: 'info@drasutaiciai.lt', location: 'Pakruojo r. sav.', annexes: ['SUT00588-P2', 'SUT00588-P4'] },
-        { name: 'Vilkėno ūkis PŪB', address: 'Vilkėno g. 3, Šilutės r. sav., LT-99145', email: 'info@vilkeno.ukis.lt', location: 'Šilutės r. sav.', annexes: ['SUT00711-P1'] },
-        { name: 'Nemuno ūkis PŪB', address: 'Nemuno g. 101, Jurbarko r. sav., LT-74123', email: 'info@nemuno.ukis.lt', location: 'Jurbarko r. sav.', annexes: ['SUT00725-P1', 'SUT00725-P2'] }
+        { name: 'Klauso ūkis, UAB', address: 'Domeikų g. 8, Domeikių k., Žagarės sen., Joniškio r. sav., Šiaulių apskr., LT-84374', email: 'info@klauso.ukis.lt', location: 'Joniškio r. sav.', annexes: ['SUT00595-P1', 'SUT00642-P1', 'SUT00642-P2'], quantity: '150t' },
+        { name: 'Pauliaus Jurgeliūno ūkis', address: 'Liepų g. 1, Kėdainiai, LT-57345', email: 'info@jurgeliuno.ukis.lt', location: 'Kėdainių r. sav.', annexes: ['SUT00627-P3'], quantity: '100t' },
+        { name: 'UAB „Drąsutaičiai“', address: 'Parko g. 15, Drąsutaičiai, Pakruojo r. sav., LT-83451', email: 'info@drasutaiciai.lt', location: 'Pakruojo r. sav.', annexes: ['SUT00588-P2', 'SUT00588-P4'], quantity: '250t' },
+        { name: 'Vilkėno ūkis PŪB', address: 'Vilkėno g. 3, Šilutės r. sav., LT-99145', email: 'info@vilkeno.ukis.lt', location: 'Šilutės r. sav.', annexes: ['SUT00711-P1'], quantity: '120t' },
+        { name: 'Nemuno ūkis PŪB', address: 'Nemuno g. 101, Jurbarko r. sav., LT-74123', email: 'info@nemuno.ukis.lt', location: 'Jurbarko r. sav.', annexes: ['SUT00725-P1', 'SUT00725-P2'], quantity: '300t' }
     ];
     let selectedSupplier = null;
     let selectedAnnex = null;
@@ -358,6 +377,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const annexContainer = document.getElementById('annex-container');
     const annexSearchInput = document.getElementById('annex-search');
     const annexDropdown = document.getElementById('annex-dropdown');
+    const pickupDateInput = document.getElementById('pickup-date');
+    const generateLabelsBtn = document.getElementById('generate-labels-btn');
+    const omnivaStickerPreview = document.getElementById('omniva-sticker-preview');
+    const quantityInput = document.getElementById('quantity-input');
 
     // --- Functions ---
     const updateProgressBar = () => {
@@ -370,6 +393,10 @@ document.addEventListener('DOMContentLoaded', function () {
             step.classList.toggle('visible-step', index + 1 === stepNumber);
             step.classList.toggle('hidden-step', index + 1 !== stepNumber);
         });
+        if (stepNumber === 3) {
+            omnivaStickerPreview.classList.add('hidden');
+            pickupDateInput.value = '';
+        }
         currentStep = stepNumber;
         updateProgressBar();
     };
@@ -377,28 +404,28 @@ document.addEventListener('DOMContentLoaded', function () {
     const updateUIData = () => {
         if (!selectedSupplier || !selectedAnnex) return;
         
-        // Generate sample number only when moving to step 3
         if (currentStep === 2) {
              currentSampleNumber = 'BJ25 M' + sampleCounter++;
+             const initialQuantity = selectedSupplier.quantity || '150t';
+             quantityInput.value = initialQuantity;
+             document.querySelectorAll('.label-quantity').forEach(el => el.textContent = initialQuantity);
         }
 
         const today = new Date();
         const deliveryDate = new Date();
         deliveryDate.setDate(today.getDate() + 3);
         const formattedDateLT = deliveryDate.toLocaleDateString('lt-LT');
-        const formattedDateISO = deliveryDate.toISOString().split('T')[0];
         
-        // Step 3 - Labels
+        // Set default date for the top label
         document.querySelectorAll('.label-sample-nr').forEach(el => el.textContent = currentSampleNumber);
         document.querySelectorAll('.label-date').forEach(el => el.textContent = formattedDateLT);
-        document.getElementById('omniva-date').textContent = formattedDateISO;
         document.querySelectorAll('.label-location').forEach(el => el.textContent = selectedSupplier.location);
 
 
-        // Step 4 - Email
+        // Email data (will be updated again if date changes)
         document.getElementById('email-to').textContent = selectedSupplier.email;
         document.getElementById('email-contract').textContent = selectedAnnex;
-        document.getElementById('email-date').textContent = formattedDateLT;
+        document.getElementById('email-date').textContent = formattedDateLT; // Default date
         document.getElementById('email-address').textContent = selectedSupplier.address;
     };
     
@@ -417,10 +444,12 @@ document.addEventListener('DOMContentLoaded', function () {
     nextButtons.forEach(button => {
         button.addEventListener('click', () => {
             if (currentStep < totalSteps) {
-                updateUIData();
+                if (currentStep === 2) {
+                    updateUIData();
+                }
                 if (currentStep === 4) { // After clicking "Send"
                     const historyTable = document.getElementById('history-table-body');
-                    const newRow = historyTable.insertRow(0); // Insert at the top
+                    const newRow = historyTable.insertRow(0);
                     const today = new Date().toISOString().split('T')[0];
                     const getSentToValue = (scenario) => {
                         switch(scenario) {
@@ -438,7 +467,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const sentTo = getSentToValue(selectedScenario);
                     newRow.innerHTML = `
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">Andrius</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${today}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${pickupDateInput.value || today}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">${currentSampleNumber}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${selectedSupplier.name}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${selectedSupplier.location}</td>
@@ -488,11 +517,40 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.scenario-display-text').forEach(el => {
             el.textContent = '';
         });
+        omnivaStickerPreview.classList.add('hidden');
+        pickupDateInput.value = '';
+        quantityInput.value = '';
         showStep(1);
     });
 
+    quantityInput.addEventListener('input', () => {
+        const quantityValue = quantityInput.value.trim() ? quantityInput.value : '0t';
+        document.querySelectorAll('.label-quantity').forEach(el => el.textContent = quantityValue);
+    });
+    
+    generateLabelsBtn.addEventListener('click', () => {
+        const selectedDate = pickupDateInput.value;
+        if (!selectedDate) {
+            pickupDateInput.focus();
+            return;
+        }
+
+        const dateObj = new Date(selectedDate);
+        const userTimezoneOffset = dateObj.getTimezoneOffset() * 60000;
+        const adjustedDate = new Date(dateObj.getTime() + userTimezoneOffset);
+
+        const formattedDateLT = adjustedDate.toLocaleDateString('lt-LT');
+        const formattedDateISO = adjustedDate.toISOString().split('T')[0];
+
+        document.querySelectorAll('.label-date').forEach(el => el.textContent = formattedDateLT);
+        document.getElementById('omniva-date').textContent = formattedDateISO;
+        document.getElementById('email-date').textContent = formattedDateLT;
+
+        omnivaStickerPreview.classList.remove('hidden');
+    });
+
+
     // --- Autocomplete & Dropdown Logic ---
-    // Supplier Autocomplete
     supplierInput.addEventListener('input', function() {
         const val = this.value;
         closeAllLists();
@@ -516,7 +574,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     supplierAddressDiv.classList.remove('hidden');
                     closeAllLists();
                     
-                    // Populate and show annex dropdown
                     annexContainer.classList.remove('hidden');
                     populateAnnexDropdown(supplier.annexes);
                 });
@@ -525,7 +582,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
     
-    // Annex Dropdown
     function populateAnnexDropdown(annexes) {
         annexDropdown.innerHTML = '';
         annexes.forEach(annex => {
@@ -552,7 +608,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     annexSearchInput.addEventListener('focus', () => annexDropdown.classList.remove('hidden'));
 
-    // Global click listener to close dropdowns
     function closeAllLists(elmnt) {
         autocompleteList.classList.add('hidden');
         if (elmnt !== annexSearchInput) {
