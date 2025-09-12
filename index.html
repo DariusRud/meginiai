@@ -46,7 +46,7 @@
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
 
-    <div class="w-full max-w-4xl mx-auto p-4">
+    <div class="w-full max-w-5xl mx-auto p-4">
         
         <!-- Progress Bar -->
         <div class="px-4 sm:px-0">
@@ -267,25 +267,34 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mėginio numeris</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vadybininkas</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Paėmimo Data</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mėginio Nr.</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tiekėjas</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sutarties priedas</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Paėmimo Vieta</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Siunčiama į</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sutarties Priedas</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statusas</th>
                             </tr>
                         </thead>
                         <tbody id="history-table-body" class="bg-white divide-y divide-gray-200">
                              <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">BJ25 M229</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">Andrius</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">2025-09-10</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">BJ25 M229</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">Pauliaus Jurgeliūno ūkis</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">Kėdainių r. sav.</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">VM</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">SUT00627-P3</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Išsiųsta</span></td>
                             </tr>
                              <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">BJ25 M228</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">Andrius</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">2025-09-08</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">BJ25 M228</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">UAB „Drąsutaičiai“</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">Pakruojo r. sav.</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">BIL</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">SUT00588-P2</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Išsiųsta</span></td>
                             </tr>
@@ -305,6 +314,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const totalSteps = 5;
     let sampleCounter = 230; // Start counter for new samples
     let currentSampleNumber = null;
+    let selectedScenario = null;
     
     // Mock data for suppliers with associated annexes
     const suppliers = [
@@ -395,10 +405,27 @@ document.addEventListener('DOMContentLoaded', function () {
                     const historyTable = document.getElementById('history-table-body');
                     const newRow = historyTable.insertRow(0); // Insert at the top
                     const today = new Date().toISOString().split('T')[0];
+                    const getSentToValue = (scenario) => {
+                        switch(scenario) {
+                            case 'farm-vm':
+                            case 'elevator-vm':
+                                return 'VM';
+                            case 'elevator-biliunai':
+                                return 'BIL';
+                            case 'elevator-office':
+                                return 'Ofisas';
+                            default:
+                                return 'N/A';
+                        }
+                    };
+                    const sentTo = getSentToValue(selectedScenario);
                     newRow.innerHTML = `
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">${currentSampleNumber}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">Andrius</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${today}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">${currentSampleNumber}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${selectedSupplier.name}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${selectedSupplier.location}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${sentTo}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${selectedAnnex}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Išsiųsta</span></td>
                     `;
@@ -415,7 +442,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     scenarioRadios.forEach(radio => {
-        radio.addEventListener('change', () => { step1NextBtn.disabled = false; });
+        radio.addEventListener('change', () => { 
+            step1NextBtn.disabled = false;
+            selectedScenario = document.querySelector('input[name="scenario"]:checked').value;
+        });
     });
 
     step1NextBtn.addEventListener('click', () => showStep(2));
@@ -429,6 +459,7 @@ document.addEventListener('DOMContentLoaded', function () {
         resetAnnex();
         scenarioRadios.forEach(r => r.checked = false);
         step1NextBtn.disabled = true;
+        selectedScenario = null;
         showStep(1);
     });
 
