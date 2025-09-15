@@ -55,7 +55,7 @@
                 <h1 class="text-2xl font-bold text-gray-800">Mėginių Siuntimo Procesas</h1>
             </div>
             <div class="relative w-full bg-gray-200 rounded-full h-2.5 mb-6">
-                <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 20%; transition: width 0.3s ease-in-out;"></div>
+                <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%; transition: width 0.3s ease-in-out;"></div>
             </div>
         </div>
 
@@ -124,14 +124,14 @@
             </div>
         </div>
 
-        <!-- Step 3: Label Generation -->
+        <!-- Step 3: Sample Label -->
         <div id="step-3" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
             <div class="mb-4">
                 <span class="text-red-500 font-semibold">Scenarijus:</span>
                 <span class="text-gray-700 font-medium ml-2 scenario-display-text"></span>
             </div>
-            <h2 class="text-xl font-semibold text-gray-700 mb-1">3. Etikečių formavimas</h2>
-            <p class="text-gray-500 mb-6">Sistema sugeneravo lipdukus. Patikrinkite ir, jei reikia, pakoreguokite informaciją.</p>
+            <h2 class="text-xl font-semibold text-gray-700 mb-1">3. Lipdukas Mėginiui</h2>
+            <p class="text-gray-500 mb-6">Patikrinkite sugeneruotą lipduką ir įveskite kiekį.</p>
             
             <div class="mb-6">
                 <label for="quantity-input" class="block text-sm font-medium text-gray-700 font-bold">Kiekis:</label>
@@ -151,11 +151,11 @@
                                 <p class="text-xs text-gray-600">Svirbygalos g. 19, Lithuania</p>
                             </div>
                             <div class="space-y-1 text-xs">
-                                <p><span class="font-semibold">Pavyzdžio Nr:</span> <span class="label-sample-nr">BJ24 M228</span></p>
-                                <p><span class="font-semibold">Paėmimo data:</span> <span class="label-date">2025 09 15</span></p>
+                                <p><span class="font-semibold">Pavyzdžio Nr:</span> <span class="label-sample-nr"></span></p>
+                                <p><span class="font-semibold">Paėmimo data:</span> <span class="label-date"></span></p>
                                 <p><span class="font-semibold">Veislė:</span> <span class="label-variety">Laureate</span></p>
-                                <p><span class="font-semibold">Paėmimo vieta:</span> <span class="label-location">Joniškio r. sav.</span></p>
-                                <p><span class="font-semibold">Kiekis:</span> <span class="label-quantity">150t</span></p>
+                                <p><span class="font-semibold">Paėmimo vieta:</span> <span class="label-location"></span></p>
+                                <p><span class="font-semibold">Kiekis:</span> <span class="label-quantity"></span></p>
                             </div>
                             <div class="mt-2 h-16 border-t border-gray-200"></div>
                         </div>
@@ -167,103 +167,124 @@
                                 <p class="text-xs text-gray-600">Svirbygalos g. 19, Lithuania</p>
                             </div>
                             <div class="space-y-1 text-xs">
-                                <p><span class="font-semibold">Pavyzdžio Nr:</span> <span class="label-sample-nr">BJ24 M228</span></p>
-                                <p><span class="font-semibold">Paėmimo data:</span> <span class="label-date">2025 09 15</span></p>
+                                <p><span class="font-semibold">Pavyzdžio Nr:</span> <span class="label-sample-nr"></span></p>
+                                <p><span class="font-semibold">Paėmimo data:</span> <span class="label-date"></span></p>
                                 <p><span class="font-semibold">Veislė:</span> <span class="label-variety">Laureate</span></p>
-                                <p><span class="font-semibold">Paėmimo vieta:</span> <span class="label-location">Joniškio r. sav.</span></p>
-                                <p><span class="font-semibold">Kiekis:</span> <span class="label-quantity">150t</span></p>
+                                <p><span class="font-semibold">Paėmimo vieta:</span> <span class="label-location"></span></p>
+                                <p><span class="font-semibold">Kiekis:</span> <span class="label-quantity"></span></p>
                             </div>
                             <div class="mt-2 h-16 border-t border-gray-200"></div>
                         </div>
                     </div>
                 </div>
-                <!-- Omniva Label Section -->
-                <div class="border-2 border-dashed rounded-lg p-4 bg-gray-50">
-                    <div class="text-center mb-4 border-b pb-4">
-                        <div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-                            <div>
-                                <label for="pickup-date" class="block text-sm font-medium text-gray-700 text-left">Kada paimti:</label>
-                                <input type="date" id="pickup-date" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                            </div>
-                            <button id="generate-labels-btn" class="self-end sm:self-center bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 mt-2 sm:mt-0 whitespace-nowrap">Generuoti Omniva etiketę</button>
-                        </div>
-                    </div>
-
-                    <div id="omniva-sticker-preview" class="hidden">
-                        <h3 class="font-bold text-center text-gray-800 mb-2">Omniva lipdukas</h3>
-                        <div class="bg-white p-4 rounded-md shadow-sm border text-gray-800">
-                            <div class="flex justify-between items-start pb-2 border-b">
-                                <div>
-                                    <img src="https://www.omniva.lt/img/omniva-logo.svg" alt="Omniva logo" class="h-6">
-                                    <p class="text-xs mt-1">Siunta - Kurjeris</p>
-                                </div>
-                                <div class="text-right">
-                                    <svg class="w-12 h-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="currentColor" d="M140 140h28v28h-28v-28Zm-56-56H56v28h28V84Zm0 56H56v28h28v-28Zm56-56h28v28h-28V84Zm56 0h28v28h-28V84Zm-56 56h28v28h-28v-28Zm56 0h28v28h-28v-28Zm-56 56h28v28h-28v-28Zm-28-28a12 12 0 1 1-12-12a12 12 0 0 1 12 12Zm112 0h28v28h-28v-28Zm-56 56h28v28h-28v-28Zm-56-56H56v28h28v-28Zm0-56H56v28h28V84Zm168 56h28v28h-28v-28ZM40 40a16 16 0 0 0-16 16v40H8a8 8 0 0 0 0 16h16v40H8a8 8 0 0 0 0 16h16v40a16 16 0 0 0 16 16h40v16a8 8 0 0 0 16 0v-16h40v16a8 8 0 0 0 16 0v-16h40v16a8 8 0 0 0 16 0v-16h40a16 16 0 0 0 16-16v-40h16a8 8 0 0 0 0-16h-16V96h16a8 8 0 0 0 0-16h-16V56a16 16 0 0 0-16-16H56A16 16 0 0 0 40 40Zm16 16h144v144H56V56Z"/></svg>
-                                    <p class="text-sm font-mono mt-1" id="omniva-date">2025-06-04</p>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-6 gap-2 mt-2">
-                                <div class="col-span-1 text-xs font-bold transform -rotate-90 origin-center self-center text-center tracking-widest">SIUNTĖJAS</div>
-                                <div class="col-span-5 text-xs pl-2">
-                                    <p class="font-bold">Baltijos Javai UAB</p>
-                                    <p>Kauno m. Svirbygalos g. 19, LT-46280</p>
-                                    <p>Kauno m. sav., Kauno apskr. Lietuva</p>
-                                </div>
-                            </div>
-                             <div class="grid grid-cols-6 gap-2 mt-2 pt-2 border-t">
-                                <div class="col-span-1 text-xs font-bold transform -rotate-90 origin-center self-center text-center tracking-widest">GAVĖJAS</div>
-                                <div class="col-span-5 text-xs pl-2">
-                                    <p class="font-bold">UAB Viking Malt</p>
-                                    <p>Dovydas</p>
-                                    <p>Panevėžio m. Pramonės g. 2, LT-35289, Panevėžys</p>
-                                    <p class="mt-1">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline-block mr-1" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg>
-                                        <span>37069151153</span>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="py-2 mt-2 border-y">
-                                <p class="text-xs font-semibold">Būtinai pasiskambinti prieš atvykstant</p>
-                            </div>
-                            <div class="mt-2 text-center">
-                                <div class="barcode">*CC780308494EE*</div>
-                                <p class="text-xs font-mono tracking-widest">CC780308494EE</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
             <div class="mt-8 flex justify-between">
                 <button class="btn-back bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-300">Atgal</button>
                 <button class="btn-next bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700">Toliau</button>
             </div>
         </div>
-
-        <!-- Step 4: Email Sending -->
+        
+        <!-- Step 4: Omniva Order -->
         <div id="step-4" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
+             <div class="mb-4">
+                <span class="text-red-500 font-semibold">Scenarijus:</span>
+                <span class="text-gray-700 font-medium ml-2 scenario-display-text"></span>
+            </div>
+            <h2 class="text-xl font-semibold text-gray-700 mb-1">4. Omniva Užsakymas</h2>
+            <p class="text-gray-500 mb-6">Pasirinkite paėmimo datą ir sugeneruokite Omniva siuntos lipduką.</p>
+            
+             <!-- Omniva Label Section -->
+             <div class="border-2 border-dashed rounded-lg p-4 bg-gray-50">
+                <div class="text-center mb-4 border-b pb-4">
+                    <div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <div>
+                            <label for="pickup-date" class="block text-sm font-medium text-gray-700 text-left">Kada paimti:</label>
+                            <input type="date" id="pickup-date" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <button id="generate-labels-btn" class="self-end sm:self-center bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 mt-2 sm:mt-0 whitespace-nowrap">Generuoti Omniva etiketę</button>
+                    </div>
+                    <div id="generation-success-msg" class="hidden mt-3 text-sm font-semibold text-green-600 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                        <span>Etiketė sėkmingai sugeneruota!</span>
+                    </div>
+                </div>
+
+                <div id="omniva-sticker-preview" class="hidden">
+                    <h3 class="font-bold text-center text-gray-800 mb-2">Omniva lipdukas</h3>
+                    <div class="bg-white p-4 rounded-md shadow-sm border text-gray-800">
+                        <div class="flex justify-between items-start pb-2 border-b">
+                            <div>
+                                <img src="https://www.omniva.lt/img/omniva-logo.svg" alt="Omniva logo" class="h-6">
+                                <p class="text-xs mt-1">Siunta - Kurjeris</p>
+                            </div>
+                            <div class="text-right">
+                                <svg class="w-12 h-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="currentColor" d="M140 140h28v28h-28v-28Zm-56-56H56v28h28V84Zm0 56H56v28h28v-28Zm56-56h28v28h-28V84Zm56 0h28v28h-28V84Zm-56 56h28v28h-28v-28Zm56 0h28v28h-28v-28Zm-56 56h28v28h-28v-28Zm-28-28a12 12 0 1 1-12-12a12 12 0 0 1 12 12Zm112 0h28v28h-28v-28Zm-56 56h28v28h-28v-28Zm-56-56H56v28h28v-28Zm0-56H56v28h28V84Zm168 56h28v28h-28v-28ZM40 40a16 16 0 0 0-16 16v40H8a8 8 0 0 0 0 16h16v40H8a8 8 0 0 0 0 16h16v40a16 16 0 0 0 16 16h40v16a8 8 0 0 0 16 0v-16h40v16a8 8 0 0 0 16 0v-16h40v16a8 8 0 0 0 16 0v-16h40a16 16 0 0 0 16-16v-40h16a8 8 0 0 0 0-16h-16V96h16a8 8 0 0 0 0-16h-16V56a16 16 0 0 0-16-16H56A16 16 0 0 0 40 40Zm16 16h144v144H56V56Z"/></svg>
+                                <p class="text-sm font-mono mt-1" id="omniva-date"></p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-6 gap-2 mt-2">
+                            <div class="col-span-1 text-xs font-bold transform -rotate-90 origin-center self-center text-center tracking-widest">SIUNTĖJAS</div>
+                            <div class="col-span-5 text-xs pl-2">
+                                <p class="font-bold">Baltijos Javai UAB</p>
+                                <p>Kauno m. Svirbygalos g. 19, LT-46280</p>
+                                <p>Kauno m. sav., Kauno apskr. Lietuva</p>
+                            </div>
+                        </div>
+                         <div class="grid grid-cols-6 gap-2 mt-2 pt-2 border-t">
+                            <div class="col-span-1 text-xs font-bold transform -rotate-90 origin-center self-center text-center tracking-widest">GAVĖJAS</div>
+                            <div class="col-span-5 text-xs pl-2">
+                                <p class="font-bold">UAB Viking Malt</p>
+                                <p>Dovydas</p>
+                                <p>Panevėžio m. Pramonės g. 2, LT-35289, Panevėžys</p>
+                                <p class="mt-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline-block mr-1" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg>
+                                    <span>37069151153</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="py-2 mt-2 border-y">
+                            <p class="text-xs font-semibold">Būtinai pasiskambinti prieš atvykstant</p>
+                        </div>
+                        <div class="mt-2 text-center">
+                            <div class="barcode">*CC780308494EE*</div>
+                            <p class="text-xs font-mono tracking-widest">CC780308494EE</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <div class="mt-8 flex justify-between">
+                <button class="btn-back bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-300">Atgal</button>
+                <button class="btn-next bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700">Toliau</button>
+            </div>
+        </div>
+
+
+        <!-- Step 5: Email Sending -->
+        <div id="step-5" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
             <div class="mb-4">
                 <span class="text-red-500 font-semibold">Scenarijus:</span>
                 <span class="text-gray-700 font-medium ml-2 scenario-display-text"></span>
             </div>
-            <h2 class="text-xl font-semibold text-gray-700 mb-1">4. El. laiško siuntimas</h2>
+            <h2 class="text-xl font-semibold text-gray-700 mb-1">5. El. laiško siuntimas</h2>
             <p class="text-gray-500 mb-6">Patikrinkite suformuotą el. laišką ūkiui ir prisegtus dokumentus.</p>
             <div class="border rounded-lg overflow-hidden bg-white shadow-sm">
-                <div class="p-4 border-b bg-gray-50">
-                    <p class="text-sm"><span class="font-medium text-gray-500">Kam:</span> <span id="email-to" class="text-gray-800">info@klauso.ukis.lt</span></p>
-                    <p class="text-sm"><span class="font-medium text-gray-500">Tema:</span> <span class="text-gray-800">Mėginio paėmimas pagal sutartį <span id="email-contract">SUT00595-P1</span></span></p>
+                <div class="p-4 border-b bg-gray-50 space-y-2">
+                    <div>
+                        <label for="email-to-input" class="text-sm font-medium text-gray-500">Kam:</label>
+                        <input type="email" id="email-to-input" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="email-subject-input" class="text-sm font-medium text-gray-500">Tema:</label>
+                        <input type="text" id="email-subject-input" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
                 </div>
-                <div class="p-4 text-sm text-gray-700 leading-relaxed">
-                    <p>Sveiki,</p><br>
-                    <p>Kurjeris atvyks <span id="email-date" class="font-semibold">2025 09 15</span> | <span class="font-semibold">12:00-13:30</span> | <span id="email-address" class="font-semibold">Domeikų g. 8, Domeikių k., Žagarės sen., Joniškio r. sav., Šiaulių apskr., LT-84374</span>.</p>
-                    <p>Primename, kad <span class="font-bold">adreso kortelės</span> lipdukas klijuojamas ant siuntos kurjeriui.</p>
-                    <p class="font-bold text-red-600 mt-2">Lipdukas mėginiui yra klijuojamas ant miežių mėginio pavyzdžio (2 kg). Svarbu: jeigu mėginys bus be lipduko, kuris yra sukurtas jus identifikuoti, tyrimas laboratorijoje nebus atliekamas.</p>
-                    <br>
-                    <p>Pagarbiai/Kind regards,</p>
-                    <p class="font-semibold">Renata Bernotienė</p>
-                    <p>Logistikos administratorė</p>
-                    <p>UAB "Baltijos javai"</p>
+                <div class="p-4">
+                    <label for="email-body-input" class="text-sm font-medium text-gray-500">Laiško tekstas:</label>
+                    <textarea id="email-body-input" rows="10" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
                 </div>
+
                 <div class="p-4 border-t bg-gray-50">
                     <h4 class="text-sm font-semibold mb-2 text-gray-600">Prisegtukai (2):</h4>
                     <div class="flex space-x-3">
@@ -284,8 +305,8 @@
             </div>
         </div>
 
-        <!-- Step 5: Confirmation -->
-        <div id="step-5" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
+        <!-- Step 6: Confirmation -->
+        <div id="step-6" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
             <div class="text-center">
                  <div class="mb-4">
                     <span class="text-red-500 font-semibold">Scenarijus:</span>
@@ -347,7 +368,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     let currentStep = 1;
-    const totalSteps = 5;
+    const totalSteps = 6;
     let sampleCounter = 230; // Start counter for new samples
     let currentSampleNumber = null;
     let selectedScenario = null;
@@ -427,10 +448,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const generateLabelsBtn = document.getElementById('generate-labels-btn');
     const omnivaStickerPreview = document.getElementById('omniva-sticker-preview');
     const quantityInput = document.getElementById('quantity-input');
+    const generationSuccessMsg = document.getElementById('generation-success-msg');
 
     // --- Functions ---
     const updateProgressBar = () => {
-        const progress = ((currentStep -1) / (totalSteps - 1)) * 100;
+        const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
         progressBar.style.width = `${progress}%`;
     };
 
@@ -439,8 +461,9 @@ document.addEventListener('DOMContentLoaded', function () {
             step.classList.toggle('visible-step', index + 1 === stepNumber);
             step.classList.toggle('hidden-step', index + 1 !== stepNumber);
         });
-        if (stepNumber === 3) {
+         if (stepNumber === 4) { // Reset Omniva sticker when entering its step
             omnivaStickerPreview.classList.add('hidden');
+            generationSuccessMsg.classList.add('hidden');
             pickupDateInput.value = '';
         }
         currentStep = stepNumber;
@@ -450,30 +473,23 @@ document.addEventListener('DOMContentLoaded', function () {
     const updateUIData = () => {
         if (!selectedSupplier || !selectedAnnex) return;
         
+        // This function is now primarily for setting up Step 3
         if (currentStep === 2) {
              currentSampleNumber = 'BJ25 M' + sampleCounter++;
              const selectedAnnexData = selectedSupplier.annexes.find(a => a.nr === selectedAnnex);
              const initialQuantity = selectedAnnexData ? selectedAnnexData.quantity : 'N/A';
              quantityInput.value = initialQuantity;
              document.querySelectorAll('.label-quantity').forEach(el => el.textContent = initialQuantity);
-        }
-
-        const today = new Date();
-        const deliveryDate = new Date();
-        deliveryDate.setDate(today.getDate() + 3);
-        const formattedDateLT = deliveryDate.toLocaleDateString('lt-LT');
         
-        // Set default date for the top label
-        document.querySelectorAll('.label-sample-nr').forEach(el => el.textContent = currentSampleNumber);
-        document.querySelectorAll('.label-date').forEach(el => el.textContent = formattedDateLT);
-        document.querySelectorAll('.label-location').forEach(el => el.textContent = selectedSupplier.location);
-
-
-        // Email data (will be updated again if date changes)
-        document.getElementById('email-to').textContent = selectedSupplier.email;
-        document.getElementById('email-contract').textContent = selectedAnnex;
-        document.getElementById('email-date').textContent = formattedDateLT; // Default date
-        document.getElementById('email-address').textContent = selectedSupplier.address;
+            const today = new Date();
+            const deliveryDate = new Date();
+            deliveryDate.setDate(today.getDate() + 3);
+            const formattedDateLT = deliveryDate.toLocaleDateString('lt-LT');
+            
+            document.querySelectorAll('.label-sample-nr').forEach(el => el.textContent = currentSampleNumber);
+            document.querySelectorAll('.label-date').forEach(el => el.textContent = formattedDateLT);
+            document.querySelectorAll('.label-location').forEach(el => el.textContent = selectedSupplier.location);
+        }
     };
     
     const validateStep2 = () => {
@@ -494,8 +510,42 @@ document.addEventListener('DOMContentLoaded', function () {
             if (currentStep < totalSteps) {
                 if (currentStep === 2) {
                     updateUIData();
-                }
-                if (currentStep === 4) { // After clicking "Send"
+                } else if (currentStep === 4) { // When leaving Omniva step, update email info
+                    const emailToInput = document.getElementById('email-to-input');
+                    const emailSubjectInput = document.getElementById('email-subject-input');
+                    const emailBodyInput = document.getElementById('email-body-input');
+                    
+                    emailToInput.value = selectedSupplier.email;
+                    emailSubjectInput.value = `Mėginio paėmimas pagal sutartį ${selectedAnnex}`;
+
+                    let formattedDateLT;
+                    if (pickupDateInput.value) {
+                         const dateObj = new Date(pickupDateInput.value);
+                         const userTimezoneOffset = dateObj.getTimezoneOffset() * 60000;
+                         const adjustedDate = new Date(dateObj.getTime() + userTimezoneOffset);
+                         formattedDateLT = adjustedDate.toLocaleDateString('lt-LT');
+                    } else {
+                         const deliveryDate = new Date();
+                         deliveryDate.setDate(new Date().getDate() + 3);
+                         formattedDateLT = deliveryDate.toLocaleDateString('lt-LT');
+                    }
+                    
+                    const bodyText = `Sveiki,
+
+Kurjeris atvyks ${formattedDateLT} | 12:00-13:30 | ${selectedSupplier.address}.
+
+Primename, kad adreso kortelės lipdukas klijuojamas ant siuntos kurjeriui.
+
+Lipdukas mėginiui yra klijuojamas ant miežių mėginio pavyzdžio (2 kg). Svarbu: jeigu mėginys bus be lipduko, kuris yra sukurtas jus identifikuoti, tyrimas laboratorijoje nebus atliekamas.
+
+Pagarbiai/Kind regards,
+Renata Bernotienė
+Logistikos administratorė
+UAB "Baltijos javai"`;
+    
+                    emailBodyInput.value = bodyText;
+
+                } else if (currentStep === 5) { // After clicking "Send"
                     const historyTable = document.getElementById('history-table-body');
                     const newRow = historyTable.insertRow(0);
                     const today = new Date().toISOString().split('T')[0];
@@ -568,6 +618,7 @@ document.addEventListener('DOMContentLoaded', function () {
         omnivaStickerPreview.classList.add('hidden');
         pickupDateInput.value = '';
         quantityInput.value = '';
+        generationSuccessMsg.classList.add('hidden');
         showStep(1);
     });
 
@@ -592,9 +643,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         document.querySelectorAll('.label-date').forEach(el => el.textContent = formattedDateLT);
         document.getElementById('omniva-date').textContent = formattedDateISO;
-        document.getElementById('email-date').textContent = formattedDateLT;
 
         omnivaStickerPreview.classList.remove('hidden');
+        generationSuccessMsg.classList.remove('hidden');
+        setTimeout(() => {
+            generationSuccessMsg.classList.add('hidden');
+        }, 3000);
     });
 
 
