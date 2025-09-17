@@ -1,747 +1,1581 @@
 <!DOCTYPE html>
 <html lang="lt">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mėginių Paėmimo Prototipas</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        .step-card {
-            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-        }
-        .hidden-step {
-            display: none;
-            opacity: 0;
-            transform: scale(0.95);
-        }
-        .visible-step {
-            display: block;
-            opacity: 1;
-            transform: scale(1);
-        }
-        .autocomplete-items div, .dropdown-items div {
-            padding: 10px;
-            cursor: pointer;
-            background-color: #fff;
-            border-bottom: 1px solid #ddd;
-        }
-        .autocomplete-items div:hover, .dropdown-items div:hover {
-            background-color: #e9e9e9;
-        }
-        .autocomplete-active {
-            background-color: DodgerBlue !important;
-            color: #ffffff;
-        }
-        .barcode {
-            font-family: 'Libre Barcode 39', cursive;
-            font-size: 48px;
-            line-height: 1;
-        }
-    </style>
-     <link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+39&display=swap" rel="stylesheet">
-</head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Mėginių Paėmimo Prototipas</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+			rel="stylesheet" />
+		<style>
+			body {
+				font-family: 'Inter', sans-serif;
+			}
+			.step-card {
+				transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+			}
+			.hidden-step {
+				display: none;
+				opacity: 0;
+				transform: scale(0.95);
+			}
+			.visible-step {
+				display: block;
+				opacity: 1;
+				transform: scale(1);
+			}
+			.autocomplete-items div,
+			.dropdown-items div {
+				padding: 10px;
+				cursor: pointer;
+				background-color: #fff;
+				border-bottom: 1px solid #ddd;
+			}
+			.autocomplete-items div:hover,
+			.dropdown-items div:hover {
+				background-color: #e9e9e9;
+			}
+			.autocomplete-active {
+				background-color: DodgerBlue !important;
+				color: #ffffff;
+			}
+			.barcode {
+				font-family: 'Libre Barcode 39', cursive;
+				font-size: 48px;
+				line-height: 1;
+			}
+		</style>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Libre+Barcode+39&display=swap"
+			rel="stylesheet" />
+	</head>
+	<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+		<div class="w-full max-w-5xl mx-auto p-4">
+			<!-- Progress Bar -->
+			<div class="px-4 sm:px-0">
+				<div class="flex items-center justify-center mb-4">
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="32"
+						height="32"
+						viewBox="0 0 256 256"
+						class="text-blue-600 mr-3">
+						<path
+							fill="currentColor"
+							d="M216 72h-12.82A63.95 63.95 0 0 0 89.67 48.27L72.24 35.84A8 8 0 0 0 60.27 32H40a8 8 0 0 0 0 16h17.73l17.43 12.43A64.12 64.12 0 0 0 80 128a63.38 63.38 0 0 0 4.28 22.88a32 32 0 1 0 15.44 15.44A64 64 0 0 0 216 136V80a8 8 0 0 0-8-8M56 200a16 16 0 1 1 16 16a16 16 0 0 1-16-16m152-72h-72a56 56 0 0 1-52.2-35.34A56.24 56.24 0 0 1 136 80h72Z" />
+					</svg>
+					<h1 class="text-2xl font-bold text-gray-800">Mėginių Siuntimo Procesas</h1>
+				</div>
+				<div class="relative w-full bg-gray-200 rounded-full h-2.5 mb-6">
+					<div
+						id="progressBar"
+						class="bg-blue-600 h-2.5 rounded-full"
+						style="width: 0%; transition: width 0.3s ease-in-out"></div>
+				</div>
+			</div>
 
-    <div class="w-full max-w-5xl mx-auto p-4">
-        
-        <!-- Progress Bar -->
-        <div class="px-4 sm:px-0">
-             <div class="flex items-center justify-center mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 256 256" class="text-blue-600 mr-3"><path fill="currentColor" d="M216 72h-12.82A63.95 63.95 0 0 0 89.67 48.27L72.24 35.84A8 8 0 0 0 60.27 32H40a8 8 0 0 0 0 16h17.73l17.43 12.43A64.12 64.12 0 0 0 80 128a63.38 63.38 0 0 0 4.28 22.88a32 32 0 1 0 15.44 15.44A64 64 0 0 0 216 136V80a8 8 0 0 0-8-8M56 200a16 16 0 1 1 16 16a16 16 0 0 1-16-16m152-72h-72a56 56 0 0 1-52.2-35.34A56.24 56.24 0 0 1 136 80h72Z"/></svg>
-                <h1 class="text-2xl font-bold text-gray-800">Mėginių Siuntimo Procesas</h1>
-            </div>
-            <div class="relative w-full bg-gray-200 rounded-full h-2.5 mb-6">
-                <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%; transition: width 0.3s ease-in-out;"></div>
-            </div>
-        </div>
+			<!-- Step 1: Scenario Selection -->
+			<div id="step-1" class="step-card bg-white p-8 rounded-xl shadow-lg visible-step">
+				<h2 class="text-xl font-semibold text-gray-700 mb-1">1. Scenarijaus Pasirinkimas</h2>
+				<p class="text-gray-500 mb-6">Pasirinkite mėginio siuntimo scenarijų.</p>
+				<div id="scenarioOptions" class="space-y-3">
+					<label
+						class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-500 transition-all">
+						<input
+							type="radio"
+							name="scenario"
+							value="farm-vm"
+							class="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500" />
+						<span class="ml-4 text-gray-800 font-medium">Ūkis -> Viking Malt (VM)</span>
+					</label>
+					<label
+						class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-500 transition-all">
+						<input
+							type="radio"
+							name="scenario"
+							value="elevator-vm"
+							class="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500" />
+						<span class="ml-4 text-gray-800 font-medium">Elevatorius -> Viking Malt (VM)</span>
+					</label>
+					<label
+						class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-500 transition-all">
+						<input
+							type="radio"
+							name="scenario"
+							value="elevator-biliunai"
+							class="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500" />
+						<span class="ml-4 text-gray-800 font-medium">Elevatorius -> BILIŪNAI Elevatorius</span>
+					</label>
+					<label
+						class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-500 transition-all">
+						<input
+							type="radio"
+							name="scenario"
+							value="elevator-office"
+							class="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500" />
+						<span class="ml-4 text-gray-800 font-medium">Elevatorius -> Ofisas</span>
+					</label>
+				</div>
+				<div class="mt-4">
+					<label for="auth-token" class="block text-sm font-medium text-gray-700"
+						>Prieigos žetonas</label
+					>
+					<input
+						type="password"
+						id="auth-token"
+						class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+						placeholder="Įveskite tokeną duomenų užklausai" />
+					<p class="text-xs text-gray-500 mt-1">
+						Token naudojamas duomenų užklausai (Authorization antraštė).
+					</p>
+				</div>
+				<div class="mt-8 text-right">
+					<button
+						id="btn-step1-next"
+						class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
+						disabled>
+						Toliau
+					</button>
+					<span id="step1-loading" class="hidden inline-flex items-center ml-3 text-blue-600">
+						<svg
+							class="animate-spin h-5 w-5 mr-2"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24">
+							<circle
+								class="opacity-25"
+								cx="12"
+								cy="12"
+								r="10"
+								stroke="currentColor"
+								stroke-width="4"></circle>
+							<path
+								class="opacity-75"
+								fill="currentColor"
+								d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+						</svg>
+						Kraunama...
+					</span>
+				</div>
+			</div>
 
-        <!-- Step 1: Scenario Selection -->
-        <div id="step-1" class="step-card bg-white p-8 rounded-xl shadow-lg visible-step">
-            <h2 class="text-xl font-semibold text-gray-700 mb-1">1. Scenarijaus Pasirinkimas</h2>
-            <p class="text-gray-500 mb-6">Pasirinkite mėginio siuntimo scenarijų.</p>
-            <div id="scenarioOptions" class="space-y-3">
-                <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-500 transition-all">
-                    <input type="radio" name="scenario" value="farm-vm" class="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500">
-                    <span class="ml-4 text-gray-800 font-medium">Ūkis -> Viking Malt (VM)</span>
-                </label>
-                <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-500 transition-all">
-                    <input type="radio" name="scenario" value="elevator-vm" class="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500">
-                    <span class="ml-4 text-gray-800 font-medium">Elevatorius -> Viking Malt (VM)</span>
-                </label>
-                <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-500 transition-all">
-                    <input type="radio" name="scenario" value="elevator-biliunai" class="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500">
-                    <span class="ml-4 text-gray-800 font-medium">Elevatorius -> BILIŪNAI Elevatorius</span>
-                </label>
-                 <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-500 transition-all">
-                    <input type="radio" name="scenario" value="elevator-office" class="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500">
-                    <span class="ml-4 text-gray-800 font-medium">Elevatorius -> Ofisas</span>
-                </label>
-            </div>
-            <div class="mt-8 text-right">
-                <button id="btn-step1-next" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>Toliau</button>
-            </div>
-        </div>
+			<!-- Step 2: Data Input -->
+			<div id="step-2" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
+				<div class="mb-4">
+					<span class="text-red-500 font-semibold">Scenarijus:</span>
+					<span class="text-gray-700 font-medium ml-2 scenario-display-text"></span>
+				</div>
+				<h2 class="text-xl font-semibold text-gray-700 mb-1">2. Duomenų įvedimas</h2>
+				<p class="text-gray-500 mb-6">
+					Įveskite siuntėjo informaciją ir pasirinkite sutarties priedą.
+				</p>
+				<div class="space-y-6">
+					<div class="relative">
+						<label for="supplier" class="block text-sm font-medium text-gray-700 mb-1"
+							>Iš kur siunčiama (Tiekėjas)</label
+						>
+						<input
+							type="text"
+							id="supplier"
+							name="supplier"
+							autocomplete="off"
+							class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+							placeholder="Pradėkite vesti ūkio pavadinimą..." />
+						<div
+							id="autocomplete-list"
+							class="absolute z-20 w-full bg-white border border-gray-300 rounded-b-md shadow-lg hidden autocomplete-items"></div>
+						<div
+							id="supplier-address"
+							class="mt-2 text-sm text-gray-600 p-3 bg-gray-50 rounded-md border border-gray-200 hidden"></div>
+					</div>
+					<!-- Annex dropdown - initially hidden -->
+					<div id="annex-container" class="hidden">
+						<label for="annex-search" class="block text-sm font-medium text-gray-700"
+							>Priedo numeris</label
+						>
+						<div class="relative mt-1">
+							<input
+								type="text"
+								id="annex-search"
+								placeholder="Pasirinkite arba ieškokite..."
+								autocomplete="off"
+								class="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+							<div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+								<svg
+									class="h-5 w-5 text-gray-400"
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 20 20"
+									fill="currentColor"
+									aria-hidden="true">
+									<path
+										fill-rule="evenodd"
+										d="M10 3a.75.75 0 01.53.22l3.5 3.5a.75.75 0 01-1.06 1.06L10 4.81 6.53 8.28a.75.75 0 01-1.06-1.06l3.5-3.5A.75.75 0 0110 3zm-3.72 9.28a.75.75 0 011.06 0L10 15.19l2.47-2.47a.75.75 0 111.06 1.06l-3.5 3.5a.75.75 0 01-1.06 0l-3.5-3.5a.75.75 0 010-1.06z"
+										clip-rule="evenodd" />
+								</svg>
+							</div>
+							<div
+								id="annex-dropdown"
+								class="absolute hidden z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto dropdown-items">
+								<!-- Annex items will be populated by JS -->
+							</div>
+						</div>
+						<div
+							id="annex-details"
+							class="mt-2 text-sm text-gray-600 p-3 bg-gray-50 rounded-md border border-gray-200 hidden"></div>
+					</div>
+				</div>
+				<div class="mt-8 flex justify-between">
+					<button
+						class="btn-back bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-300">
+						Atgal
+					</button>
+					<button
+						id="btn-step2-next"
+						class="btn-next bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400"
+						disabled>
+						Toliau
+					</button>
+				</div>
+			</div>
 
-        <!-- Step 2: Data Input -->
-        <div id="step-2" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
-            <div class="mb-4">
-                <span class="text-red-500 font-semibold">Scenarijus:</span>
-                <span class="text-gray-700 font-medium ml-2 scenario-display-text"></span>
-            </div>
-            <h2 class="text-xl font-semibold text-gray-700 mb-1">2. Duomenų įvedimas</h2>
-            <p class="text-gray-500 mb-6">Įveskite siuntėjo informaciją ir pasirinkite sutarties priedą.</p>
-            <div class="space-y-6">
-                <div class="relative">
-                    <label for="supplier" class="block text-sm font-medium text-gray-700 mb-1">Iš kur siunčiama (Tiekėjas)</label>
-                    <input type="text" id="supplier" name="supplier" autocomplete="off" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Pradėkite vesti ūkio pavadinimą...">
-                    <div id="autocomplete-list" class="absolute z-20 w-full bg-white border border-gray-300 rounded-b-md shadow-lg hidden autocomplete-items"></div>
-                    <div id="supplier-address" class="mt-2 text-sm text-gray-600 p-3 bg-gray-50 rounded-md border border-gray-200 hidden"></div>
-                </div>
-                <!-- Annex dropdown - initially hidden -->
-                <div id="annex-container" class="hidden">
-                    <label for="annex-search" class="block text-sm font-medium text-gray-700">Priedo numeris</label>
-                    <div class="relative mt-1">
-                        <input type="text" id="annex-search" placeholder="Pasirinkite arba ieškokite..." autocomplete="off" class="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                        <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                             <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M10 3a.75.75 0 01.53.22l3.5 3.5a.75.75 0 01-1.06 1.06L10 4.81 6.53 8.28a.75.75 0 01-1.06-1.06l3.5-3.5A.75.75 0 0110 3zm-3.72 9.28a.75.75 0 011.06 0L10 15.19l2.47-2.47a.75.75 0 111.06 1.06l-3.5 3.5a.75.75 0 01-1.06 0l-3.5-3.5a.75.75 0 010-1.06z" clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                        <div id="annex-dropdown" class="absolute hidden z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto dropdown-items">
-                            <!-- Annex items will be populated by JS -->
-                        </div>
-                    </div>
-                    <div id="annex-details" class="mt-2 text-sm text-gray-600 p-3 bg-gray-50 rounded-md border border-gray-200 hidden"></div>
-                </div>
-            </div>
-            <div class="mt-8 flex justify-between">
-                <button class="btn-back bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-300">Atgal</button>
-                <button id="btn-step2-next" class="btn-next bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400" disabled>Toliau</button>
-            </div>
-        </div>
+			<!-- Step 3: Sample Label -->
+			<div id="step-3" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
+				<div class="mb-4">
+					<span class="text-red-500 font-semibold">Scenarijus:</span>
+					<span class="text-gray-700 font-medium ml-2 scenario-display-text"></span>
+				</div>
+				<h2 class="text-xl font-semibold text-gray-700 mb-1">3. Lipdukas Mėginiui</h2>
+				<p class="text-gray-500 mb-6">Patikrinkite sugeneruotą lipduką ir įveskite kiekį.</p>
 
-        <!-- Step 3: Sample Label -->
-        <div id="step-3" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
-            <div class="mb-4">
-                <span class="text-red-500 font-semibold">Scenarijus:</span>
-                <span class="text-gray-700 font-medium ml-2 scenario-display-text"></span>
-            </div>
-            <h2 class="text-xl font-semibold text-gray-700 mb-1">3. Lipdukas Mėginiui</h2>
-            <p class="text-gray-500 mb-6">Patikrinkite sugeneruotą lipduką ir įveskite kiekį.</p>
-            
-            <div class="mb-6">
-                <label for="quantity-input" class="block text-sm font-medium text-gray-700 font-bold">Kiekis:</label>
-                <input type="text" id="quantity-input" class="mt-1 block w-full max-w-xs px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="pvz., 150t">
-            </div>
+				<div class="mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+					<div>
+						<label for="step3-date" class="block text-sm font-medium text-gray-700 font-bold"
+							>Paėmimo data:</label
+						>
+						<input
+							type="date"
+							id="step3-date"
+							class="mt-1 block w-full max-w-xs px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+					</div>
+					<div>
+						<label for="quantity-input" class="block text-sm font-medium text-gray-700 font-bold"
+							>Kiekis:</label
+						>
+						<input
+							type="text"
+							id="quantity-input"
+							class="mt-1 block w-full max-w-xs px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+							placeholder="pvz., 150t" />
+					</div>
+				</div>
 
-            <div class="space-y-6">
-                <!-- Sample Label -->
-                <div class="border-2 border-dashed rounded-lg p-4 bg-gray-50">
-                    <h3 class="font-bold text-center text-gray-800 mb-2">Mėginio lipdukas</h3>
-                    <div class="grid grid-cols-2 gap-0 border bg-white shadow-sm p-2">
-                        <!-- Left Label -->
-                        <div class="p-2 border-r">
-                            <div class="text-left mb-2 pb-2">
-                                <p class="font-bold text-sm">BALTIJOS JAVAI</p>
-                                <p class="text-xs text-gray-600">Siuntėjas: UAB "Baltijos javai"</p>
-                                <p class="text-xs text-gray-600">Svirbygalos g. 19, Lithuania</p>
-                            </div>
-                            <div class="space-y-1 text-xs">
-                                <p><span class="font-semibold">Pavyzdžio Nr:</span> <span class="label-sample-nr"></span></p>
-                                <p><span class="font-semibold">Paėmimo data:</span> <span class="label-date"></span></p>
-                                <p><span class="font-semibold">Veislė:</span> <span class="label-variety">Laureate</span></p>
-                                <p><span class="font-semibold">Paėmimo vieta:</span> <span class="label-location"></span></p>
-                                <p><span class="font-semibold">Kiekis:</span> <span class="label-quantity"></span></p>
-                            </div>
-                            <div class="mt-2 h-16 border-t border-gray-200"></div>
-                        </div>
-                        <!-- Right Label -->
-                        <div class="p-2">
-                             <div class="text-left mb-2 pb-2">
-                                <p class="font-bold text-sm">BALTIJOS JAVAI</p>
-                                <p class="text-xs text-gray-600">Siuntėjas: UAB "Baltijos javai"</p>
-                                <p class="text-xs text-gray-600">Svirbygalos g. 19, Lithuania</p>
-                            </div>
-                            <div class="space-y-1 text-xs">
-                                <p><span class="font-semibold">Pavyzdžio Nr:</span> <span class="label-sample-nr"></span></p>
-                                <p><span class="font-semibold">Paėmimo data:</span> <span class="label-date"></span></p>
-                                <p><span class="font-semibold">Veislė:</span> <span class="label-variety">Laureate</span></p>
-                                <p><span class="font-semibold">Paėmimo vieta:</span> <span class="label-location"></span></p>
-                                <p><span class="font-semibold">Kiekis:</span> <span class="label-quantity"></span></p>
-                            </div>
-                            <div class="mt-2 h-16 border-t border-gray-200"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-8 flex justify-between">
-                <button class="btn-back bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-300">Atgal</button>
-                <button class="btn-next bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700">Toliau</button>
-            </div>
-        </div>
-        
-        <!-- Step 4: Omniva Order -->
-        <div id="step-4" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
-             <div class="mb-4">
-                <span class="text-red-500 font-semibold">Scenarijus:</span>
-                <span class="text-gray-700 font-medium ml-2 scenario-display-text"></span>
-            </div>
-            <h2 class="text-xl font-semibold text-gray-700 mb-1">4. Omniva Užsakymas</h2>
-            <p class="text-gray-500 mb-6">Pasirinkite paėmimo datą ir sugeneruokite Omniva siuntos lipduką.</p>
-            
-             <!-- Omniva Label Section -->
-             <div class="border-2 border-dashed rounded-lg p-4 bg-gray-50">
-                <div class="text-center mb-4 border-b pb-4">
-                    <div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <div>
-                            <label for="pickup-date" class="block text-sm font-medium text-gray-700 text-left">Kada paimti:</label>
-                            <input type="date" id="pickup-date" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                        </div>
-                        <button id="generate-labels-btn" class="self-end sm:self-center bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 mt-2 sm:mt-0 whitespace-nowrap">Generuoti Omniva etiketę</button>
-                    </div>
-                    <div id="generation-success-msg" class="hidden mt-3 text-sm font-semibold text-green-600 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                        </svg>
-                        <span>Etiketė sėkmingai sugeneruota!</span>
-                    </div>
-                </div>
+				<div class="space-y-6">
+					<!-- Sample Label -->
+					<div class="border-2 border-dashed rounded-lg p-4 bg-gray-50">
+						<h3 class="font-bold text-center text-gray-800 mb-2">Mėginio lipdukas</h3>
+						<div class="grid grid-cols-2 gap-0 border bg-white shadow-sm p-2">
+							<!-- Left Label -->
+							<div class="p-2 border-r">
+								<div class="text-left mb-2 pb-2">
+									<p class="font-bold text-sm">BALTIJOS JAVAI</p>
+									<p class="text-xs text-gray-600">Siuntėjas: UAB "Baltijos javai"</p>
+									<p class="text-xs text-gray-600">Svirbygalos g. 19, Lithuania</p>
+								</div>
+								<div class="space-y-1 text-xs">
+									<p>
+										<span class="font-semibold">Paėmimo data:</span>
+										<span class="label-date"></span>
+									</p>
+									<p>
+										<span class="font-semibold">Veislė:</span>
+										<span class="label-variety"></span>
+									</p>
+									<p>
+										<span class="font-semibold">Paėmimo vieta:</span>
+										<span class="label-location"></span>
+									</p>
+									<p>
+										<span class="font-semibold">Kiekis:</span> <span class="label-quantity"></span>
+									</p>
+								</div>
+								<div class="mt-2 h-16 border-t border-gray-200"></div>
+							</div>
+							<!-- Right Label -->
+							<div class="p-2">
+								<div class="text-left mb-2 pb-2">
+									<p class="font-bold text-sm">BALTIJOS JAVAI</p>
+									<p class="text-xs text-gray-600">Siuntėjas: UAB "Baltijos javai"</p>
+									<p class="text-xs text-gray-600">Svirbygalos g. 19, Lithuania</p>
+								</div>
+								<div class="space-y-1 text-xs">
+									<p>
+										<span class="font-semibold">Paėmimo data:</span>
+										<span class="label-date"></span>
+									</p>
+									<p>
+										<span class="font-semibold">Veislė:</span>
+										<span class="label-variety"></span>
+									</p>
+									<p>
+										<span class="font-semibold">Paėmimo vieta:</span>
+										<span class="label-location"></span>
+									</p>
+									<p>
+										<span class="font-semibold">Kiekis:</span> <span class="label-quantity"></span>
+									</p>
+								</div>
+								<div class="mt-2 h-16 border-t border-gray-200"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="mt-8 flex justify-between">
+					<button
+						class="btn-back bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-300">
+						Atgal
+					</button>
+					<button
+						class="btn-next bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700">
+						Toliau
+					</button>
+				</div>
+			</div>
 
-                <div id="omniva-sticker-preview" class="hidden">
-                    <h3 class="font-bold text-center text-gray-800 mb-2">Omniva lipdukas</h3>
-                    <div class="bg-white p-4 rounded-md shadow-sm border text-gray-800">
-                        <div class="flex justify-between items-start pb-2 border-b">
-                            <div>
-                                <img src="https://www.omniva.lt/img/omniva-logo.svg" alt="Omniva logo" class="h-6">
-                                <p class="text-xs mt-1">Siunta - Kurjeris</p>
-                            </div>
-                            <div class="text-right">
-                                <svg class="w-12 h-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="currentColor" d="M140 140h28v28h-28v-28Zm-56-56H56v28h28V84Zm0 56H56v28h28v-28Zm56-56h28v28h-28V84Zm56 0h28v28h-28V84Zm-56 56h28v28h-28v-28Zm56 0h28v28h-28v-28Zm-56 56h28v28h-28v-28Zm-28-28a12 12 0 1 1-12-12a12 12 0 0 1 12 12Zm112 0h28v28h-28v-28Zm-56 56h28v28h-28v-28Zm-56-56H56v28h28v-28Zm0-56H56v28h28V84Zm168 56h28v28h-28v-28ZM40 40a16 16 0 0 0-16 16v40H8a8 8 0 0 0 0 16h16v40H8a8 8 0 0 0 0 16h16v40a16 16 0 0 0 16 16h40v16a8 8 0 0 0 16 0v-16h40v16a8 8 0 0 0 16 0v-16h40v16a8 8 0 0 0 16 0v-16h40a16 16 0 0 0 16-16v-40h16a8 8 0 0 0 0-16h-16V96h16a8 8 0 0 0 0-16h-16V56a16 16 0 0 0-16-16H56A16 16 0 0 0 40 40Zm16 16h144v144H56V56Z"/></svg>
-                                <p class="text-sm font-mono mt-1" id="omniva-date"></p>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-6 gap-2 mt-2">
-                            <div class="col-span-1 text-xs font-bold transform -rotate-90 origin-center self-center text-center tracking-widest">SIUNTĖJAS</div>
-                            <div class="col-span-5 text-xs pl-2">
-                                <p class="font-bold">Baltijos Javai UAB</p>
-                                <p>Kauno m. Svirbygalos g. 19, LT-46280</p>
-                                <p>Kauno m. sav., Kauno apskr. Lietuva</p>
-                            </div>
-                        </div>
-                         <div class="grid grid-cols-6 gap-2 mt-2 pt-2 border-t">
-                            <div class="col-span-1 text-xs font-bold transform -rotate-90 origin-center self-center text-center tracking-widest">GAVĖJAS</div>
-                            <div class="col-span-5 text-xs pl-2">
-                                <p class="font-bold">UAB Viking Malt</p>
-                                <p>Dovydas</p>
-                                <p>Panevėžio m. Pramonės g. 2, LT-35289, Panevėžys</p>
-                                <p class="mt-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 inline-block mr-1" viewBox="0 0 20 20" fill="currentColor"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg>
-                                    <span>37069151153</span>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="py-2 mt-2 border-y">
-                            <p class="text-xs font-semibold">Būtinai pasiskambinti prieš atvykstant</p>
-                        </div>
-                        <div class="mt-2 text-center">
-                            <div class="barcode">*CC780308494EE*</div>
-                            <p class="text-xs font-mono tracking-widest">CC780308494EE</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-             <div class="mt-8 flex justify-between">
-                <button class="btn-back bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-300">Atgal</button>
-                <button class="btn-next bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700">Toliau</button>
-            </div>
-        </div>
+			<!-- Step 4: Omniva Order -->
+			<div id="step-4" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
+				<div class="mb-4">
+					<span class="text-red-500 font-semibold">Scenarijus:</span>
+					<span class="text-gray-700 font-medium ml-2 scenario-display-text"></span>
+				</div>
+				<h2 class="text-xl font-semibold text-gray-700 mb-1">4. Siuntos Užsakymas</h2>
+				<p class="text-gray-500 mb-6">Pasirinkite paėmimo datą ir sugeneruokite siuntos lipduką.</p>
 
+				<!-- Omniva Label Section -->
+				<div class="border-2 border-dashed rounded-lg p-4 bg-gray-50">
+					<div class="text-center mb-4 border-b pb-4">
+						<div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+							<div>
+								<label for="pickup-date" class="block text-sm font-medium text-gray-700 text-left"
+									>Kada paimti:</label
+								>
+								<input
+									type="date"
+									id="pickup-date"
+									class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+							</div>
+							<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full sm:w-auto">
+								<div>
+									<label for="ship-city" class="block text-sm font-medium text-gray-700 text-left"
+										>Miestas</label
+									>
+									<input
+										id="ship-city"
+										type="text"
+										class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+								</div>
+								<div>
+									<label for="ship-street" class="block text-sm font-medium text-gray-700 text-left"
+										>Gatvė</label
+									>
+									<input
+										id="ship-street"
+										type="text"
+										class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+								</div>
+								<div>
+									<label
+										for="ship-building"
+										class="block text-sm font-medium text-gray-700 text-left"
+										>Pastato nr.</label
+									>
+									<input
+										id="ship-building"
+										type="text"
+										class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+								</div>
+								<div>
+									<label for="ship-postal" class="block text-sm font-medium text-gray-700 text-left"
+										>Pašto kodas</label
+									>
+									<input
+										id="ship-postal"
+										type="text"
+										inputmode="numeric"
+										pattern="\\d{5}"
+										maxlength="5"
+										class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+								</div>
+							</div>
+							<button
+								id="generate-labels-btn"
+								class="self-end sm:self-center bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 mt-2 sm:mt-0 whitespace-nowrap">
+								Generuoti siuntos etiketę
+							</button>
+						</div>
+						<div
+							id="generation-success-msg"
+							class="hidden mt-3 text-sm font-semibold text-green-600 flex items-center justify-center">
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								class="h-5 w-5 mr-2"
+								viewBox="0 0 20 20"
+								fill="currentColor">
+								<path
+									fill-rule="evenodd"
+									d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+									clip-rule="evenodd" />
+							</svg>
+							<span>Etiketė sėkmingai sugeneruota!</span>
+						</div>
+					</div>
 
-        <!-- Step 5: Email Sending -->
-        <div id="step-5" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
-            <div class="mb-4">
-                <span class="text-red-500 font-semibold">Scenarijus:</span>
-                <span class="text-gray-700 font-medium ml-2 scenario-display-text"></span>
-            </div>
-            <h2 class="text-xl font-semibold text-gray-700 mb-1">5. El. laiško siuntimas</h2>
-            <p class="text-gray-500 mb-6">Patikrinkite suformuotą el. laišką ūkiui ir prisegtus dokumentus.</p>
-            <div class="border rounded-lg overflow-hidden bg-white shadow-sm">
-                <div class="p-4 border-b bg-gray-50 space-y-2">
-                    <div>
-                        <label for="email-to-input" class="text-sm font-medium text-gray-500">Kam:</label>
-                        <input type="email" id="email-to-input" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label for="email-subject-input" class="text-sm font-medium text-gray-500">Tema:</label>
-                        <input type="text" id="email-subject-input" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                </div>
-                <div class="p-4">
-                    <label for="email-body-input" class="text-sm font-medium text-gray-500">Laiško tekstas:</label>
-                    <textarea id="email-body-input" rows="10" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
-                </div>
+					<div id="omniva-sticker-preview" class="hidden">
+						<h3 class="font-bold text-center text-gray-800 mb-2">Siuntos lipdukas</h3>
+						<div class="bg-white p-4 rounded-md shadow-sm border text-gray-800">
+							<div class="flex justify-between items-start pb-2 border-b">
+								<div>
+									<p class="text-xs mt-1">Siunta - Kurjeris</p>
+								</div>
+								<div class="text-right">
+									<svg class="w-12 h-12" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+										<path
+											fill="currentColor"
+											d="M140 140h28v28h-28v-28Zm-56-56H56v28h28V84Zm0 56H56v28h28v-28Zm56-56h28v28h-28V84Zm56 0h28v28h-28V84Zm-56 56h28v28h-28v-28Zm56 0h28v28h-28v-28Zm-56 56h28v28h-28v-28Zm-28-28a12 12 0 1 1-12-12a12 12 0 0 1 12 12Zm112 0h28v28h-28v-28Zm-56 56h28v28h-28v-28Zm-56-56H56v28h28v-28Zm0-56H56v28h28V84Zm168 56h28v28h-28v-28ZM40 40a16 16 0 0 0-16 16v40H8a8 8 0 0 0 0 16h16v40H8a8 8 0 0 0 0 16h16v40a16 16 0 0 0 16 16h40v16a8 8 0 0 0 16 0v-16h40v16a8 8 0 0 0 16 0v-16h40v16a8 8 0 0 0 16 0v-16h40a16 16 0 0 0 16-16v-40h16a8 8 0 0 0 0-16h-16V96h16a8 8 0 0 0 0-16h-16V56a16 16 0 0 0-16-16H56A16 16 0 0 0 40 40Zm16 16h144v144H56V56Z" />
+									</svg>
+									<p class="text-sm font-mono mt-1" id="omniva-date"></p>
+								</div>
+							</div>
+							<div class="grid grid-cols-6 gap-3 mt-3">
+								<div
+									class="col-span-1 text-xs font-bold transform -rotate-90 origin-center self-center text-center tracking-widest">
+									SIUNTĖJAS
+								</div>
+								<div class="col-span-5 text-xs pl-2">
+									<p class="font-bold">Baltijos Javai UAB</p>
+									<p>Kauno m. Svirbygalos g. 19, LT-46280</p>
+									<p>Kauno m. sav., Kauno apskr. Lietuva</p>
+								</div>
+							</div>
+							<div class="grid grid-cols-6 gap-3 mt-3 pt-2 border-t">
+								<div
+									class="col-span-1 text-xs font-bold transform -rotate-90 origin-center self-center text-center tracking-widest">
+									GAVĖJAS
+								</div>
+								<div class="col-span-5 text-xs pl-2">
+									<p class="font-bold">UAB Viking Malt</p>
+									<p>Dovydas</p>
+									<p>Panevėžio m. Pramonės g. 2, LT-35289, Panevėžys</p>
+									<p class="mt-1">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											class="h-3 w-3 inline-block mr-1"
+											viewBox="0 0 20 20"
+											fill="currentColor">
+											<path
+												d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path>
+										</svg>
+										<span>+370 691 51153</span>
+									</p>
+								</div>
+							</div>
+							<div class="py-2 mt-2 border-y">
+								<p class="text-xs font-semibold">Būtinai pasiskambinti prieš atvykstant</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="mt-8 flex justify-between">
+					<button
+						class="btn-back bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-300">
+						Atgal
+					</button>
+					<button
+						class="btn-next bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed">
+						Toliau
+					</button>
+				</div>
+			</div>
 
-                <div class="p-4 border-t bg-gray-50">
-                    <h4 class="text-sm font-semibold mb-2 text-gray-600">Prisegtukai (2):</h4>
-                    <div class="flex space-x-3">
-                        <div class="flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-full">
-                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                            meginio_lipdukas.pdf
-                        </div>
-                        <div class="flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-full">
-                             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                            omniva_siunta.pdf
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-8 flex justify-between">
-                <button class="btn-back bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-300">Atgal</button>
-                <button class="btn-next bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700">Siųsti</button>
-            </div>
-        </div>
+			<!-- Step 5: Email Sending -->
+			<div id="step-5" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
+				<div class="mb-4">
+					<span class="text-red-500 font-semibold">Scenarijus:</span>
+					<span class="text-gray-700 font-medium ml-2 scenario-display-text"></span>
+				</div>
+				<h2 class="text-xl font-semibold text-gray-700 mb-1">5. El. laiško siuntimas</h2>
+				<p class="text-gray-500 mb-6">
+					Patikrinkite suformuotą el. laišką ūkiui ir prisegtus dokumentus.
+				</p>
+				<div class="border rounded-lg overflow-hidden bg-white shadow-sm">
+					<div class="p-4 border-b bg-gray-50 space-y-2">
+						<div>
+							<label for="email-to-input" class="text-sm font-medium text-gray-500">Kam:</label>
+							<input
+								type="email"
+								id="email-to-input"
+								class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+						</div>
+						<div>
+							<label for="email-subject-input" class="text-sm font-medium text-gray-500"
+								>Tema:</label
+							>
+							<input
+								type="text"
+								id="email-subject-input"
+								class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+						</div>
+					</div>
+					<div class="p-4">
+						<label for="email-body-input" class="text-sm font-medium text-gray-500"
+							>Laiško tekstas:</label
+						>
+						<textarea
+							id="email-body-input"
+							rows="10"
+							class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
+						<div class="mt-2 text-sm text-red-600">
+							Svarbu: jeigu mėginys bus be lipduko, kuris yra sukurtas jus identifikuoti, tyrimas
+							laboratorijoje nebus atliekamas.
+						</div>
+					</div>
 
-        <!-- Step 6: Confirmation -->
-        <div id="step-6" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
-            <div class="text-center">
-                 <div class="mb-4">
-                    <span class="text-red-500 font-semibold">Scenarijus:</span>
-                    <span class="text-gray-700 font-medium ml-2 scenario-display-text"></span>
-                </div>
-                <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
-                    <svg class="h-10 w-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                </div>
-                <h2 class="text-2xl font-bold text-gray-800">Sėkmingai išsiųsta!</h2>
-                <p class="text-gray-500 mt-2 mb-6">Laiškas ir dokumentai buvo sėkmingai išsiųsti tiekėjui.</p>
-            </div>
-             <div class="mt-8">
-                <h3 class="text-lg font-semibold text-gray-700 mb-4">Anksčiau išsiųstų mėginių sąrašas</h3>
-                <div class="overflow-x-auto border rounded-lg">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vadybininkas</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Paėmimo Data</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mėginio Nr.</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tiekėjas</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Paėmimo Vieta</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Siunčiama į</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sutarties Priedas</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statusas</th>
-                            </tr>
-                        </thead>
-                        <tbody id="history-table-body" class="bg-white divide-y divide-gray-200">
-                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">Andrius</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">2025-09-10</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">BJ25 M229</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">Pauliaus Jurgeliūno ūkis</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">Kėdainių r. sav.</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">VM</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">SUT00627-P3</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Išsiųsta</span></td>
-                            </tr>
-                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">Andrius</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">2025-09-08</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">BJ25 M228</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">UAB „Drąsutaičiai“</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">Pakruojo r. sav.</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">BIL</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">SUT00588-P2</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Išsiųsta</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="mt-8 text-center">
-                <button id="btn-restart" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700">Pradėti iš naujo</button>
-            </div>
-        </div>
-    </div>
+					<div class="p-4 border-t bg-gray-50">
+						<h4 class="text-sm font-semibold mb-2 text-gray-600">Prisegtukai (2):</h4>
+						<div
+							id="attachments-cooldown-msg"
+							class="hidden text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-1 mb-2">
+							Failai ruošiami. Galėsite atsisiųsti po
+							<span id="attachments-cooldown-seconds">20</span> s.
+						</div>
+						<div class="flex space-x-3">
+							<button
+								id="download-sample-sticker"
+								class="flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-full hover:bg-blue-200 cursor-pointer">
+								<svg
+									class="w-4 h-4 mr-1.5"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+									xmlns="http://www.w3.org/2000/svg">
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+								</svg>
+								meginio_lipdukas.pdf
+							</button>
+							<button
+								id="download-post-sticker"
+								class="flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-full hover:bg-blue-200 cursor-pointer">
+								<svg
+									class="w-4 h-4 mr-1.5"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+									xmlns="http://www.w3.org/2000/svg">
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+								</svg>
+								siuntos_lipdukas.pdf
+							</button>
+						</div>
+					</div>
+				</div>
+				<div class="mt-8 flex justify-between">
+					<button
+						class="btn-back bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-300">
+						Atgal
+					</button>
+					<div class="flex items-center">
+						<button
+							class="btn-next bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed">
+							Siųsti
+						</button>
+						<span id="step5-sending" class="hidden inline-flex items-center ml-3 text-green-600">
+							<svg
+								class="animate-spin h-5 w-5 mr-2"
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24">
+								<circle
+									class="opacity-25"
+									cx="12"
+									cy="12"
+									r="10"
+									stroke="currentColor"
+									stroke-width="4"></circle>
+								<path
+									class="opacity-75"
+									fill="currentColor"
+									d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+							</svg>
+							Siunčiama...
+						</span>
+					</div>
+				</div>
+			</div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    let currentStep = 1;
-    const totalSteps = 6;
-    let sampleCounter = 230; // Start counter for new samples
-    let currentSampleNumber = null;
-    let selectedScenario = null;
-    let selectedScenarioText = '';
-    
-    // Mock data for suppliers with associated annexes
-    const suppliers = [
-        {
-            name: 'Klauso ūkis, UAB',
-            address: 'Domeikų g. 8, Domeikių k., Žagarės sen., Joniškio r. sav., Šiaulių apskr., LT-84374',
-            email: 'info@klauso.ukis.lt',
-            location: 'Joniškio r. sav.',
-            annexes: [
-                { nr: 'SUT00595-P1', date: '2025-10-15', quantity: '150t', status: 'aktyvus' },
-                { nr: 'SUT00642-P1', date: '2025-11-01', quantity: '200t', status: 'aktyvus' },
-                { nr: 'SUT00642-P2', date: '2025-11-20', quantity: '50t', status: 'vykdomas' }
-            ]
-        },
-        {
-            name: 'Pauliaus Jurgeliūno ūkis',
-            address: 'Liepų g. 1, Kėdainiai, LT-57345',
-            email: 'info@jurgeliuno.ukis.lt',
-            location: 'Kėdainių r. sav.',
-            annexes: [
-                { nr: 'SUT00627-P3', date: '2025-09-30', quantity: '100t', status: 'aktyvus' }
-            ]
-        },
-        {
-            name: 'UAB „Drąsutaičiai“',
-            address: 'Parko g. 15, Drąsutaičiai, Pakruojo r. sav., LT-83451',
-            email: 'info@drasutaiciai.lt',
-            location: 'Pakruojo r. sav.',
-            annexes: [
-                { nr: 'SUT00588-P2', date: '2025-10-01', quantity: '250t', status: 'aktyvus' },
-                { nr: 'SUT00588-P4', date: '2025-10-25', quantity: '175t', status: 'pasyvus' }
-            ]
-        },
-        {
-            name: 'Vilkėno ūkis PŪB',
-            address: 'Vilkėno g. 3, Šilutės r. sav., LT-99145',
-            email: 'info@vilkeno.ukis.lt',
-            location: 'Šilutės r. sav.',
-            annexes: [
-                { nr: 'SUT00711-P1', date: '2026-01-15', quantity: '120t', status: 'aktyvus' }
-            ]
-        },
-        {
-            name: 'Nemuno ūkis PŪB',
-            address: 'Nemuno g. 101, Jurbarko r. sav., LT-74123',
-            email: 'info@nemuno.ukis.lt',
-            location: 'Jurbarko r. sav.',
-            annexes: [
-                { nr: 'SUT00725-P1', date: '2025-12-05', quantity: '300t', status: 'aktyvus' },
-                { nr: 'SUT00725-P2', date: '2025-12-20', quantity: '150t', status: 'aktyvus' }
-            ]
-        }
-    ];
-    let selectedSupplier = null;
-    let selectedAnnex = null;
+			<!-- Step 6: Confirmation -->
+			<div id="step-6" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
+				<div class="text-center">
+					<div class="mb-4">
+						<span class="text-red-500 font-semibold">Scenarijus:</span>
+						<span class="text-gray-700 font-medium ml-2 scenario-display-text"></span>
+					</div>
+					<div
+						class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
+						<svg
+							class="h-10 w-10 text-green-600"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M5 13l4 4L19 7"></path>
+						</svg>
+					</div>
+					<h2 class="text-2xl font-bold text-gray-800">Sėkmingai išsiųsta!</h2>
+					<p class="text-gray-500 mt-2 mb-6">
+						Laiškas ir dokumentai buvo sėkmingai išsiųsti tiekėjui.
+					</p>
+				</div>
+				<div class="mt-8">
+					<h3 class="text-lg font-semibold text-gray-700 mb-4">
+						Anksčiau išsiųstų mėginių sąrašas
+					</h3>
+					<div class="overflow-x-auto border rounded-lg">
+						<table class="min-w-full divide-y divide-gray-200">
+							<thead class="bg-gray-50">
+								<tr>
+									<th
+										class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Vadybininkas
+									</th>
+									<th
+										class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Paėmimo Data
+									</th>
+									<th
+										class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Mėginio Nr.
+									</th>
+									<th
+										class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Tiekėjas
+									</th>
+									<th
+										class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Paėmimo Vieta
+									</th>
+									<th
+										class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Siunčiama į
+									</th>
+									<th
+										class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Sutarties Priedas
+									</th>
+								</tr>
+							</thead>
+							<tbody id="history-table-body" class="bg-white divide-y divide-gray-200">
+								<tr>
+									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">Andrius</td>
+									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">2025-09-10</td>
+									<td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+										BJ25 M229
+									</td>
+									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+										Pauliaus Jurgeliūno ūkis
+									</td>
+									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+										Kėdainių r. sav.
+									</td>
+									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">VM</td>
+									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">SUT00627-P3</td>
+									<td class="px-6 py-4 whitespace-nowrap text-sm">
+										<span
+											class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+											>Išsiųsta</span
+										>
+									</td>
+								</tr>
+								<tr>
+									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">Andrius</td>
+									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">2025-09-08</td>
+									<td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+										BJ25 M228
+									</td>
+									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+										UAB „Drąsutaičiai"
+									</td>
+									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+										Pakruojo r. sav.
+									</td>
+									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">BIL</td>
+									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">SUT00588-P2</td>
+									<td class="px-6 py-4 whitespace-nowrap text-sm">
+										<span
+											class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
+											>Išsiųsta</span
+										>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="mt-8 text-center">
+					<button
+						id="btn-restart"
+						class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700">
+						Pradėti iš naujo
+					</button>
+				</div>
+			</div>
+		</div>
 
-    // --- DOM Elements ---
-    const steps = document.querySelectorAll('.step-card');
-    const progressBar = document.getElementById('progressBar');
-    const nextButtons = document.querySelectorAll('.btn-next');
-    const backButtons = document.querySelectorAll('.btn-back');
-    const step1NextBtn = document.getElementById('btn-step1-next');
-    const step2NextBtn = document.getElementById('btn-step2-next');
-    const scenarioRadios = document.querySelectorAll('input[name="scenario"]');
-    const supplierInput = document.getElementById('supplier');
-    const supplierAddressDiv = document.getElementById('supplier-address');
-    const autocompleteList = document.getElementById('autocomplete-list');
-    const annexContainer = document.getElementById('annex-container');
-    const annexSearchInput = document.getElementById('annex-search');
-    const annexDropdown = document.getElementById('annex-dropdown');
-    const annexDetailsDiv = document.getElementById('annex-details');
-    const pickupDateInput = document.getElementById('pickup-date');
-    const generateLabelsBtn = document.getElementById('generate-labels-btn');
-    const omnivaStickerPreview = document.getElementById('omniva-sticker-preview');
-    const quantityInput = document.getElementById('quantity-input');
-    const generationSuccessMsg = document.getElementById('generation-success-msg');
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				let currentStep = 1;
+				const totalSteps = 6;
+				let sampleCounter = 230; // Start counter for new samples
+				let currentSampleNumber = null;
+				let selectedScenario = null;
+				let selectedScenarioText = '';
 
-    // --- Functions ---
-    const updateProgressBar = () => {
-        const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
-        progressBar.style.width = `${progress}%`;
-    };
+				// Suppliers will be fetched from the backend webhook (same JSON shape as before)
+				let suppliers = [];
+				const SUPPLIERS_ENDPOINT =
+					'https://operations.baltijosjavai.lt/webhook/get-clients-with-data';
+				const UPDATE_ENDPOINT = 'https://operations.baltijosjavai.lt/webhook/update-sample';
+				const loadSuppliers = async token => {
+					try {
+						const resp = await fetch(SUPPLIERS_ENDPOINT, {
+							headers: { accept: 'application/json', Authorization: token || '' },
+						});
+						if (!resp.ok) throw new Error('HTTP ' + resp.status);
+						const data = await resp.json();
+						if (Array.isArray(data)) {
+							suppliers = data;
+						} else {
+							throw new Error('Neteisingas duomenų formatas');
+						}
+					} catch (err) {
+						console.error('Nepavyko užkrauti tiekėjų sąrašo iš webhook:', err);
+						throw err;
+					}
+				};
+				let selectedSupplier = null;
+				let selectedAnnex = null;
+				let authToken = '';
 
-    const showStep = (stepNumber) => {
-        steps.forEach((step, index) => {
-            step.classList.toggle('visible-step', index + 1 === stepNumber);
-            step.classList.toggle('hidden-step', index + 1 !== stepNumber);
-        });
-         if (stepNumber === 4) { // Reset Omniva sticker when entering its step
-            omnivaStickerPreview.classList.add('hidden');
-            generationSuccessMsg.classList.add('hidden');
-            pickupDateInput.value = '';
-        }
-        currentStep = stepNumber;
-        updateProgressBar();
-    };
-    
-    const updateUIData = () => {
-        if (!selectedSupplier || !selectedAnnex) return;
-        
-        // This function is now primarily for setting up Step 3
-        if (currentStep === 2) {
-             currentSampleNumber = 'BJ25 M' + sampleCounter++;
-             const selectedAnnexData = selectedSupplier.annexes.find(a => a.nr === selectedAnnex);
-             const initialQuantity = selectedAnnexData ? selectedAnnexData.quantity : 'N/A';
-             quantityInput.value = initialQuantity;
-             document.querySelectorAll('.label-quantity').forEach(el => el.textContent = initialQuantity);
-        
-            const today = new Date();
-            const deliveryDate = new Date();
-            deliveryDate.setDate(today.getDate() + 3);
-            const formattedDateLT = deliveryDate.toLocaleDateString('lt-LT');
-            
-            document.querySelectorAll('.label-sample-nr').forEach(el => el.textContent = currentSampleNumber);
-            document.querySelectorAll('.label-date').forEach(el => el.textContent = formattedDateLT);
-            document.querySelectorAll('.label-location').forEach(el => el.textContent = selectedSupplier.location);
-        }
-    };
-    
-    const validateStep2 = () => {
-        step2NextBtn.disabled = !(selectedSupplier && selectedAnnex && supplierInput.value === selectedSupplier.name);
-    };
+				// --- DOM Elements ---
+				const steps = document.querySelectorAll('.step-card');
+				const progressBar = document.getElementById('progressBar');
+				const nextButtons = document.querySelectorAll('.btn-next');
+				const backButtons = document.querySelectorAll('.btn-back');
+				const step1NextBtn = document.getElementById('btn-step1-next');
+				const step1Loading = document.getElementById('step1-loading');
+				const tokenInput = document.getElementById('auth-token');
+				const step2NextBtn = document.getElementById('btn-step2-next');
+				const scenarioRadios = document.querySelectorAll('input[name="scenario"]');
+				const supplierInput = document.getElementById('supplier');
+				const supplierAddressDiv = document.getElementById('supplier-address');
+				const autocompleteList = document.getElementById('autocomplete-list');
+				const annexContainer = document.getElementById('annex-container');
+				const annexSearchInput = document.getElementById('annex-search');
+				const annexDropdown = document.getElementById('annex-dropdown');
+				const annexDetailsDiv = document.getElementById('annex-details');
+				const pickupDateInput = document.getElementById('pickup-date');
+				const generateLabelsBtn = document.getElementById('generate-labels-btn');
+				const omnivaStickerPreview = document.getElementById('omniva-sticker-preview');
+				const quantityInput = document.getElementById('quantity-input');
+				const generationSuccessMsg = document.getElementById('generation-success-msg');
+				const step4NextBtn = document.querySelector('#step-4 .btn-next');
+				const step5SendBtn = document.querySelector('#step-5 .btn-next');
+				let omnivaGenerated = false;
+				let generationMsgTimeout = null;
+				let attachmentsReadyAt = 0;
+				let attachmentsCooldownTimer = null;
 
-    const resetAnnex = () => {
-        annexContainer.classList.add('hidden');
-        annexDetailsDiv.classList.add('hidden');
-        annexSearchInput.value = '';
-        selectedAnnex = null;
-        validateStep2();
-    };
-    
-    // --- Event Listeners ---
-    nextButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            if (currentStep < totalSteps) {
-                if (currentStep === 2) {
-                    updateUIData();
-                } else if (currentStep === 4) { // When leaving Omniva step, update email info
-                    const emailToInput = document.getElementById('email-to-input');
-                    const emailSubjectInput = document.getElementById('email-subject-input');
-                    const emailBodyInput = document.getElementById('email-body-input');
-                    
-                    emailToInput.value = selectedSupplier.email;
-                    emailSubjectInput.value = `Mėginio paėmimas pagal sutartį ${selectedAnnex}`;
+				function showGenerationSuccessOnce() {
+					if (generationMsgTimeout) {
+						clearTimeout(generationMsgTimeout);
+						generationMsgTimeout = null;
+					}
+					generationSuccessMsg.classList.remove('hidden');
+					generationMsgTimeout = setTimeout(() => {
+						generationSuccessMsg.classList.add('hidden');
+						generationMsgTimeout = null;
+					}, 3000);
+				}
 
-                    let formattedDateLT;
-                    if (pickupDateInput.value) {
-                         const dateObj = new Date(pickupDateInput.value);
-                         const userTimezoneOffset = dateObj.getTimezoneOffset() * 60000;
-                         const adjustedDate = new Date(dateObj.getTime() + userTimezoneOffset);
-                         formattedDateLT = adjustedDate.toLocaleDateString('lt-LT');
-                    } else {
-                         const deliveryDate = new Date();
-                         deliveryDate.setDate(new Date().getDate() + 3);
-                         formattedDateLT = deliveryDate.toLocaleDateString('lt-LT');
-                    }
-                    
-                    const bodyText = `Sveiki,
+				function setAttachmentButtonsEnabled(enabled) {
+					const sampleBtn = document.getElementById('download-sample-sticker');
+					const postBtn = document.getElementById('download-post-sticker');
+					[sampleBtn, postBtn].forEach(btn => {
+						if (!btn) return;
+						btn.disabled = !enabled;
+						if (enabled) {
+							btn.classList.remove('opacity-50', 'cursor-not-allowed');
+							btn.classList.add('cursor-pointer');
+						} else {
+							btn.classList.add('opacity-50', 'cursor-not-allowed');
+							btn.classList.remove('cursor-pointer');
+						}
+					});
+				}
 
-Kurjeris atvyks ${formattedDateLT} | 12:00-13:30 | ${selectedSupplier.address}.
+				function startAttachmentsCooldown(seconds = 20) {
+					const msg = document.getElementById('attachments-cooldown-msg');
+					const secs = document.getElementById('attachments-cooldown-seconds');
+					attachmentsReadyAt = Date.now() + seconds * 1000;
+					if (msg) msg.classList.remove('hidden');
+					setAttachmentButtonsEnabled(false);
+					if (step5SendBtn) step5SendBtn.disabled = true;
+					if (step5SendBtn) {
+						step5SendBtn.classList.add('disabled:cursor-not-allowed');
+					}
+					if (secs) secs.textContent = String(seconds);
+					if (attachmentsCooldownTimer) {
+						clearInterval(attachmentsCooldownTimer);
+						attachmentsCooldownTimer = null;
+					}
+					attachmentsCooldownTimer = setInterval(() => {
+						const remainMs = attachmentsReadyAt - Date.now();
+						const remain = Math.max(0, Math.ceil(remainMs / 1000));
+						if (secs) secs.textContent = String(remain);
+						if (remain <= 0) {
+							clearInterval(attachmentsCooldownTimer);
+							attachmentsCooldownTimer = null;
+							if (msg) msg.classList.add('hidden');
+							setAttachmentButtonsEnabled(true);
+							if (step5SendBtn && omnivaGenerated) step5SendBtn.disabled = false;
+							if (step5SendBtn) step5SendBtn.classList.remove('disabled:cursor-not-allowed');
+						}
+					}, 200);
+				}
+
+				function attachmentsAvailable() {
+					return Date.now() >= attachmentsReadyAt;
+				}
+
+				// --- Download helpers for attachments in Step 5 ---
+				async function downloadWithAuth(url, filename) {
+					try {
+						const headers = { accept: 'application/pdf', 'content-type': 'application/json' };
+						if (authToken) headers['Authorization'] = authToken;
+						const clientId = selectedSupplier
+							? selectedSupplier.Id ?? selectedSupplier.id ?? null
+							: null;
+						if (!clientId) {
+							alert('Nepasirinktas klientas – negalima atsisiųsti failo.');
+							return;
+						}
+						if (!attachmentsAvailable()) {
+							const remain = Math.max(0, Math.ceil((attachmentsReadyAt - Date.now()) / 1000));
+							alert('Failai dar ruošiami. Bandykite po ' + remain + ' s.');
+							return;
+						}
+						const resp = await fetch(url, {
+							method: 'POST',
+							headers,
+							body: JSON.stringify({ clientId }),
+						});
+						if (!resp.ok) throw new Error('HTTP ' + resp.status);
+						const blob = await resp.blob();
+						const a = document.createElement('a');
+						const objectUrl = URL.createObjectURL(blob);
+						a.href = objectUrl;
+						a.download = filename;
+						document.body.appendChild(a);
+						a.click();
+						a.remove();
+						URL.revokeObjectURL(objectUrl);
+					} catch (e) {
+						console.error('Download failed:', e);
+						alert('Nepavyko atsisiųsti failo. Patikrinkite ryšį ir bandykite dar kartą.');
+					}
+				}
+				const sampleStickerBtn = document.getElementById('download-sample-sticker');
+				if (sampleStickerBtn) {
+					sampleStickerBtn.addEventListener('click', () => {
+						downloadWithAuth(
+							'https://operations.baltijosjavai.lt/webhook/download-sample-sticker',
+							'meginio_lipdukas.pdf'
+						);
+					});
+				}
+				const postStickerBtn = document.getElementById('download-post-sticker');
+				if (postStickerBtn) {
+					postStickerBtn.addEventListener('click', () => {
+						downloadWithAuth(
+							'https://operations.baltijosjavai.lt/webhook/download-post-sticker',
+							'siuntos_lipdukas.pdf'
+						);
+					});
+				}
+
+				// --- Functions ---
+				const updateProgressBar = () => {
+					const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+					progressBar.style.width = `${progress}%`;
+				};
+
+				const showStep = stepNumber => {
+					steps.forEach((step, index) => {
+						step.classList.toggle('visible-step', index + 1 === stepNumber);
+						step.classList.toggle('hidden-step', index + 1 !== stepNumber);
+					});
+					if (stepNumber === 4) {
+						// Reset Siuntos sticker when entering its step
+						omnivaStickerPreview.classList.add('hidden');
+						generationSuccessMsg.classList.add('hidden');
+						// Keep any date chosen in Step 3; if empty, initialize from Step 3 date
+						if (!pickupDateInput.value) {
+							const step3DateEl = document.getElementById('step3-date');
+							if (step3DateEl && step3DateEl.value) {
+								pickupDateInput.value = step3DateEl.value;
+							}
+						}
+						// Reflect the date into the printed date field
+						const omnivaDateEl = document.getElementById('omniva-date');
+						if (omnivaDateEl && pickupDateInput.value) {
+							omnivaDateEl.textContent = pickupDateInput.value;
+						}
+						// Prefill address inputs from selected supplier if structured address exists
+						const addr =
+							selectedSupplier &&
+							selectedSupplier.address &&
+							typeof selectedSupplier.address === 'object'
+								? selectedSupplier.address
+								: null;
+						const cityEl = document.getElementById('ship-city');
+						const streetEl = document.getElementById('ship-street');
+						const buildingEl = document.getElementById('ship-building');
+						const postalEl = document.getElementById('ship-postal');
+						if (addr) {
+							if (cityEl) cityEl.value = addr.city || '';
+							if (streetEl) streetEl.value = addr.street || '';
+							if (buildingEl) buildingEl.value = addr.building || addr.building_number || '';
+							if (postalEl) postalEl.value = addr.postal_code || '';
+						}
+						// Require label generation before proceeding
+						if (step4NextBtn) step4NextBtn.disabled = !omnivaGenerated;
+						// Show generate button if not yet generated
+						if (!omnivaGenerated && generateLabelsBtn) {
+							generateLabelsBtn.classList.remove('hidden');
+						}
+					}
+					if (stepNumber === 5) {
+						// Grey out and disable Step 5 if label not generated (safety)
+						const step5 = document.getElementById('step-5');
+						if (!omnivaGenerated) {
+							if (step5) step5.classList.add('opacity-50');
+							if (step5SendBtn) step5SendBtn.disabled = true;
+						} else {
+							if (step5) step5.classList.remove('opacity-50');
+							if (step5SendBtn) step5SendBtn.disabled = false;
+						}
+						// Start a 25s cooldown for attachments when entering Step 5
+						startAttachmentsCooldown(20);
+						// Also disable send while attachments are not ready
+						if (step5SendBtn && !attachmentsAvailable()) step5SendBtn.disabled = true;
+					}
+					currentStep = stepNumber;
+					updateProgressBar();
+				};
+
+				const updateUIData = () => {
+					if (!selectedSupplier || !selectedAnnex) return;
+
+					// This function is now primarily for setting up Step 3
+					if (currentStep === 2) {
+						currentSampleNumber = 'BJ25 M' + sampleCounter++;
+						const selectedAnnexData = (
+							selectedSupplier.priedai ||
+							selectedSupplier.annexes ||
+							[]
+						).find(a => a.nr === selectedAnnex);
+						const initialQuantity = selectedAnnexData ? selectedAnnexData.quantity : 'N/A';
+						quantityInput.value = initialQuantity;
+						document
+							.querySelectorAll('.label-quantity')
+							.forEach(el => (el.textContent = initialQuantity));
+
+						const today = new Date();
+						const deliveryDate = new Date();
+						deliveryDate.setDate(today.getDate() + 3);
+						const formattedDateLT = deliveryDate.toLocaleDateString('lt-LT');
+						const formattedDateISO = deliveryDate.toISOString().split('T')[0];
+
+						document
+							.querySelectorAll('.label-sample-nr')
+							.forEach(el => (el.textContent = currentSampleNumber));
+						document
+							.querySelectorAll('.label-date')
+							.forEach(el => (el.textContent = formattedDateLT));
+						// Initialize both date inputs to the same ISO date to keep them in sync by default
+						const step3DateInputEl = document.getElementById('step3-date');
+						if (step3DateInputEl) step3DateInputEl.value = formattedDateISO;
+						if (pickupDateInput) pickupDateInput.value = formattedDateISO;
+						document
+							.querySelectorAll('.label-location')
+							.forEach(
+								el => (el.textContent = selectedSupplier.address || selectedSupplier.location || '')
+							);
+						// Populate variety from annex (annex.veisle if provided)
+						document
+							.querySelectorAll('.label-variety')
+							.forEach(
+								el =>
+									(el.textContent =
+										(selectedAnnexData &&
+											(selectedAnnexData.veisle || selectedAnnexData.variety || '')) ||
+										'')
+							);
+					}
+				};
+
+				const validateStep2 = () => {
+					step2NextBtn.disabled = !(
+						selectedSupplier &&
+						selectedAnnex &&
+						supplierInput.value === selectedSupplier.name
+					);
+				};
+
+				const resetAnnex = () => {
+					annexContainer.classList.add('hidden');
+					annexDetailsDiv.classList.add('hidden');
+					annexSearchInput.value = '';
+					selectedAnnex = null;
+					validateStep2();
+				};
+
+				const validateStep1 = () => {
+					const scenarioChosen = !!document.querySelector('input[name="scenario"]:checked');
+					const tokenPresent = !!(tokenInput && tokenInput.value.trim());
+					step1NextBtn.disabled = !(scenarioChosen && tokenPresent);
+				};
+
+				// --- Event Listeners ---
+				nextButtons.forEach(button => {
+					button.addEventListener('click', () => {
+						if (currentStep < totalSteps) {
+							if (currentStep === 2) {
+								updateUIData();
+							} else if (currentStep === 4) {
+								// Block moving to Step 5 unless label generated
+								if (!omnivaGenerated) {
+									alert('Pirma sugeneruokite siuntos etiketę.');
+									return;
+								}
+								// When leaving Omniva step, update email info
+								const emailToInput = document.getElementById('email-to-input');
+								const emailSubjectInput = document.getElementById('email-subject-input');
+								const emailBodyInput = document.getElementById('email-body-input');
+
+								emailToInput.value = selectedSupplier.email;
+								emailSubjectInput.value = `Mėginio paėmimas pagal sutartį ${selectedAnnex}`;
+
+								let formattedDateLT;
+								if (pickupDateInput.value) {
+									const dateObj = new Date(pickupDateInput.value);
+									const userTimezoneOffset = dateObj.getTimezoneOffset() * 60000;
+									const adjustedDate = new Date(dateObj.getTime() + userTimezoneOffset);
+									formattedDateLT = adjustedDate.toLocaleDateString('lt-LT');
+								} else {
+									const deliveryDate = new Date();
+									deliveryDate.setDate(new Date().getDate() + 3);
+									formattedDateLT = deliveryDate.toLocaleDateString('lt-LT');
+								}
+								// Compose address from Step 4 fields in order: street, building, city, post_code
+								const shipStreet = (document.getElementById('ship-street') || {}).value || '';
+								const shipBuilding = (document.getElementById('ship-building') || {}).value || '';
+								const shipCity = (document.getElementById('ship-city') || {}).value || '';
+								const shipPostal = (document.getElementById('ship-postal') || {}).value || '';
+								const addressLine =
+									`${shipStreet} ${shipBuilding}, ${shipCity}, ${shipPostal}`.trim();
+
+								const bodyText = `Sveiki,
+
+Kurjeris atvyks ${formattedDateLT} | 12:00-13:30 | ${addressLine}.
 
 Primename, kad adreso kortelės lipdukas klijuojamas ant siuntos kurjeriui.
 
-Lipdukas mėginiui yra klijuojamas ant miežių mėginio pavyzdžio (2 kg). Svarbu: jeigu mėginys bus be lipduko, kuris yra sukurtas jus identifikuoti, tyrimas laboratorijoje nebus atliekamas.
+Svarbu: Lipdukas mėginiui yra klijuojamas ant miežių mėginio pavyzdžio (2 kg). Jeigu mėginys bus be lipduko, kuris yra sukurtas jus identifikuoti, tyrimas laboratorijoje nebus atliekamas.
 
 Pagarbiai/Kind regards,
 Renata Bernotienė
 Logistikos administratorė
 UAB "Baltijos javai"`;
-    
-                    emailBodyInput.value = bodyText;
 
-                } else if (currentStep === 5) { // After clicking "Send"
-                    const historyTable = document.getElementById('history-table-body');
-                    const newRow = historyTable.insertRow(0);
-                    const today = new Date().toISOString().split('T')[0];
-                    const getSentToValue = (scenario) => {
-                        switch(scenario) {
-                            case 'farm-vm':
-                            case 'elevator-vm':
-                                return 'VM';
-                            case 'elevator-biliunai':
-                                return 'BIL';
-                            case 'elevator-office':
-                                return 'Ofisas';
-                            default:
-                                return 'N/A';
-                        }
-                    };
-                    const sentTo = getSentToValue(selectedScenario);
-                    newRow.innerHTML = `
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">Andrius</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${pickupDateInput.value || today}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">${currentSampleNumber}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${selectedSupplier.name}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${selectedSupplier.location}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${sentTo}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${selectedAnnex}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Išsiųsta</span></td>
-                    `;
-                }
-                showStep(currentStep + 1);
-            }
-        });
-    });
+								emailBodyInput.value = bodyText;
+							} else if (currentStep === 5) {
+								// Handle sending email via webhook, then append history and move to step 6
+								const emailToInput = document.getElementById('email-to-input');
+								const emailSubjectInput = document.getElementById('email-subject-input');
+								const emailBodyInput = document.getElementById('email-body-input');
+								const sendBtn = document.querySelector('#step-5 .btn-next');
+								const sendingIndicator = document.getElementById('step5-sending');
+								// Block send if attachments are still preparing
+								if (!attachmentsAvailable()) {
+									const remain = Math.max(0, Math.ceil((attachmentsReadyAt - Date.now()) / 1000));
+									alert('Failai ruošiami. Siuntimas galimas po ' + remain + ' s.');
+									return;
+								}
+								// Required field check for "Kam"
+								if (!emailToInput.value || !emailToInput.value.trim()) {
+									alert('Laukas "Kam" yra privalomas.');
+									emailToInput.focus();
+									return;
+								}
+								// Prepare payload
+								const clientId = selectedSupplier
+									? selectedSupplier.Id ?? selectedSupplier.id ?? null
+									: null;
+								const payload = {
+									to: emailToInput.value.trim(),
+									subject: emailSubjectInput.value || '',
+									body: emailBodyInput.value || '',
+									clientId,
+									sampleNumber: currentSampleNumber,
+									annex: selectedAnnex || null,
+									pickupDate: pickupDateInput.value || null,
+								};
+								const headers = { accept: 'application/json', 'content-type': 'application/json' };
+								if (authToken) headers['Authorization'] = authToken;
+								// Disable button during send
+								if (sendBtn) sendBtn.disabled = true;
+								if (sendingIndicator) sendingIndicator.classList.remove('hidden');
+								fetch('https://operations.baltijosjavai.lt/webhook/send-email', {
+									method: 'POST',
+									headers,
+									body: JSON.stringify(payload),
+								})
+									.then(resp => {
+										if (!resp.ok) throw new Error('HTTP ' + resp.status);
+										return resp.json().catch(() => ({}));
+									})
+									.then(data => {
+										// On success, response contains today's added rows; populate table only with that data
+										const rows = Array.isArray(data?.samples)
+											? data.samples
+											: Array.isArray(data)
+											? data
+											: [];
+										const tbody = document.getElementById('history-table-body');
+										if (!tbody) {
+											console.warn('Nerastas istorijos lentelės korpusas');
+										} else {
+											tbody.innerHTML = '';
+										}
+										if (!rows.length) {
+											console.log('Webhook grąžino 0 eilučių lentelės užpildymui.');
+										}
+										rows.forEach(r => {
+											const vadybininkas = (r && r.vadybininkas) || '';
+											const paemimo_data = (r && r.paemimo_data) || '';
+											const kodas = (r && r.kodas) || '';
+											const tiekejas = (r && r.klientas && r.klientas.pavadinimas) || '';
+											const paemimo_vieta = (r && r.sandelys) || '';
+											const siunciama_i = (r && r.pristatymo_vieta) || '';
+											const sutarties_priedas = (r && r.priedo_pavadinimas) || '';
+											const tr = document.createElement('tr');
+											tr.innerHTML = `
+												<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${vadybininkas}</td>
+												<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${paemimo_data}</td>
+												<td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">${kodas}</td>
+												<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${tiekejas}</td>
+												<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${paemimo_vieta}</td>
+												<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${siunciama_i}</td>
+												<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${sutarties_priedas}</td>
+												<td class="px-6 py-4 whitespace-nowrap text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Išsiųsta</span></td>
+											`;
+											if (tbody) tbody.appendChild(tr);
+										});
+										showStep(currentStep + 1);
+									})
+									.catch(err => {
+										console.error('Siuntimo klaida:', err);
+										alert('Nepavyko išsiųsti el. laiško. Bandykite dar kartą.');
+									})
+									.finally(() => {
+										if (sendBtn) sendBtn.disabled = false;
+										if (sendingIndicator) sendingIndicator.classList.add('hidden');
+									});
+								// Prevent default auto-advance; we'll advance on success above
+								return;
+							}
+							showStep(currentStep + 1);
+						}
+					});
+				});
 
-    backButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            if (currentStep > 1) showStep(currentStep - 1);
-        });
-    });
+				backButtons.forEach(button => {
+					button.addEventListener('click', () => {
+						if (currentStep > 1) showStep(currentStep - 1);
+					});
+				});
 
-    scenarioRadios.forEach(radio => {
-        radio.addEventListener('change', () => { 
-            step1NextBtn.disabled = false;
-            const checkedRadio = document.querySelector('input[name="scenario"]:checked');
-            selectedScenario = checkedRadio.value;
-            selectedScenarioText = checkedRadio.nextElementSibling.textContent.trim();
-        });
-    });
+				scenarioRadios.forEach(radio => {
+					radio.addEventListener('change', () => {
+						validateStep1();
+						const checkedRadio = document.querySelector('input[name="scenario"]:checked');
+						selectedScenario = checkedRadio.value;
+						selectedScenarioText = checkedRadio.nextElementSibling.textContent.trim();
+					});
+				});
+				if (tokenInput) {
+					tokenInput.addEventListener('input', () => {
+						authToken = tokenInput.value.trim();
+						validateStep1();
+					});
+				}
 
-    step1NextBtn.addEventListener('click', () => {
-        document.querySelectorAll('.scenario-display-text').forEach(el => {
-            el.textContent = selectedScenarioText;
-        });
-        showStep(2);
-    });
-    
-    document.getElementById('btn-restart').addEventListener('click', () => {
-        selectedSupplier = null;
-        currentSampleNumber = null;
-        supplierInput.value = '';
-        supplierAddressDiv.classList.add('hidden');
-        autocompleteList.classList.add('hidden');
-        resetAnnex();
-        scenarioRadios.forEach(r => r.checked = false);
-        step1NextBtn.disabled = true;
-        selectedScenario = null;
-        selectedScenarioText = '';
-        document.querySelectorAll('.scenario-display-text').forEach(el => {
-            el.textContent = '';
-        });
-        omnivaStickerPreview.classList.add('hidden');
-        pickupDateInput.value = '';
-        quantityInput.value = '';
-        generationSuccessMsg.classList.add('hidden');
-        showStep(1);
-    });
+				step1NextBtn.addEventListener('click', async () => {
+					// Load suppliers with provided token before proceeding
+					step1NextBtn.disabled = true;
+					if (step1Loading) step1Loading.classList.remove('hidden');
+					try {
+						await loadSuppliers(authToken);
+						document.querySelectorAll('.scenario-display-text').forEach(el => {
+							el.textContent = selectedScenarioText;
+						});
+						showStep(2);
+					} catch (e) {
+						alert('Nepavyko užkrauti duomenų. Patikrinkite tokeną ir bandykite dar kartą.');
+					} finally {
+						validateStep1();
+						if (step1Loading) step1Loading.classList.add('hidden');
+					}
+				});
 
-    quantityInput.addEventListener('input', () => {
-        const quantityValue = quantityInput.value.trim() ? quantityInput.value : '0t';
-        document.querySelectorAll('.label-quantity').forEach(el => el.textContent = quantityValue);
-    });
-    
-    generateLabelsBtn.addEventListener('click', () => {
-        const selectedDate = pickupDateInput.value;
-        if (!selectedDate) {
-            pickupDateInput.focus();
-            return;
-        }
+				document.getElementById('btn-restart').addEventListener('click', () => {
+					selectedSupplier = null;
+					currentSampleNumber = null;
+					supplierInput.value = '';
+					supplierAddressDiv.classList.add('hidden');
+					autocompleteList.classList.add('hidden');
+					resetAnnex();
+					scenarioRadios.forEach(r => (r.checked = false));
+					step1NextBtn.disabled = true;
+					selectedScenario = null;
+					selectedScenarioText = '';
+					document.querySelectorAll('.scenario-display-text').forEach(el => {
+						el.textContent = '';
+					});
+					omnivaStickerPreview.classList.add('hidden');
+					pickupDateInput.value = '';
+					quantityInput.value = '';
+					generationSuccessMsg.classList.add('hidden');
+					omnivaGenerated = false;
+					if (step4NextBtn) step4NextBtn.disabled = true;
+					// Unhide generate button for a fresh start
+					if (generateLabelsBtn) generateLabelsBtn.classList.remove('hidden');
+					// Reset attachments cooldown
+					const msg = document.getElementById('attachments-cooldown-msg');
+					if (attachmentsCooldownTimer) clearInterval(attachmentsCooldownTimer);
+					attachmentsCooldownTimer = null;
+					attachmentsReadyAt = 0;
+					if (msg) msg.classList.add('hidden');
+					setAttachmentButtonsEnabled(true);
+					if (step5SendBtn) step5SendBtn.disabled = true;
+					showStep(1);
+				});
 
-        const dateObj = new Date(selectedDate);
-        const userTimezoneOffset = dateObj.getTimezoneOffset() * 60000;
-        const adjustedDate = new Date(dateObj.getTime() + userTimezoneOffset);
+				quantityInput.addEventListener('input', () => {
+					const quantityValue = quantityInput.value.trim() ? quantityInput.value : '0t';
+					document
+						.querySelectorAll('.label-quantity')
+						.forEach(el => (el.textContent = quantityValue));
+				});
 
-        const formattedDateLT = adjustedDate.toLocaleDateString('lt-LT');
-        const formattedDateISO = adjustedDate.toISOString().split('T')[0];
+				const step3DateInput = document.getElementById('step3-date');
+				if (step3DateInput) {
+					step3DateInput.addEventListener('change', () => {
+						const val = step3DateInput.value;
+						if (!val) return;
+						const d = new Date(val);
+						const adjusted = new Date(d.getTime() + d.getTimezoneOffset() * 60000);
+						const formattedDateLT = adjusted.toLocaleDateString('lt-LT');
+						document
+							.querySelectorAll('.label-date')
+							.forEach(el => (el.textContent = formattedDateLT));
+						// Keep Omniva pickup date in sync with sticker date
+						if (pickupDateInput) pickupDateInput.value = val;
+						const omnivaDateEl = document.getElementById('omniva-date');
+						if (omnivaDateEl) omnivaDateEl.textContent = val;
+					});
+				}
+				// Also sync from Omniva date picker back to sticker date and labels
+				if (pickupDateInput) {
+					pickupDateInput.addEventListener('change', () => {
+						const val = pickupDateInput.value;
+						if (!val) return;
+						const d = new Date(val);
+						const adjusted = new Date(d.getTime() + d.getTimezoneOffset() * 60000);
+						const formattedDateLT = adjusted.toLocaleDateString('lt-LT');
+						document
+							.querySelectorAll('.label-date')
+							.forEach(el => (el.textContent = formattedDateLT));
+						const step3DateEl = document.getElementById('step3-date');
+						if (step3DateEl) step3DateEl.value = val;
+						const omnivaDateEl = document.getElementById('omniva-date');
+						if (omnivaDateEl) omnivaDateEl.textContent = val;
+					});
+				}
 
-        document.querySelectorAll('.label-date').forEach(el => el.textContent = formattedDateLT);
-        document.getElementById('omniva-date').textContent = formattedDateISO;
+				generateLabelsBtn.addEventListener('click', () => {
+					// Validate required shipping address fields
+					const cityEl = document.getElementById('ship-city');
+					const streetEl = document.getElementById('ship-street');
+					const buildingEl = document.getElementById('ship-building');
+					const postalEl = document.getElementById('ship-postal');
+					const requiredMap = [
+						{ el: cityEl, label: 'Miestas' },
+						{ el: streetEl, label: 'Gatvė' },
+						{ el: buildingEl, label: 'Pastato nr.' },
+						{ el: postalEl, label: 'Pašto kodas' },
+					];
+					const missing = requiredMap.filter(({ el }) => !el || !el.value || !el.value.trim());
+					if (missing.length > 0) {
+						alert('Užpildykite adresą: ' + missing.map(m => m.label).join(', '));
+						if (missing[0] && missing[0].el) missing[0].el.focus();
+						return;
+					}
+					// Validate postal code format (exactly 5 digits)
+					if (!/^\d{5}$/.test(postalEl.value.trim())) {
+						alert('Pašto kodas turi būti tiksliai 5 skaitmenys.');
+						postalEl.focus();
+						return;
+					}
+					const selectedDate = pickupDateInput.value;
+					if (!selectedDate) {
+						pickupDateInput.focus();
+						return;
+					}
 
-        omnivaStickerPreview.classList.remove('hidden');
-        generationSuccessMsg.classList.remove('hidden');
-        setTimeout(() => {
-            generationSuccessMsg.classList.add('hidden');
-        }, 3000);
-    });
+					// Confirm before generating; on Yes, hide the button and proceed
+					const confirmed = confirm('Ar tikrai norite generuoti siuntos etiketę?');
+					if (!confirmed) {
+						return;
+					}
+					generateLabelsBtn.classList.add('hidden');
 
+					const dateObj = new Date(selectedDate);
+					const userTimezoneOffset = dateObj.getTimezoneOffset() * 60000;
+					const adjustedDate = new Date(dateObj.getTime() + userTimezoneOffset);
 
-    // --- Autocomplete & Dropdown Logic ---
-    supplierInput.addEventListener('input', function() {
-        const val = this.value;
-        closeAllLists();
-        resetAnnex();
-        selectedSupplier = null;
-        validateStep2();
+					const formattedDateLT = adjustedDate.toLocaleDateString('lt-LT');
+					const formattedDateISO = adjustedDate.toISOString().split('T')[0];
 
-        if (!val) return false;
-        
-        autocompleteList.innerHTML = '';
-        autocompleteList.classList.remove('hidden');
+					document
+						.querySelectorAll('.label-date')
+						.forEach(el => (el.textContent = formattedDateLT));
+					document.getElementById('omniva-date').textContent = formattedDateISO;
+					// Ensure Step 3 date input mirrors generated date
+					const step3DateEl = document.getElementById('step3-date');
+					if (step3DateEl) step3DateEl.value = formattedDateISO;
 
-        suppliers.forEach(supplier => {
-            if (supplier.name.toUpperCase().includes(val.toUpperCase())) {
-                const item = document.createElement('div');
-                item.innerHTML = `<strong>${supplier.name.substr(0, val.length)}</strong>${supplier.name.substr(val.length)}`;
-                item.addEventListener('click', function() {
-                    supplierInput.value = supplier.name;
-                    selectedSupplier = supplier;
-                    supplierAddressDiv.innerHTML = `<strong>Adresas:</strong> ${supplier.address}`;
-                    supplierAddressDiv.classList.remove('hidden');
-                    closeAllLists();
-                    
-                    annexContainer.classList.remove('hidden');
-                    populateAnnexDropdown(supplier.annexes);
-                });
-                autocompleteList.appendChild(item);
-            }
-        });
-    });
-    
-    function populateAnnexDropdown(annexes) {
-        annexDropdown.innerHTML = '';
-        annexes.forEach(annex => {
-            const item = document.createElement('div');
-            item.classList.add('flex', 'justify-between', 'items-center', 'w-full', 'p-2', 'text-sm', 'cursor-pointer', 'border-b', 'hover:bg-gray-100');
-            item.innerHTML = `
+					// Prepare payload for webhook update
+					const resolveSelectedAnnex = () => {
+						if (!selectedSupplier) return null;
+						const list = selectedSupplier.priedai || selectedSupplier.annexes || [];
+						return list.find(a => a.nr === selectedAnnex) || null;
+					};
+					const selectedAnnexObj = resolveSelectedAnnex();
+					// Read current shipping address inputs
+					const shipCity = (document.getElementById('ship-city') || {}).value || '';
+					const shipStreet = (document.getElementById('ship-street') || {}).value || '';
+					const shipBuilding = (document.getElementById('ship-building') || {}).value || '';
+					const shipPostal = (document.getElementById('ship-postal') || {}).value || '';
+					const payload = {
+						sampleNumber: currentSampleNumber,
+						pickupDate: formattedDateISO,
+						supplierId: selectedSupplier
+							? selectedSupplier.Id ?? selectedSupplier.id ?? null
+							: null,
+						annexId: selectedAnnexObj ? selectedAnnexObj.Id ?? selectedAnnexObj.id ?? null : null,
+						supplier: selectedSupplier
+							? {
+									name: selectedSupplier.name,
+									address: selectedSupplier.address || '',
+									email: selectedSupplier.email || '',
+									location: selectedSupplier.location || '',
+							  }
+							: null,
+						annex: selectedAnnex || null,
+						quantity: quantityInput && quantityInput.value ? quantityInput.value : '',
+						variety: selectedAnnexObj
+							? selectedAnnexObj.veisle || selectedAnnexObj.variety || ''
+							: '',
+						pristatymas_nuo: selectedAnnexObj ? selectedAnnexObj.pristatymas_nuo || '' : '',
+						pristatymas_iki: selectedAnnexObj ? selectedAnnexObj.pristatymas_iki || '' : '',
+						pickupAddress: {
+							city: shipCity,
+							street: shipStreet,
+							building_number: shipBuilding,
+							postal_code: shipPostal,
+						},
+						scenario: selectedScenario,
+					};
+
+					// Fire webhook to update sample; include Authorization header from Step 1 token
+					const headers = { accept: 'application/json', 'content-type': 'application/json' };
+					if (authToken) headers['Authorization'] = authToken;
+
+					fetch(UPDATE_ENDPOINT, {
+						method: 'POST',
+						headers,
+						body: JSON.stringify(payload),
+					})
+						.then(resp => {
+							if (!resp.ok) throw new Error('HTTP ' + resp.status);
+							return resp.json().catch(() => ({}));
+						})
+						.then(() => {
+							// No-op UI here to avoid double toggling; UI is handled once below
+						})
+						.catch(err => {
+							console.error('Nepavyko atnaujinti mėginio per webhook:', err);
+							alert('Nepavyko atnaujinti mėginio. Patikrinkite tokeną ir bandykite dar kartą.');
+						});
+
+					// Show the label and a single success message immediately for UX responsiveness
+					omnivaStickerPreview.classList.remove('hidden');
+					showGenerationSuccessOnce();
+					// Mark as generated and enable Next on Step 4
+					omnivaGenerated = true;
+					if (step4NextBtn) step4NextBtn.disabled = false;
+				});
+
+				// --- Autocomplete & Dropdown Logic ---
+				supplierInput.addEventListener('input', function () {
+					const val = this.value;
+					closeAllLists();
+					resetAnnex();
+					selectedSupplier = null;
+					validateStep2();
+
+					if (!val) return false;
+
+					autocompleteList.innerHTML = '';
+					autocompleteList.classList.remove('hidden');
+
+					suppliers.forEach(supplier => {
+						if (supplier.name.toUpperCase().includes(val.toUpperCase())) {
+							const item = document.createElement('div');
+							item.innerHTML = `<strong>${supplier.name.substr(
+								0,
+								val.length
+							)}</strong>${supplier.name.substr(val.length)}`;
+							item.addEventListener('click', function () {
+								supplierInput.value = supplier.name;
+								selectedSupplier = supplier;
+								supplierAddressDiv.innerHTML = `<strong>Adresas:</strong> ${supplier.address}`;
+								supplierAddressDiv.classList.remove('hidden');
+								closeAllLists();
+
+								annexContainer.classList.remove('hidden');
+								populateAnnexDropdown(supplier.priedai || supplier.annexes || []);
+							});
+							autocompleteList.appendChild(item);
+						}
+					});
+				});
+
+				function populateAnnexDropdown(annexes) {
+					annexDropdown.innerHTML = '';
+					annexes.forEach(annex => {
+						const item = document.createElement('div');
+						item.classList.add(
+							'flex',
+							'justify-between',
+							'items-center',
+							'w-full',
+							'p-2',
+							'text-sm',
+							'cursor-pointer',
+							'border-b',
+							'hover:bg-gray-100'
+						);
+						item.innerHTML = `
                 <span class="font-semibold text-red-500 w-1/4">${annex.nr}</span>
                 <span class="text-gray-600 w-1/4"><strong class="font-medium">Priedo data:</strong> ${annex.date}</span>
                 <span class="text-gray-600 w-1/4"><strong class="font-medium">Kiekis:</strong> ${annex.quantity}</span>
-                <span class="w-1/4 text-right"><strong class="font-medium">Statusas:</strong> <span class="font-semibold ${annex.status === 'aktyvus' ? 'text-green-600' : 'text-yellow-600'}">${annex.status}</span></span>
             `;
-            item.addEventListener('click', function() {
-                annexSearchInput.value = annex.nr;
-                selectedAnnex = annex.nr;
-                
-                const selectedAnnexData = selectedSupplier.annexes.find(a => a.nr === selectedAnnex);
-                if (selectedAnnexData) {
-                    annexDetailsDiv.innerHTML = `
+						item.addEventListener('click', function () {
+							annexSearchInput.value = annex.nr;
+							selectedAnnex = annex.nr;
+
+							const selectedAnnexData = (
+								selectedSupplier.priedai ||
+								selectedSupplier.annexes ||
+								[]
+							).find(a => a.nr === selectedAnnex);
+							if (selectedAnnexData) {
+								annexDetailsDiv.innerHTML = `
                         <strong>Priedo data:</strong> ${selectedAnnexData.date} | 
-                        <strong>Kiekis:</strong> ${selectedAnnexData.quantity} | 
-                        <strong>Statusas:</strong> <span class="font-semibold ${selectedAnnexData.status === 'aktyvus' ? 'text-green-600' : 'text-yellow-600'}">${selectedAnnexData.status}</span>
-                    `;
-                    annexDetailsDiv.classList.remove('hidden');
-                    quantityInput.value = selectedAnnexData.quantity;
-                    document.querySelectorAll('.label-quantity').forEach(el => el.textContent = selectedAnnexData.quantity);
-                }
+                        <strong>Kiekis:</strong> ${selectedAnnexData.quantity} `;
+								annexDetailsDiv.classList.remove('hidden');
+								quantityInput.value = selectedAnnexData.quantity;
+								document
+									.querySelectorAll('.label-quantity')
+									.forEach(el => (el.textContent = selectedAnnexData.quantity));
+								// Update variety and address immediately on selection
+								document
+									.querySelectorAll('.label-variety')
+									.forEach(
+										el =>
+											(el.textContent = selectedAnnexData.veisle || selectedAnnexData.variety || '')
+									);
+								document
+									.querySelectorAll('.label-location')
+									.forEach(
+										el =>
+											(el.textContent = selectedSupplier.address || selectedSupplier.location || '')
+									);
+							}
 
-                annexDropdown.classList.add('hidden');
-                validateStep2();
-            });
-            annexDropdown.appendChild(item);
-        });
-    }
+							annexDropdown.classList.add('hidden');
+							validateStep2();
+						});
+						annexDropdown.appendChild(item);
+					});
+				}
 
-    annexSearchInput.addEventListener('input', function() {
-        const filter = this.value.toUpperCase();
-        const items = annexDropdown.getElementsByTagName('div');
-        for (let i = 0; i < items.length; i++) {
-            const txtValue = items[i].textContent || items[i].innerText;
-            items[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? "" : "none";
-        }
-    });
+				annexSearchInput.addEventListener('input', function () {
+					const filter = this.value.toUpperCase();
+					const items = annexDropdown.getElementsByTagName('div');
+					for (let i = 0; i < items.length; i++) {
+						const txtValue = items[i].textContent || items[i].innerText;
+						items[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? '' : 'none';
+					}
+				});
 
-    annexSearchInput.addEventListener('focus', () => annexDropdown.classList.remove('hidden'));
+				annexSearchInput.addEventListener('focus', () => annexDropdown.classList.remove('hidden'));
 
-    function closeAllLists(elmnt) {
-        autocompleteList.classList.add('hidden');
-        if (elmnt !== annexSearchInput) {
-            annexDropdown.classList.add('hidden');
-        }
-    }
+				function closeAllLists(elmnt) {
+					autocompleteList.classList.add('hidden');
+					if (elmnt !== annexSearchInput) {
+						annexDropdown.classList.add('hidden');
+					}
+				}
 
-    document.addEventListener('click', function (e) {
-        closeAllLists(e.target);
-    });
-});
-</script>
-
-</body>
+				document.addEventListener('click', function (e) {
+					closeAllLists(e.target);
+				});
+			});
+		</script>
+	</body>
 </html>
-
