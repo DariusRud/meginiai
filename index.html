@@ -52,6 +52,7 @@
 	</head>
 	<body class="bg-gray-100 flex items-center justify-center min-h-screen">
 		<div class="w-full max-w-5xl mx-auto p-4">
+			<!-- Progress Bar -->
 			<div class="px-4 sm:px-0">
 				<div class="flex items-center justify-center mb-4">
 					<svg
@@ -74,6 +75,7 @@
 				</div>
 			</div>
 
+			<!-- Step 1: Scenario Selection -->
 			<div id="step-1" class="step-card bg-white p-8 rounded-xl shadow-lg visible-step">
 				<h2 class="text-xl font-semibold text-gray-700 mb-1">1. Scenarijaus Pasirinkimas</h2>
 				<p class="text-gray-500 mb-6">Pasirinkite mėginio siuntimo scenarijų.</p>
@@ -158,6 +160,7 @@
 				</div>
 			</div>
 
+			<!-- Step 2: Data Input -->
 			<div id="step-2" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
 				<div class="mb-4">
 					<span class="text-red-500 font-semibold">Scenarijus:</span>
@@ -168,6 +171,7 @@
 					Įveskite siuntėjo informaciją ir pasirinkite sutarties priedą.
 				</p>
 				<div class="space-y-6">
+					<!-- NEW: Elevator Selection Container -->
 					<div id="elevator-container" class="hidden">
 						<label for="elevator-select" class="block text-sm font-medium text-gray-700 mb-1"
 							>Iš kur siunčiama (Elevatorius)</label
@@ -175,7 +179,8 @@
 						<select
 							id="elevator-select"
 							class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-							</select>
+							<!-- Options will be populated by JS -->
+						</select>
 						<div
 							id="elevator-address"
 							class="mt-2 text-sm text-gray-600 p-3 bg-gray-50 rounded-md border border-gray-200 hidden"></div>
@@ -199,6 +204,7 @@
 							id="supplier-address"
 							class="mt-2 text-sm text-gray-600 p-3 bg-gray-50 rounded-md border border-gray-200 hidden"></div>
 					</div>
+					<!-- Annex dropdown - initially hidden -->
 					<div id="annex-container" class="hidden">
 						<label for="annex-search" class="block text-sm font-medium text-gray-700"
 							>Priedo numeris</label
@@ -226,7 +232,8 @@
 							<div
 								id="annex-dropdown"
 								class="absolute hidden z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto dropdown-items">
-								</div>
+								<!-- Annex items will be populated by JS -->
+							</div>
 						</div>
 						<div
 							id="annex-details"
@@ -247,6 +254,7 @@
 				</div>
 			</div>
 
+			<!-- Step 3: Sample Label -->
 			<div id="step-3" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
 				<div class="mb-4">
 					<span class="text-red-500 font-semibold">Scenarijus:</span>
@@ -278,9 +286,11 @@
 				</div>
 
 				<div class="space-y-6">
+					<!-- Sample Label -->
 					<div class="border-2 border-dashed rounded-lg p-4 bg-gray-50">
 						<h3 class="font-bold text-center text-gray-800 mb-2">Mėginio lipdukas</h3>
 						<div class="grid grid-cols-2 gap-0 border bg-white shadow-sm p-2">
+							<!-- Left Label -->
 							<div class="p-2 border-r">
 								<div class="text-left mb-2 pb-2">
 									<p class="font-bold text-sm">BALTIJOS JAVAI</p>
@@ -306,6 +316,7 @@
 								</div>
 								<div class="mt-2 h-16 border-t border-gray-200"></div>
 							</div>
+							<!-- Right Label -->
 							<div class="p-2">
 								<div class="text-left mb-2 pb-2">
 									<p class="font-bold text-sm">BALTIJOS JAVAI</p>
@@ -346,6 +357,7 @@
 				</div>
 			</div>
 
+			<!-- Step 4: Omniva Order -->
 			<div id="step-4" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
 				<div class="mb-4">
 					<span class="text-red-500 font-semibold">Scenarijus:</span>
@@ -354,6 +366,7 @@
 				<h2 class="text-xl font-semibold text-gray-700 mb-1">4. Siuntos Užsakymas</h2>
 				<p class="text-gray-500 mb-6">Pasirinkite paėmimo datą ir sugeneruokite siuntos lipduką.</p>
 
+				<!-- Omniva Label Section -->
 				<div class="border-2 border-dashed rounded-lg p-4 bg-gray-50">
 					<div class="text-center mb-4 border-b pb-4">
 						<div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -403,9 +416,6 @@
 									<input
 										id="ship-postal"
 										type="text"
-										inputmode="numeric"
-										pattern="\\d{5}"
-										maxlength="5"
 										class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
 								</div>
 							</div>
@@ -499,6 +509,7 @@
 				</div>
 			</div>
 
+			<!-- Step 5: Email Sending -->
 			<div id="step-5" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
 				<div class="mb-4">
 					<span class="text-red-500 font-semibold">Scenarijus:</span>
@@ -621,6 +632,7 @@
 				</div>
 			</div>
 
+			<!-- Step 6: Confirmation -->
 			<div id="step-6" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
 				<div class="text-center">
 					<div class="mb-4">
@@ -742,8 +754,90 @@
 			</div>
 		</div>
 
+		<!-- Custom Modal -->
+		<div id="custom-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center">
+			<div class="relative mx-auto p-5 border w-full max-w-sm shadow-lg rounded-xl bg-white">
+				<div class="mt-3 text-center">
+					<div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 mb-4">
+						<svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+					</div>
+					<h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">Pranešimas</h3>
+					<div class="mt-2 px-7 py-3">
+						<p class="text-sm text-gray-500" id="modal-message"></p>
+					</div>
+					<div class="items-center px-4 py-3" id="modal-buttons">
+						<!-- Buttons will be added here by JS -->
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<script>
 			document.addEventListener('DOMContentLoaded', function () {
+				
+				// --- Modal Elements and Functions ---
+				const modal = document.getElementById('custom-modal');
+				const modalTitle = document.getElementById('modal-title');
+				const modalMessage = document.getElementById('modal-message');
+				const modalButtons = document.getElementById('modal-buttons');
+
+				function hideModal() {
+					modal.classList.add('hidden');
+				}
+
+				function showModal(title, message, buttons) {
+					modalTitle.textContent = title;
+					modalMessage.textContent = message;
+					modalButtons.innerHTML = ''; // Clear previous buttons
+					const buttonContainer = document.createElement('div');
+					buttonContainer.className = 'flex justify-center space-x-4';
+
+					buttons.forEach(btnConfig => {
+						const button = document.createElement('button');
+						button.textContent = btnConfig.text;
+						button.className = btnConfig.classes;
+						button.addEventListener('click', () => {
+							hideModal();
+							if (btnConfig.onClick) {
+								btnConfig.onClick();
+							}
+						});
+						buttonContainer.appendChild(button);
+					});
+
+					modalButtons.appendChild(buttonContainer);
+					modal.classList.remove('hidden');
+				}
+
+				function customAlert(message, title = 'Pranešimas') {
+					showModal(title, message, [
+						{
+							text: 'Gerai',
+							classes:
+								'px-4 py-2 bg-blue-600 text-white text-base font-medium rounded-lg w-24 shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500',
+							onClick: () => {},
+						},
+					]);
+				}
+
+				function customConfirm(message, callback, title = 'Patvirtinimas') {
+					showModal(title, message, [
+						{
+							text: 'Atšaukti',
+							classes:
+								'px-4 py-2 bg-gray-200 text-gray-800 text-base font-medium rounded-lg w-24 shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400',
+							onClick: () => callback(false),
+						},
+						{
+							text: 'Gerai',
+							classes:
+								'px-4 py-2 bg-green-600 text-white text-base font-medium rounded-lg w-24 shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500',
+							onClick: () => callback(true),
+						},
+					]);
+				}
+
+
 				let currentStep = 1;
 				const totalSteps = 6;
 				let sampleCounter = 230; // Start counter for new samples
@@ -777,10 +871,11 @@
 				let selectedAnnex = null;
 				let authToken = '';
 
-				// --- NEW: Elevator data ---
+				// --- UPDATED: Elevator data ---
 				const elevators = [
 					{
 						id: 'joniskis',
+						code: 'JON',
 						name: 'AB "Joniškio grūdai"',
 						address: {
 							street: 'Statybininkų g. 10',
@@ -791,6 +886,7 @@
 					},
 					{
 						id: 'kedainiai',
+						code: 'KED',
 						name: 'UAB "Kėdainių aruodai"',
 						address: {
 							street: 'Pramonės g. 21',
@@ -801,6 +897,7 @@
 					},
 					{
 						id: 'radviliskis',
+						code: 'RAD',
 						name: 'UAB "Radviliškio elevatorius"',
 						address: {
 							street: 'Geležinkelio g. 15',
@@ -811,11 +908,133 @@
 					},
 					{
 						id: 'svirbygala',
+						code: 'SVI',
 						name: 'UAB "Baltijos javai" Svirbygalos g. elevatorius',
 						address: {
 							street: 'Svirbygalos g. 19',
 							city: 'Kaunas',
 							postal_code: 'LT-46280',
+							building: '',
+						},
+					},
+					{
+						id: 'pav',
+						code: 'PAV',
+						name: 'Pavartyčiai',
+						address: {
+							street: 'Elevatoriaus g. 1',
+							city: 'Pavartyčiai',
+							postal_code: 'LT-00000',
+							building: '',
+						},
+					},
+					{
+						id: 'bil',
+						code: 'BIL',
+						name: 'Biliūnai',
+						address: {
+							street: 'Elevatoriaus g. 1',
+							city: 'Biliūnai',
+							postal_code: 'LT-00000',
+							building: '',
+						},
+					},
+					{
+						id: 'pil',
+						code: 'PIL',
+						name: 'Pilviškės',
+						address: {
+							street: 'Elevatoriaus g. 1',
+							city: 'Pilviškės',
+							postal_code: 'LT-12345',
+							building: '7',
+						},
+					},
+					{
+						id: 'cic',
+						code: 'CIC',
+						name: 'Čičinai',
+						address: {
+							street: 'Elevatoriaus g. 1',
+							city: 'Čičinai',
+							postal_code: 'LT-00003',
+							building: '7',
+						},
+					},
+					{
+						id: 'tag',
+						code: 'TAG',
+						name: 'Trys agro bitės el.',
+						address: {
+							street: 'Elevatoriaus g. 1',
+							city: 'Nenurodyta',
+							postal_code: 'LT-00000',
+							building: '',
+						},
+					},
+					{
+						id: 'bar',
+						code: 'BAR',
+						name: 'Barzdai',
+						address: {
+							street: 'Elevatoriaus g. 1',
+							city: 'Barzdai',
+							postal_code: 'LT-00000',
+							building: '',
+						},
+					},
+					{
+						id: 'ger',
+						code: 'GER',
+						name: 'Gerkonys',
+						address: {
+							street: 'Elevatoriaus g. 1',
+							city: 'Gerkonys',
+							postal_code: 'LT-00000',
+							building: '',
+						},
+					},
+					{
+						id: 'kui',
+						code: 'KUI',
+						name: 'Kuigaliai',
+						address: {
+							street: 'Elevatoriaus g. 1',
+							city: 'Kuigaliai',
+							postal_code: 'LT-00000',
+							building: '',
+						},
+					},
+					{
+						id: 'ruc',
+						code: 'RUC',
+						name: 'Ručūnai',
+						address: {
+							street: 'Elevatoriaus g. 1',
+							city: 'Ručūnai',
+							postal_code: 'LT-00000',
+							building: '',
+						},
+					},
+					{
+						id: 'gel',
+						code: 'GEL',
+						name: 'Gelvonų el.',
+						address: {
+							street: 'Elevatoriaus g. 1',
+							city: 'Gelvonai',
+							postal_code: 'LT-00000',
+							building: '',
+						},
+					},
+					{
+						id: 'tisk',
+						code: 'TISK',
+						name: 'Tiskūnai',
+						address: {
+							street: 'Elevatoriaus g. 1',
+							city: 'Tiskūnai',
+							postal_code: 'LT-00000',
 							building: '',
 						},
 					},
@@ -863,7 +1082,7 @@
 					elevators.forEach(elevator => {
 						const option = document.createElement('option');
 						option.value = elevator.id;
-						option.textContent = elevator.name;
+						option.textContent = `${elevator.code} - ${elevator.name}`;
 						elevatorSelect.appendChild(option);
 					});
 				}
@@ -940,12 +1159,12 @@
 							? selectedSupplier.Id ?? selectedSupplier.id ?? null
 							: null;
 						if (!clientId) {
-							alert('Nepasirinktas klientas – negalima atsisiųsti failo.');
+							customAlert('Nepasirinktas klientas – negalima atsisiųsti failo.');
 							return;
 						}
 						if (!attachmentsAvailable()) {
 							const remain = Math.max(0, Math.ceil((attachmentsReadyAt - Date.now()) / 1000));
-							alert('Failai dar ruošiami. Bandykite po ' + remain + ' s.');
+							customAlert('Failai dar ruošiami. Bandykite po ' + remain + ' s.');
 							return;
 						}
 						const resp = await fetch(url, {
@@ -965,7 +1184,7 @@
 						URL.revokeObjectURL(objectUrl);
 					} catch (e) {
 						console.error('Download failed:', e);
-						alert('Nepavyko atsisiųsti failo. Patikrinkite ryšį ir bandykite dar kartą.');
+						customAlert('Nepavyko atsisiųsti failo. Patikrinkite ryšį ir bandykite dar kartą.');
 					}
 				}
 				const sampleStickerBtn = document.getElementById('download-sample-sticker');
@@ -998,6 +1217,8 @@
 						step.classList.toggle('visible-step', index + 1 === stepNumber);
 						step.classList.toggle('hidden-step', index + 1 !== stepNumber);
 					});
+
+					// Logic specific to step 4
 					if (stepNumber === 4) {
 						omnivaStickerPreview.classList.add('hidden');
 						generationSuccessMsg.classList.add('hidden');
@@ -1008,37 +1229,48 @@
 								pickupDateInput.value = step3DateEl.value;
 							}
 						}
+
 						const omnivaDateEl = document.getElementById('omniva-date');
 						if (omnivaDateEl && pickupDateInput.value) {
 							omnivaDateEl.textContent = pickupDateInput.value;
 						}
 
-						// MODIFIED: Prefill address based on scenario
 						const isElevatorScenario = selectedScenario === 'elevator-vm';
-						const addr =
+						const source =
 							isElevatorScenario && selectedElevator
-								? selectedElevator.address
-								: selectedSupplier &&
-								  selectedSupplier.address &&
-								  typeof selectedSupplier.address === 'object'
-								? selectedSupplier.address
-								: null;
+								? selectedElevator
+								: selectedSupplier;
+						
+						let addr = null;
+						if (source && typeof source.address === 'object' && source.address !== null) {
+							addr = source.address;
+						} else if (source && typeof source.address === 'string') {
+							const parts = source.address.split(',');
+							addr = {
+								city: parts[0]?.trim() || '',
+								street: parts[1]?.trim() || '',
+								building: '',
+								postal_code: ''
+							};
+						}
 
 						const cityEl = document.getElementById('ship-city');
 						const streetEl = document.getElementById('ship-street');
 						const buildingEl = document.getElementById('ship-building');
 						const postalEl = document.getElementById('ship-postal');
-						if (addr) {
-							if (cityEl) cityEl.value = addr.city || '';
-							if (streetEl) streetEl.value = addr.street || '';
-							if (buildingEl) buildingEl.value = addr.building || addr.building_number || '';
-							if (postalEl) postalEl.value = addr.postal_code || '';
-						}
+
+						if (cityEl) cityEl.value = addr ? addr.city || '' : '' ;
+						if (streetEl) streetEl.value = addr ? addr.street || '' : '';
+						if (buildingEl) buildingEl.value = addr ? addr.building || addr.building_number || '' : '';
+						if (postalEl) postalEl.value = addr ? addr.postal_code || '' : '';
+
 						if (step4NextBtn) step4NextBtn.disabled = !omnivaGenerated;
 						if (!omnivaGenerated && generateLabelsBtn) {
 							generateLabelsBtn.classList.remove('hidden');
 						}
 					}
+
+					// Logic specific to step 5
 					if (stepNumber === 5) {
 						const step5 = document.getElementById('step-5');
 						if (!omnivaGenerated) {
@@ -1051,9 +1283,11 @@
 						startAttachmentsCooldown(20);
 						if (step5SendBtn && !attachmentsAvailable()) step5SendBtn.disabled = true;
 					}
+
 					currentStep = stepNumber;
 					updateProgressBar();
 				};
+
 
 				const updateUIData = () => {
 					if (!selectedSupplier || !selectedAnnex) return;
@@ -1075,7 +1309,7 @@
 						const deliveryDate = new Date();
 						deliveryDate.setDate(today.getDate() + 3);
 						const formattedDateLT = deliveryDate.toLocaleDateString('lt-LT');
-						const formattedDateISO = deliveryDate.toISOString().split('T[0]')[0];
+						const formattedDateISO = deliveryDate.toISOString().split('T')[0];
 
 						document
 							.querySelectorAll('.label-sample-nr')
@@ -1087,7 +1321,6 @@
 						if (step3DateInputEl) step3DateInputEl.value = formattedDateISO;
 						if (pickupDateInput) pickupDateInput.value = formattedDateISO;
 
-						// MODIFIED: Set location based on scenario
 						const location =
 							selectedScenario === 'elevator-vm' && selectedElevator
 								? selectedElevator.name
@@ -1110,7 +1343,6 @@
 						selectedSupplier &&
 						selectedAnnex &&
 						supplierInput.value === selectedSupplier.name;
-					// MODIFIED: Add elevator validation if required
 					if (selectedScenario === 'elevator-vm') {
 						isValid = isValid && selectedElevator;
 					}
@@ -1139,7 +1371,7 @@
 								updateUIData();
 							} else if (currentStep === 4) {
 								if (!omnivaGenerated) {
-									alert('Pirma sugeneruokite siuntos etiketę.');
+									customAlert('Pirma sugeneruokite siuntos etiketę.');
 									return;
 								}
 								const emailToInput = document.getElementById('email-to-input');
@@ -1189,11 +1421,11 @@ UAB "Baltijos javai"`;
 								const sendingIndicator = document.getElementById('step5-sending');
 								if (!attachmentsAvailable()) {
 									const remain = Math.max(0, Math.ceil((attachmentsReadyAt - Date.now()) / 1000));
-									alert('Failai ruošiami. Siuntimas galimas po ' + remain + ' s.');
+									customAlert('Failai ruošiami. Siuntimas galimas po ' + remain + ' s.');
 									return;
 								}
 								if (!emailToInput.value || !emailToInput.value.trim()) {
-									alert('Laukas "Kam" yra privalomas.');
+									customAlert('Laukas "Kam" yra privalomas.');
 									emailToInput.focus();
 									return;
 								}
@@ -1262,7 +1494,7 @@ UAB "Baltijos javai"`;
 									})
 									.catch(err => {
 										console.error('Siuntimo klaida:', err);
-										alert('Nepavyko išsiųsti el. laiško. Bandykite dar kartą.');
+										customAlert('Nepavyko išsiųsti el. laiško. Bandykite dar kartą.');
 									})
 									.finally(() => {
 										if (sendBtn) sendBtn.disabled = false;
@@ -1305,7 +1537,6 @@ UAB "Baltijos javai"`;
 							el.textContent = selectedScenarioText;
 						});
 
-						// MODIFIED: Show/hide elevator container based on scenario
 						if (selectedScenario === 'elevator-vm') {
 							elevatorContainer.classList.remove('hidden');
 							supplierLabel.textContent = 'Iš kur atvežta (Tiekėjas)';
@@ -1313,10 +1544,10 @@ UAB "Baltijos javai"`;
 							elevatorContainer.classList.add('hidden');
 							supplierLabel.textContent = 'Iš kur siunčiama (Tiekėjas)';
 						}
-						validateStep2(); // Re-validate after changing visibility
+						validateStep2(); 
 						showStep(2);
 					} catch (e) {
-						alert('Nepavyko užkrauti duomenų. Patikrinkite tokeną ir bandykite dar kartą.');
+						customAlert('Nepavyko užkrauti duomenų. Patikrinkite prieigos žetoną ir bandykite dar kartą.');
 					} finally {
 						validateStep1();
 						if (step1Loading) step1Loading.classList.add('hidden');
@@ -1325,11 +1556,11 @@ UAB "Baltijos javai"`;
 
 				document.getElementById('btn-restart').addEventListener('click', () => {
 					selectedSupplier = null;
-					selectedElevator = null; // NEW
-					elevatorSelect.value = ''; // NEW
-					elevatorContainer.classList.add('hidden'); // NEW
-					elevatorAddressDiv.classList.add('hidden'); // NEW
-					supplierLabel.textContent = 'Iš kur siunčiama (Tiekėjas)'; // NEW
+					selectedElevator = null; 
+					elevatorSelect.value = ''; 
+					elevatorContainer.classList.add('hidden'); 
+					elevatorAddressDiv.classList.add('hidden'); 
+					supplierLabel.textContent = 'Iš kur siunčiama (Tiekėjas)'; 
 
 					currentSampleNumber = null;
 					supplierInput.value = '';
@@ -1413,104 +1644,103 @@ UAB "Baltijos javai"`;
 					];
 					const missing = requiredMap.filter(({ el }) => !el || !el.value || !el.value.trim());
 					if (missing.length > 0) {
-						alert('Užpildykite adresą: ' + missing.map(m => m.label).join(', '));
+						customAlert('Užpildykite visus adreso laukus: ' + missing.map(m => m.label).join(', '));
 						if (missing[0] && missing[0].el) missing[0].el.focus();
 						return;
 					}
-					if (!/^\d{5}$/.test(postalEl.value.trim())) {
-						alert('Pašto kodas turi būti tiksliai 5 skaitmenys.');
-						postalEl.focus();
-						return;
-					}
+					
 					const selectedDate = pickupDateInput.value;
 					if (!selectedDate) {
+						customAlert('Nurodykite paėmimo datą.');
 						pickupDateInput.focus();
 						return;
 					}
 
-					const confirmed = confirm('Ar tikrai norite generuoti siuntos etiketę?');
-					if (!confirmed) {
-						return;
-					}
-					generateLabelsBtn.classList.add('hidden');
+					customConfirm('Ar tikrai norite generuoti siuntos etiketę?', confirmed => {
+						if (!confirmed) {
+							return;
+						}
+						
+						generateLabelsBtn.classList.add('hidden');
 
-					const dateObj = new Date(selectedDate);
-					const userTimezoneOffset = dateObj.getTimezoneOffset() * 60000;
-					const adjustedDate = new Date(dateObj.getTime() + userTimezoneOffset);
+						const dateObj = new Date(selectedDate);
+						const userTimezoneOffset = dateObj.getTimezoneOffset() * 60000;
+						const adjustedDate = new Date(dateObj.getTime() + userTimezoneOffset);
 
-					const formattedDateLT = adjustedDate.toLocaleDateString('lt-LT');
-					const formattedDateISO = adjustedDate.toISOString().split('T[0]')[0];
+						const formattedDateLT = adjustedDate.toLocaleDateString('lt-LT');
+						const formattedDateISO = adjustedDate.toISOString().split('T')[0];
 
-					document
-						.querySelectorAll('.label-date')
-						.forEach(el => (el.textContent = formattedDateLT));
-					document.getElementById('omniva-date').textContent = formattedDateISO;
-					const step3DateEl = document.getElementById('step3-date');
-					if (step3DateEl) step3DateEl.value = formattedDateISO;
+						document
+							.querySelectorAll('.label-date')
+							.forEach(el => (el.textContent = formattedDateLT));
+						document.getElementById('omniva-date').textContent = formattedDateISO;
+						const step3DateEl = document.getElementById('step3-date');
+						if (step3DateEl) step3DateEl.value = formattedDateISO;
 
-					const resolveSelectedAnnex = () => {
-						if (!selectedSupplier) return null;
-						const list = selectedSupplier.priedai || selectedSupplier.annexes || [];
-						return list.find(a => a.nr === selectedAnnex) || null;
-					};
-					const selectedAnnexObj = resolveSelectedAnnex();
-					const shipCity = (document.getElementById('ship-city') || {}).value || '';
-					const shipStreet = (document.getElementById('ship-street') || {}).value || '';
-					const shipBuilding = (document.getElementById('ship-building') || {}).value || '';
-					const shipPostal = (document.getElementById('ship-postal') || {}).value || '';
-					const payload = {
-						sampleNumber: currentSampleNumber,
-						pickupDate: formattedDateISO,
-						supplierId: selectedSupplier
-							? selectedSupplier.Id ?? selectedSupplier.id ?? null
-							: null,
-						annexId: selectedAnnexObj ? selectedAnnexObj.Id ?? selectedAnnexObj.id ?? null : null,
-						supplier: selectedSupplier
-							? {
-									name: selectedSupplier.name,
-									address: selectedSupplier.address || '',
-									email: selectedSupplier.email || '',
-									location: selectedSupplier.location || '',
-							  }
-							: null,
-						annex: selectedAnnex || null,
-						quantity: quantityInput && quantityInput.value ? quantityInput.value : '',
-						variety: selectedAnnexObj
-							? selectedAnnexObj.veisle || selectedAnnexObj.variety || ''
-							: '',
-						pristatymas_nuo: selectedAnnexObj ? selectedAnnexObj.pristatymas_nuo || '' : '',
-						pristatymas_iki: selectedAnnexObj ? selectedAnnexObj.pristatymas_iki || '' : '',
-						pickupAddress: {
-							city: shipCity,
-							street: shipStreet,
-							building_number: shipBuilding,
-							postal_code: shipPostal,
-						},
-						scenario: selectedScenario,
-					};
+						const resolveSelectedAnnex = () => {
+							if (!selectedSupplier) return null;
+							const list = selectedSupplier.priedai || selectedSupplier.annexes || [];
+							return list.find(a => a.nr === selectedAnnex) || null;
+						};
+						const selectedAnnexObj = resolveSelectedAnnex();
+						const shipCity = (document.getElementById('ship-city') || {}).value || '';
+						const shipStreet = (document.getElementById('ship-street') || {}).value || '';
+						const shipBuilding = (document.getElementById('ship-building') || {}).value || '';
+						const shipPostal = (document.getElementById('ship-postal') || {}).value || '';
+						const payload = {
+							sampleNumber: currentSampleNumber,
+							pickupDate: formattedDateISO,
+							supplierId: selectedSupplier
+								? selectedSupplier.Id ?? selectedSupplier.id ?? null
+								: null,
+							annexId: selectedAnnexObj ? selectedAnnexObj.Id ?? selectedAnnexObj.id ?? null : null,
+							supplier: selectedSupplier
+								? {
+										name: selectedSupplier.name,
+										address: selectedSupplier.address || '',
+										email: selectedSupplier.email || '',
+										location: selectedSupplier.location || '',
+								  }
+								: null,
+							annex: selectedAnnex || null,
+							quantity: quantityInput && quantityInput.value ? quantityInput.value : '',
+							variety: selectedAnnexObj
+								? selectedAnnexObj.veisle || selectedAnnexObj.variety || ''
+								: '',
+							pristatymas_nuo: selectedAnnexObj ? selectedAnnexObj.pristatymas_nuo || '' : '',
+							pristatymas_iki: selectedAnnexObj ? selectedAnnexObj.pristatymas_iki || '' : '',
+							pickupAddress: {
+								city: shipCity,
+								street: shipStreet,
+								building_number: shipBuilding,
+								postal_code: shipPostal,
+							},
+							scenario: selectedScenario,
+						};
 
-					const headers = { accept: 'application/json', 'content-type': 'application/json' };
-					if (authToken) headers['Authorization'] = authToken;
+						const headers = { accept: 'application/json', 'content-type': 'application/json' };
+						if (authToken) headers['Authorization'] = authToken;
 
-					fetch(UPDATE_ENDPOINT, {
-						method: 'POST',
-						headers,
-						body: JSON.stringify(payload),
-					})
-						.then(resp => {
-							if (!resp.ok) throw new Error('HTTP ' + resp.status);
-							return resp.json().catch(() => ({}));
+						fetch(UPDATE_ENDPOINT, {
+							method: 'POST',
+							headers,
+							body: JSON.stringify(payload),
 						})
-						.then(() => {})
-						.catch(err => {
-							console.error('Nepavyko atnaujinti mėginio per webhook:', err);
-							alert('Nepavyko atnaujinti mėginio. Patikrinkite tokeną ir bandykite dar kartą.');
-						});
+							.then(resp => {
+								if (!resp.ok) throw new Error('HTTP ' + resp.status);
+								return resp.json().catch(() => ({}));
+							})
+							.then(() => {})
+							.catch(err => {
+								console.error('Nepavyko atnaujinti mėginio per webhook:', err);
+								customAlert('Nepavyko atnaujinti mėginio. Patikrinkite prieigos žetoną ir bandykite dar kartą.');
+							});
 
-					omnivaStickerPreview.classList.remove('hidden');
-					showGenerationSuccessOnce();
-					omnivaGenerated = true;
-					if (step4NextBtn) step4NextBtn.disabled = false;
+						omnivaStickerPreview.classList.remove('hidden');
+						showGenerationSuccessOnce();
+						omnivaGenerated = true;
+						if (step4NextBtn) step4NextBtn.disabled = false;
+					});
 				});
 
 				// --- NEW: Elevator Event Listener ---
@@ -1605,7 +1835,6 @@ UAB "Baltijos javai"`;
 										el =>
 											(el.textContent = selectedAnnexData.veisle || selectedAnnexData.variety || '')
 									);
-								// MODIFIED: Location logic moved to updateUIData for consistency
 								const location =
 									selectedScenario === 'elevator-vm' && selectedElevator
 										? selectedElevator.name
@@ -1647,3 +1876,4 @@ UAB "Baltijos javai"`;
 		</script>
 	</body>
 </html>
+
