@@ -51,21 +51,28 @@
 			rel="stylesheet" />
 	</head>
 	<body class="bg-gray-100 flex items-center justify-center min-h-screen">
-		<div class="w-full max-w-5xl mx-auto p-4">
+		<div class="w-full max-w-5xl mx-auto p-4" id="main-process-container">
 			<!-- Progress Bar -->
 			<div class="px-4 sm:px-0">
-				<div class="flex items-center justify-center mb-4">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="32"
-						height="32"
-						viewBox="0 0 256 256"
-						class="text-blue-600 mr-3">
-						<path
-							fill="currentColor"
-							d="M216 72h-12.82A63.95 63.95 0 0 0 89.67 48.27L72.24 35.84A8 8 0 0 0 60.27 32H40a8 8 0 0 0 0 16h17.73l17.43 12.43A64.12 64.12 0 0 0 80 128a63.38 63.38 0 0 0 4.28 22.88a32 32 0 1 0 15.44 15.44A64 64 0 0 0 216 136V80a8 8 0 0 0-8-8M56 200a16 16 0 1 1 16 16a16 16 0 0 1-16-16m152-72h-72a56 56 0 0 1-52.2-35.34A56.24 56.24 0 0 1 136 80h72Z" />
-					</svg>
-					<h1 class="text-2xl font-bold text-gray-800">Mėginių Siuntimo Procesas</h1>
+				<div class="flex items-center justify-between mb-4">
+					<div class="flex items-center">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="32"
+							height="32"
+							viewBox="0 0 256 256"
+							class="text-blue-600 mr-3">
+							<path
+								fill="currentColor"
+								d="M216 72h-12.82A63.95 63.95 0 0 0 89.67 48.27L72.24 35.84A8 8 0 0 0 60.27 32H40a8 8 0 0 0 0 16h17.73l17.43 12.43A64.12 64.12 0 0 0 80 128a63.38 63.38 0 0 0 4.28 22.88a32 32 0 1 0 15.44 15.44A64 64 0 0 0 216 136V80a8 8 0 0 0-8-8M56 200a16 16 0 1 1 16 16a16 16 0 0 1-16-16m152-72h-72a56 56 0 0 1-52.2-35.34A56.24 56.24 0 0 1 136 80h72Z" />
+						</svg>
+						<h1 class="text-2xl font-bold text-gray-800">Mėginių Siuntimo Procesas</h1>
+					</div>
+					<button
+						id="btn-open-register"
+						class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+						Mėginių registras
+					</button>
 				</div>
 				<div class="relative w-full bg-gray-200 rounded-full h-2.5 mb-6">
 					<div
@@ -695,51 +702,14 @@
 										class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 										Sutarties Priedas
 									</th>
+									<th
+										class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+										Būsena
+									</th>
 								</tr>
 							</thead>
 							<tbody id="history-table-body" class="bg-white divide-y divide-gray-200">
-								<tr>
-									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">Andrius</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">2025-09-10</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-										BJ25 M229
-									</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-										Pauliaus Jurgeliūno ūkis
-									</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-										Kėdainių r. sav.
-									</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">VM</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">SUT00627-P3</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm">
-										<span
-											class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
-											>Išsiųsta</span
-										>
-									</td>
-								</tr>
-								<tr>
-									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">Andrius</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">2025-09-08</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-										BJ25 M228
-									</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-										UAB „Drąsutaičiai"
-									</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-										Pakruojo r. sav.
-									</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">BIL</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">SUT00588-P2</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm">
-										<span
-											class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"
-											>Išsiųsta</span
-										>
-									</td>
-								</tr>
+								<!-- Populated by JS -->
 							</tbody>
 						</table>
 					</div>
@@ -754,12 +724,83 @@
 			</div>
 		</div>
 
+		<!-- Register View -->
+		<div id="register-view" class="w-full max-w-5xl mx-auto p-4 hidden">
+			<div class="bg-white p-8 rounded-xl shadow-lg">
+				<h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Išsiųstų Mėginių Registras</h2>
+				<div class="overflow-x-auto border rounded-lg">
+					<table class="min-w-full divide-y divide-gray-200">
+						<thead class="bg-gray-50">
+							<tr>
+								<th
+									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									Vadybininkas
+								</th>
+								<th
+									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									Paėmimo Data
+								</th>
+								<th
+									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									Mėginio Nr.
+								</th>
+								<th
+									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									Tiekėjas
+								</th>
+								<th
+									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									Paėmimo Vieta
+								</th>
+								<th
+									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									Siunčiama į
+								</th>
+								<th
+									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									Sutarties Priedas
+								</th>
+								<th
+									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									Būsena
+								</th>
+							</tr>
+						</thead>
+						<tbody id="register-table-body" class="bg-white divide-y divide-gray-200">
+							<!-- Populated by JS -->
+						</tbody>
+					</table>
+				</div>
+				<div class="mt-8 text-center">
+					<button
+						id="btn-back-to-main"
+						class="bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-400">
+						Atgal į procesą
+					</button>
+				</div>
+			</div>
+		</div>
+
 		<!-- Custom Modal -->
-		<div id="custom-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center">
+		<div
+			id="custom-modal"
+			class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center">
 			<div class="relative mx-auto p-5 border w-full max-w-sm shadow-lg rounded-xl bg-white">
 				<div class="mt-3 text-center">
-					<div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 mb-4">
-						<svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+					<div
+						class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 mb-4">
+						<svg
+							class="h-6 w-6 text-blue-600"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+						</svg>
 					</div>
 					<h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">Pranešimas</h3>
 					<div class="mt-2 px-7 py-3">
@@ -774,7 +815,6 @@
 
 		<script>
 			document.addEventListener('DOMContentLoaded', function () {
-				
 				// --- Modal Elements and Functions ---
 				const modal = document.getElementById('custom-modal');
 				const modalTitle = document.getElementById('modal-title');
@@ -837,7 +877,6 @@
 					]);
 				}
 
-
 				let currentStep = 1;
 				const totalSteps = 6;
 				let sampleCounter = 230; // Start counter for new samples
@@ -850,6 +889,8 @@
 				const SUPPLIERS_ENDPOINT =
 					'https://operations.baltijosjavai.lt/webhook/get-clients-with-data';
 				const UPDATE_ENDPOINT = 'https://operations.baltijosjavai.lt/webhook/update-sample';
+				const GET_SAMPLES_ENDPOINT = 'https://operations.baltijosjavai.lt/webhook/get-samples-history';
+
 				const loadSuppliers = async token => {
 					try {
 						const resp = await fetch(SUPPLIERS_ENDPOINT, {
@@ -1071,6 +1112,11 @@
 				let attachmentsReadyAt = 0;
 				let attachmentsCooldownTimer = null;
 
+				const mainProcessContainer = document.getElementById('main-process-container');
+				const registerView = document.getElementById('register-view');
+				const openRegisterBtn = document.getElementById('btn-open-register');
+				const backToMainBtn = document.getElementById('btn-back-to-main');
+
 				// --- NEW: Elevator DOM Elements ---
 				const elevatorContainer = document.getElementById('elevator-container');
 				const elevatorSelect = document.getElementById('elevator-select');
@@ -1217,7 +1263,7 @@
 						step.classList.toggle('visible-step', index + 1 === stepNumber);
 						step.classList.toggle('hidden-step', index + 1 !== stepNumber);
 					});
-					
+
 					if (stepNumber === 1) {
 						omnivaGenerated = false;
 					}
@@ -1263,7 +1309,7 @@
 						} else {
 							if (generateLabelsBtn) generateLabelsBtn.classList.remove('hidden');
 						}
-						
+
 						if (step4NextBtn) step4NextBtn.disabled = !omnivaGenerated;
 					}
 
@@ -1283,7 +1329,6 @@
 					currentStep = stepNumber;
 					updateProgressBar();
 				};
-
 
 				const updateUIData = () => {
 					if (!selectedSupplier || !selectedAnnex) return;
@@ -1358,6 +1403,39 @@
 					const tokenPresent = !!(tokenInput && tokenInput.value.trim());
 					step1NextBtn.disabled = !(scenarioChosen && tokenPresent);
 				};
+
+				function renderHistoryTable(tbodyElement, rows) {
+					if (!tbodyElement) return;
+
+					tbodyElement.innerHTML = '';
+					if (!Array.isArray(rows) || rows.length === 0) {
+						tbodyElement.innerHTML =
+							'<tr><td colspan="8" class="text-center p-4">Duomenų nerasta.</td></tr>';
+						return;
+					}
+
+					rows.forEach(r => {
+						const vadybininkas = (r && r.vadybininkas) || 'N/A';
+						const paemimo_data = (r && r.paemimo_data) || 'N/A';
+						const kodas = (r && r.kodas) || 'N/A';
+						const tiekejas = (r && r.klientas && r.klientas.pavadinimas) || 'N/A';
+						const paemimo_vieta = (r && r.sandelys) || 'N/A';
+						const siunciama_i = (r && r.pristatymo_vieta) || 'N/A';
+						const sutarties_priedas = (r && r.priedo_pavadinimas) || 'N/A';
+						const tr = document.createElement('tr');
+						tr.innerHTML = `
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${vadybininkas}</td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${paemimo_data}</td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">${kodas}</td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${tiekejas}</td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${paemimo_vieta}</td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${siunciama_i}</td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${sutarties_priedas}</td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Išsiųsta</span></td>
+						`;
+						tbodyElement.appendChild(tr);
+					});
+				}
 
 				// --- Event Listeners ---
 				nextButtons.forEach(button => {
@@ -1457,35 +1535,7 @@ UAB "Baltijos javai"`;
 											? data
 											: [];
 										const tbody = document.getElementById('history-table-body');
-										if (!tbody) {
-											console.warn('Nerastas istorijos lentelės korpusas');
-										} else {
-											tbody.innerHTML = '';
-										}
-										if (!rows.length) {
-											console.log('Webhook grąžino 0 eilučių lentelės užpildymui.');
-										}
-										rows.forEach(r => {
-											const vadybininkas = (r && r.vadybininkas) || '';
-											const paemimo_data = (r && r.paemimo_data) || '';
-											const kodas = (r && r.kodas) || '';
-											const tiekejas = (r && r.klientas && r.klientas.pavadinimas) || '';
-											const paemimo_vieta = (r && r.sandelys) || '';
-											const siunciama_i = (r && r.pristatymo_vieta) || '';
-											const sutarties_priedas = (r && r.priedo_pavadinimas) || '';
-											const tr = document.createElement('tr');
-											tr.innerHTML = `
-												<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${vadybininkas}</td>
-												<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${paemimo_data}</td>
-												<td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">${kodas}</td>
-												<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${tiekejas}</td>
-												<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${paemimo_vieta}</td>
-												<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${siunciama_i}</td>
-												<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${sutarties_priedas}</td>
-												<td class="px-6 py-4 whitespace-nowrap text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Išsiųsta</span></td>
-											`;
-											if (tbody) tbody.appendChild(tr);
-										});
+										renderHistoryTable(tbody, rows);
 										showStep(currentStep + 1);
 									})
 									.catch(err => {
@@ -1540,10 +1590,12 @@ UAB "Baltijos javai"`;
 							elevatorContainer.classList.add('hidden');
 							supplierLabel.textContent = 'Iš kur siunčiama (Tiekėjas)';
 						}
-						validateStep2(); 
+						validateStep2();
 						showStep(2);
 					} catch (e) {
-						customAlert('Nepavyko užkrauti duomenų. Patikrinkite prieigos žetoną ir bandykite dar kartą.');
+						customAlert(
+							'Nepavyko užkrauti duomenų. Patikrinkite prieigos žetoną ir bandykite dar kartą.'
+						);
 					} finally {
 						validateStep1();
 						if (step1Loading) step1Loading.classList.add('hidden');
@@ -1552,11 +1604,11 @@ UAB "Baltijos javai"`;
 
 				document.getElementById('btn-restart').addEventListener('click', () => {
 					selectedSupplier = null;
-					selectedElevator = null; 
-					elevatorSelect.value = ''; 
-					elevatorContainer.classList.add('hidden'); 
-					elevatorAddressDiv.classList.add('hidden'); 
-					supplierLabel.textContent = 'Iš kur siunčiama (Tiekėjas)'; 
+					selectedElevator = null;
+					elevatorSelect.value = '';
+					elevatorContainer.classList.add('hidden');
+					elevatorAddressDiv.classList.add('hidden');
+					supplierLabel.textContent = 'Iš kur siunčiama (Tiekėjas)';
 
 					currentSampleNumber = null;
 					supplierInput.value = '';
@@ -1640,11 +1692,13 @@ UAB "Baltijos javai"`;
 					];
 					const missing = requiredMap.filter(({ el }) => !el || !el.value || !el.value.trim());
 					if (missing.length > 0) {
-						customAlert('Užpildykite visus privalomus adreso laukus: ' + missing.map(m => m.label).join(', '));
+						customAlert(
+							'Užpildykite visus privalomus adreso laukus: ' + missing.map(m => m.label).join(', ')
+						);
 						if (missing[0] && missing[0].el) missing[0].el.focus();
 						return;
 					}
-					
+
 					const selectedDate = pickupDateInput.value;
 					if (!selectedDate) {
 						customAlert('Nurodykite paėmimo datą.');
@@ -1656,7 +1710,7 @@ UAB "Baltijos javai"`;
 						if (!confirmed) {
 							return;
 						}
-						
+
 						generateLabelsBtn.classList.add('hidden');
 
 						const dateObj = new Date(selectedDate);
@@ -1729,7 +1783,9 @@ UAB "Baltijos javai"`;
 							.then(() => {})
 							.catch(err => {
 								console.error('Nepavyko atnaujinti mėginio per webhook:', err);
-								customAlert('Nepavyko atnaujinti mėginio. Patikrinkite prieigos žetoną ir bandykite dar kartą.');
+								customAlert(
+									'Nepavyko atnaujinti mėginio. Patikrinkite prieigos žetoną ir bandykite dar kartą.'
+								);
 							});
 
 						omnivaStickerPreview.classList.remove('hidden');
@@ -1818,7 +1874,7 @@ UAB "Baltijos javai"`;
 							).find(a => a.nr === selectedAnnex);
 							if (selectedAnnexData) {
 								annexDetailsDiv.innerHTML = `
-                        <strong>Priedo data:</strong> ${selectedAnnexData.date} | 
+                        <strong>Priedo data:</strong> ${selectedAnnexData.date} |
                         <strong>Kiekis:</strong> ${selectedAnnexData.quantity} `;
 								annexDetailsDiv.classList.remove('hidden');
 								quantityInput.value = selectedAnnexData.quantity;
@@ -1868,8 +1924,65 @@ UAB "Baltijos javai"`;
 				document.addEventListener('click', function (e) {
 					closeAllLists(e.target);
 				});
+
+				// --- Register View Logic ---
+				const showRegister = async () => {
+					if (!mainProcessContainer || !registerView) return;
+
+					mainProcessContainer.classList.add('hidden');
+					registerView.classList.remove('hidden');
+
+					const tbody = document.getElementById('register-table-body');
+					if (!tbody) return;
+
+					tbody.innerHTML = '<tr><td colspan="8" class="text-center p-4">Kraunama...</td></tr>';
+
+					if (!authToken) {
+						customAlert(
+							'Norėdami peržiūrėti registrą, pirmame žingsnyje įveskite galiojantį prieigos žetoną.'
+						);
+						tbody.innerHTML =
+							'<tr><td colspan="8" class="text-center p-4">Reikalingas prieigos žetonas.</td></tr>';
+						return;
+					}
+
+					try {
+						const headers = { accept: 'application/json', Authorization: authToken };
+						const resp = await fetch(GET_SAMPLES_ENDPOINT, { method: 'GET', headers });
+
+						if (!resp.ok) {
+							let errorMsg = `HTTP ${resp.status}`;
+							try {
+								const errorJson = await resp.json();
+								if (errorJson && errorJson.message) {
+									errorMsg = errorJson.message;
+								}
+							} catch (e) {
+								/* ignore json parsing error */
+							}
+							throw new Error(errorMsg);
+						}
+
+						const samples = await resp.json();
+						renderHistoryTable(tbody, samples);
+					} catch (err) {
+						console.error('Klaida gaunant registrą:', err);
+						tbody.innerHTML = `<tr><td colspan="8" class="text-center p-4 text-red-500">Nepavyko užkrauti registro duomenų. Klaida: ${err.message}</td></tr>`;
+					}
+				};
+
+				if (openRegisterBtn) {
+					openRegisterBtn.addEventListener('click', showRegister);
+				}
+
+				if (backToMainBtn) {
+					backToMainBtn.addEventListener('click', () => {
+						if (!mainProcessContainer || !registerView) return;
+						registerView.classList.add('hidden');
+						mainProcessContainer.classList.remove('hidden');
+					});
+				}
 			});
 		</script>
 	</body>
 </html>
-
