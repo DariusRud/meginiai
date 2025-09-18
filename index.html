@@ -52,7 +52,6 @@
 	</head>
 	<body class="bg-gray-100 flex items-center justify-center min-h-screen">
 		<div class="w-full max-w-5xl mx-auto p-4">
-			<!-- Progress Bar -->
 			<div class="px-4 sm:px-0">
 				<div class="flex items-center justify-center mb-4">
 					<svg
@@ -75,7 +74,6 @@
 				</div>
 			</div>
 
-			<!-- Step 1: Scenario Selection -->
 			<div id="step-1" class="step-card bg-white p-8 rounded-xl shadow-lg visible-step">
 				<h2 class="text-xl font-semibold text-gray-700 mb-1">1. Scenarijaus Pasirinkimas</h2>
 				<p class="text-gray-500 mb-6">Pasirinkite mėginio siuntimo scenarijų.</p>
@@ -160,7 +158,6 @@
 				</div>
 			</div>
 
-			<!-- Step 2: Data Input -->
 			<div id="step-2" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
 				<div class="mb-4">
 					<span class="text-red-500 font-semibold">Scenarijus:</span>
@@ -171,6 +168,19 @@
 					Įveskite siuntėjo informaciją ir pasirinkite sutarties priedą.
 				</p>
 				<div class="space-y-6">
+					<div id="elevator-container" class="hidden">
+						<label for="elevator-select" class="block text-sm font-medium text-gray-700 mb-1"
+							>Iš kur siunčiama (Elevatorius)</label
+						>
+						<select
+							id="elevator-select"
+							class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+							</select>
+						<div
+							id="elevator-address"
+							class="mt-2 text-sm text-gray-600 p-3 bg-gray-50 rounded-md border border-gray-200 hidden"></div>
+					</div>
+
 					<div class="relative">
 						<label for="supplier" class="block text-sm font-medium text-gray-700 mb-1"
 							>Iš kur siunčiama (Tiekėjas)</label
@@ -189,7 +199,6 @@
 							id="supplier-address"
 							class="mt-2 text-sm text-gray-600 p-3 bg-gray-50 rounded-md border border-gray-200 hidden"></div>
 					</div>
-					<!-- Annex dropdown - initially hidden -->
 					<div id="annex-container" class="hidden">
 						<label for="annex-search" class="block text-sm font-medium text-gray-700"
 							>Priedo numeris</label
@@ -217,8 +226,7 @@
 							<div
 								id="annex-dropdown"
 								class="absolute hidden z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto dropdown-items">
-								<!-- Annex items will be populated by JS -->
-							</div>
+								</div>
 						</div>
 						<div
 							id="annex-details"
@@ -239,7 +247,6 @@
 				</div>
 			</div>
 
-			<!-- Step 3: Sample Label -->
 			<div id="step-3" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
 				<div class="mb-4">
 					<span class="text-red-500 font-semibold">Scenarijus:</span>
@@ -271,11 +278,9 @@
 				</div>
 
 				<div class="space-y-6">
-					<!-- Sample Label -->
 					<div class="border-2 border-dashed rounded-lg p-4 bg-gray-50">
 						<h3 class="font-bold text-center text-gray-800 mb-2">Mėginio lipdukas</h3>
 						<div class="grid grid-cols-2 gap-0 border bg-white shadow-sm p-2">
-							<!-- Left Label -->
 							<div class="p-2 border-r">
 								<div class="text-left mb-2 pb-2">
 									<p class="font-bold text-sm">BALTIJOS JAVAI</p>
@@ -301,7 +306,6 @@
 								</div>
 								<div class="mt-2 h-16 border-t border-gray-200"></div>
 							</div>
-							<!-- Right Label -->
 							<div class="p-2">
 								<div class="text-left mb-2 pb-2">
 									<p class="font-bold text-sm">BALTIJOS JAVAI</p>
@@ -342,7 +346,6 @@
 				</div>
 			</div>
 
-			<!-- Step 4: Omniva Order -->
 			<div id="step-4" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
 				<div class="mb-4">
 					<span class="text-red-500 font-semibold">Scenarijus:</span>
@@ -351,7 +354,6 @@
 				<h2 class="text-xl font-semibold text-gray-700 mb-1">4. Siuntos Užsakymas</h2>
 				<p class="text-gray-500 mb-6">Pasirinkite paėmimo datą ir sugeneruokite siuntos lipduką.</p>
 
-				<!-- Omniva Label Section -->
 				<div class="border-2 border-dashed rounded-lg p-4 bg-gray-50">
 					<div class="text-center mb-4 border-b pb-4">
 						<div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -497,7 +499,6 @@
 				</div>
 			</div>
 
-			<!-- Step 5: Email Sending -->
 			<div id="step-5" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
 				<div class="mb-4">
 					<span class="text-red-500 font-semibold">Scenarijus:</span>
@@ -620,7 +621,6 @@
 				</div>
 			</div>
 
-			<!-- Step 6: Confirmation -->
 			<div id="step-6" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
 				<div class="text-center">
 					<div class="mb-4">
@@ -777,6 +777,51 @@
 				let selectedAnnex = null;
 				let authToken = '';
 
+				// --- NEW: Elevator data ---
+				const elevators = [
+					{
+						id: 'joniskis',
+						name: 'AB "Joniškio grūdai"',
+						address: {
+							street: 'Statybininkų g. 10',
+							city: 'Joniškis',
+							postal_code: 'LT-84101',
+							building: '',
+						},
+					},
+					{
+						id: 'kedainiai',
+						name: 'UAB "Kėdainių aruodai"',
+						address: {
+							street: 'Pramonės g. 21',
+							city: 'Kėdainiai',
+							postal_code: 'LT-57100',
+							building: '',
+						},
+					},
+					{
+						id: 'radviliskis',
+						name: 'UAB "Radviliškio elevatorius"',
+						address: {
+							street: 'Geležinkelio g. 15',
+							city: 'Radviliškis',
+							postal_code: 'LT-82123',
+							building: '',
+						},
+					},
+					{
+						id: 'svirbygala',
+						name: 'UAB "Baltijos javai" Svirbygalos g. elevatorius',
+						address: {
+							street: 'Svirbygalos g. 19',
+							city: 'Kaunas',
+							postal_code: 'LT-46280',
+							building: '',
+						},
+					},
+				];
+				let selectedElevator = null;
+
 				// --- DOM Elements ---
 				const steps = document.querySelectorAll('.step-card');
 				const progressBar = document.getElementById('progressBar');
@@ -789,6 +834,7 @@
 				const scenarioRadios = document.querySelectorAll('input[name="scenario"]');
 				const supplierInput = document.getElementById('supplier');
 				const supplierAddressDiv = document.getElementById('supplier-address');
+				const supplierLabel = document.querySelector('label[for="supplier"]');
 				const autocompleteList = document.getElementById('autocomplete-list');
 				const annexContainer = document.getElementById('annex-container');
 				const annexSearchInput = document.getElementById('annex-search');
@@ -805,6 +851,23 @@
 				let generationMsgTimeout = null;
 				let attachmentsReadyAt = 0;
 				let attachmentsCooldownTimer = null;
+
+				// --- NEW: Elevator DOM Elements ---
+				const elevatorContainer = document.getElementById('elevator-container');
+				const elevatorSelect = document.getElementById('elevator-select');
+				const elevatorAddressDiv = document.getElementById('elevator-address');
+
+				function populateElevatorDropdown() {
+					elevatorSelect.innerHTML =
+						'<option value="" disabled selected>Pasirinkite elevatorių...</option>';
+					elevators.forEach(elevator => {
+						const option = document.createElement('option');
+						option.value = elevator.id;
+						option.textContent = elevator.name;
+						elevatorSelect.appendChild(option);
+					});
+				}
+				populateElevatorDropdown(); // Populate on load
 
 				function showGenerationSuccessOnce() {
 					if (generationMsgTimeout) {
@@ -936,28 +999,31 @@
 						step.classList.toggle('hidden-step', index + 1 !== stepNumber);
 					});
 					if (stepNumber === 4) {
-						// Reset Siuntos sticker when entering its step
 						omnivaStickerPreview.classList.add('hidden');
 						generationSuccessMsg.classList.add('hidden');
-						// Keep any date chosen in Step 3; if empty, initialize from Step 3 date
+
 						if (!pickupDateInput.value) {
 							const step3DateEl = document.getElementById('step3-date');
 							if (step3DateEl && step3DateEl.value) {
 								pickupDateInput.value = step3DateEl.value;
 							}
 						}
-						// Reflect the date into the printed date field
 						const omnivaDateEl = document.getElementById('omniva-date');
 						if (omnivaDateEl && pickupDateInput.value) {
 							omnivaDateEl.textContent = pickupDateInput.value;
 						}
-						// Prefill address inputs from selected supplier if structured address exists
+
+						// MODIFIED: Prefill address based on scenario
+						const isElevatorScenario = selectedScenario === 'elevator-vm';
 						const addr =
-							selectedSupplier &&
-							selectedSupplier.address &&
-							typeof selectedSupplier.address === 'object'
+							isElevatorScenario && selectedElevator
+								? selectedElevator.address
+								: selectedSupplier &&
+								  selectedSupplier.address &&
+								  typeof selectedSupplier.address === 'object'
 								? selectedSupplier.address
 								: null;
+
 						const cityEl = document.getElementById('ship-city');
 						const streetEl = document.getElementById('ship-street');
 						const buildingEl = document.getElementById('ship-building');
@@ -968,15 +1034,12 @@
 							if (buildingEl) buildingEl.value = addr.building || addr.building_number || '';
 							if (postalEl) postalEl.value = addr.postal_code || '';
 						}
-						// Require label generation before proceeding
 						if (step4NextBtn) step4NextBtn.disabled = !omnivaGenerated;
-						// Show generate button if not yet generated
 						if (!omnivaGenerated && generateLabelsBtn) {
 							generateLabelsBtn.classList.remove('hidden');
 						}
 					}
 					if (stepNumber === 5) {
-						// Grey out and disable Step 5 if label not generated (safety)
 						const step5 = document.getElementById('step-5');
 						if (!omnivaGenerated) {
 							if (step5) step5.classList.add('opacity-50');
@@ -985,9 +1048,7 @@
 							if (step5) step5.classList.remove('opacity-50');
 							if (step5SendBtn) step5SendBtn.disabled = false;
 						}
-						// Start a 25s cooldown for attachments when entering Step 5
 						startAttachmentsCooldown(20);
-						// Also disable send while attachments are not ready
 						if (step5SendBtn && !attachmentsAvailable()) step5SendBtn.disabled = true;
 					}
 					currentStep = stepNumber;
@@ -997,7 +1058,6 @@
 				const updateUIData = () => {
 					if (!selectedSupplier || !selectedAnnex) return;
 
-					// This function is now primarily for setting up Step 3
 					if (currentStep === 2) {
 						currentSampleNumber = 'BJ25 M' + sampleCounter++;
 						const selectedAnnexData = (
@@ -1015,7 +1075,7 @@
 						const deliveryDate = new Date();
 						deliveryDate.setDate(today.getDate() + 3);
 						const formattedDateLT = deliveryDate.toLocaleDateString('lt-LT');
-						const formattedDateISO = deliveryDate.toISOString().split('T')[0];
+						const formattedDateISO = deliveryDate.toISOString().split('T[0]')[0];
 
 						document
 							.querySelectorAll('.label-sample-nr')
@@ -1023,16 +1083,16 @@
 						document
 							.querySelectorAll('.label-date')
 							.forEach(el => (el.textContent = formattedDateLT));
-						// Initialize both date inputs to the same ISO date to keep them in sync by default
 						const step3DateInputEl = document.getElementById('step3-date');
 						if (step3DateInputEl) step3DateInputEl.value = formattedDateISO;
 						if (pickupDateInput) pickupDateInput.value = formattedDateISO;
-						document
-							.querySelectorAll('.label-location')
-							.forEach(
-								el => (el.textContent = selectedSupplier.address || selectedSupplier.location || '')
-							);
-						// Populate variety from annex (annex.veisle if provided)
+
+						// MODIFIED: Set location based on scenario
+						const location =
+							selectedScenario === 'elevator-vm' && selectedElevator
+								? selectedElevator.name
+								: selectedSupplier.address || selectedSupplier.location || '';
+						document.querySelectorAll('.label-location').forEach(el => (el.textContent = location));
 						document
 							.querySelectorAll('.label-variety')
 							.forEach(
@@ -1046,11 +1106,15 @@
 				};
 
 				const validateStep2 = () => {
-					step2NextBtn.disabled = !(
+					let isValid =
 						selectedSupplier &&
 						selectedAnnex &&
-						supplierInput.value === selectedSupplier.name
-					);
+						supplierInput.value === selectedSupplier.name;
+					// MODIFIED: Add elevator validation if required
+					if (selectedScenario === 'elevator-vm') {
+						isValid = isValid && selectedElevator;
+					}
+					step2NextBtn.disabled = !isValid;
 				};
 
 				const resetAnnex = () => {
@@ -1074,12 +1138,10 @@
 							if (currentStep === 2) {
 								updateUIData();
 							} else if (currentStep === 4) {
-								// Block moving to Step 5 unless label generated
 								if (!omnivaGenerated) {
 									alert('Pirma sugeneruokite siuntos etiketę.');
 									return;
 								}
-								// When leaving Omniva step, update email info
 								const emailToInput = document.getElementById('email-to-input');
 								const emailSubjectInput = document.getElementById('email-subject-input');
 								const emailBodyInput = document.getElementById('email-body-input');
@@ -1098,7 +1160,6 @@
 									deliveryDate.setDate(new Date().getDate() + 3);
 									formattedDateLT = deliveryDate.toLocaleDateString('lt-LT');
 								}
-								// Compose address from Step 4 fields in order: street, building, city, post_code
 								const shipStreet = (document.getElementById('ship-street') || {}).value || '';
 								const shipBuilding = (document.getElementById('ship-building') || {}).value || '';
 								const shipCity = (document.getElementById('ship-city') || {}).value || '';
@@ -1121,25 +1182,21 @@ UAB "Baltijos javai"`;
 
 								emailBodyInput.value = bodyText;
 							} else if (currentStep === 5) {
-								// Handle sending email via webhook, then append history and move to step 6
 								const emailToInput = document.getElementById('email-to-input');
 								const emailSubjectInput = document.getElementById('email-subject-input');
 								const emailBodyInput = document.getElementById('email-body-input');
 								const sendBtn = document.querySelector('#step-5 .btn-next');
 								const sendingIndicator = document.getElementById('step5-sending');
-								// Block send if attachments are still preparing
 								if (!attachmentsAvailable()) {
 									const remain = Math.max(0, Math.ceil((attachmentsReadyAt - Date.now()) / 1000));
 									alert('Failai ruošiami. Siuntimas galimas po ' + remain + ' s.');
 									return;
 								}
-								// Required field check for "Kam"
 								if (!emailToInput.value || !emailToInput.value.trim()) {
 									alert('Laukas "Kam" yra privalomas.');
 									emailToInput.focus();
 									return;
 								}
-								// Prepare payload
 								const clientId = selectedSupplier
 									? selectedSupplier.Id ?? selectedSupplier.id ?? null
 									: null;
@@ -1154,7 +1211,6 @@ UAB "Baltijos javai"`;
 								};
 								const headers = { accept: 'application/json', 'content-type': 'application/json' };
 								if (authToken) headers['Authorization'] = authToken;
-								// Disable button during send
 								if (sendBtn) sendBtn.disabled = true;
 								if (sendingIndicator) sendingIndicator.classList.remove('hidden');
 								fetch('https://operations.baltijosjavai.lt/webhook/send-email', {
@@ -1167,7 +1223,6 @@ UAB "Baltijos javai"`;
 										return resp.json().catch(() => ({}));
 									})
 									.then(data => {
-										// On success, response contains today's added rows; populate table only with that data
 										const rows = Array.isArray(data?.samples)
 											? data.samples
 											: Array.isArray(data)
@@ -1213,7 +1268,6 @@ UAB "Baltijos javai"`;
 										if (sendBtn) sendBtn.disabled = false;
 										if (sendingIndicator) sendingIndicator.classList.add('hidden');
 									});
-								// Prevent default auto-advance; we'll advance on success above
 								return;
 							}
 							showStep(currentStep + 1);
@@ -1243,7 +1297,6 @@ UAB "Baltijos javai"`;
 				}
 
 				step1NextBtn.addEventListener('click', async () => {
-					// Load suppliers with provided token before proceeding
 					step1NextBtn.disabled = true;
 					if (step1Loading) step1Loading.classList.remove('hidden');
 					try {
@@ -1251,6 +1304,16 @@ UAB "Baltijos javai"`;
 						document.querySelectorAll('.scenario-display-text').forEach(el => {
 							el.textContent = selectedScenarioText;
 						});
+
+						// MODIFIED: Show/hide elevator container based on scenario
+						if (selectedScenario === 'elevator-vm') {
+							elevatorContainer.classList.remove('hidden');
+							supplierLabel.textContent = 'Iš kur atvežta (Tiekėjas)';
+						} else {
+							elevatorContainer.classList.add('hidden');
+							supplierLabel.textContent = 'Iš kur siunčiama (Tiekėjas)';
+						}
+						validateStep2(); // Re-validate after changing visibility
 						showStep(2);
 					} catch (e) {
 						alert('Nepavyko užkrauti duomenų. Patikrinkite tokeną ir bandykite dar kartą.');
@@ -1262,6 +1325,12 @@ UAB "Baltijos javai"`;
 
 				document.getElementById('btn-restart').addEventListener('click', () => {
 					selectedSupplier = null;
+					selectedElevator = null; // NEW
+					elevatorSelect.value = ''; // NEW
+					elevatorContainer.classList.add('hidden'); // NEW
+					elevatorAddressDiv.classList.add('hidden'); // NEW
+					supplierLabel.textContent = 'Iš kur siunčiama (Tiekėjas)'; // NEW
+
 					currentSampleNumber = null;
 					supplierInput.value = '';
 					supplierAddressDiv.classList.add('hidden');
@@ -1280,9 +1349,7 @@ UAB "Baltijos javai"`;
 					generationSuccessMsg.classList.add('hidden');
 					omnivaGenerated = false;
 					if (step4NextBtn) step4NextBtn.disabled = true;
-					// Unhide generate button for a fresh start
 					if (generateLabelsBtn) generateLabelsBtn.classList.remove('hidden');
-					// Reset attachments cooldown
 					const msg = document.getElementById('attachments-cooldown-msg');
 					if (attachmentsCooldownTimer) clearInterval(attachmentsCooldownTimer);
 					attachmentsCooldownTimer = null;
@@ -1311,13 +1378,11 @@ UAB "Baltijos javai"`;
 						document
 							.querySelectorAll('.label-date')
 							.forEach(el => (el.textContent = formattedDateLT));
-						// Keep Omniva pickup date in sync with sticker date
 						if (pickupDateInput) pickupDateInput.value = val;
 						const omnivaDateEl = document.getElementById('omniva-date');
 						if (omnivaDateEl) omnivaDateEl.textContent = val;
 					});
 				}
-				// Also sync from Omniva date picker back to sticker date and labels
 				if (pickupDateInput) {
 					pickupDateInput.addEventListener('change', () => {
 						const val = pickupDateInput.value;
@@ -1336,7 +1401,6 @@ UAB "Baltijos javai"`;
 				}
 
 				generateLabelsBtn.addEventListener('click', () => {
-					// Validate required shipping address fields
 					const cityEl = document.getElementById('ship-city');
 					const streetEl = document.getElementById('ship-street');
 					const buildingEl = document.getElementById('ship-building');
@@ -1353,7 +1417,6 @@ UAB "Baltijos javai"`;
 						if (missing[0] && missing[0].el) missing[0].el.focus();
 						return;
 					}
-					// Validate postal code format (exactly 5 digits)
 					if (!/^\d{5}$/.test(postalEl.value.trim())) {
 						alert('Pašto kodas turi būti tiksliai 5 skaitmenys.');
 						postalEl.focus();
@@ -1365,7 +1428,6 @@ UAB "Baltijos javai"`;
 						return;
 					}
 
-					// Confirm before generating; on Yes, hide the button and proceed
 					const confirmed = confirm('Ar tikrai norite generuoti siuntos etiketę?');
 					if (!confirmed) {
 						return;
@@ -1377,24 +1439,21 @@ UAB "Baltijos javai"`;
 					const adjustedDate = new Date(dateObj.getTime() + userTimezoneOffset);
 
 					const formattedDateLT = adjustedDate.toLocaleDateString('lt-LT');
-					const formattedDateISO = adjustedDate.toISOString().split('T')[0];
+					const formattedDateISO = adjustedDate.toISOString().split('T[0]')[0];
 
 					document
 						.querySelectorAll('.label-date')
 						.forEach(el => (el.textContent = formattedDateLT));
 					document.getElementById('omniva-date').textContent = formattedDateISO;
-					// Ensure Step 3 date input mirrors generated date
 					const step3DateEl = document.getElementById('step3-date');
 					if (step3DateEl) step3DateEl.value = formattedDateISO;
 
-					// Prepare payload for webhook update
 					const resolveSelectedAnnex = () => {
 						if (!selectedSupplier) return null;
 						const list = selectedSupplier.priedai || selectedSupplier.annexes || [];
 						return list.find(a => a.nr === selectedAnnex) || null;
 					};
 					const selectedAnnexObj = resolveSelectedAnnex();
-					// Read current shipping address inputs
 					const shipCity = (document.getElementById('ship-city') || {}).value || '';
 					const shipStreet = (document.getElementById('ship-street') || {}).value || '';
 					const shipBuilding = (document.getElementById('ship-building') || {}).value || '';
@@ -1430,7 +1489,6 @@ UAB "Baltijos javai"`;
 						scenario: selectedScenario,
 					};
 
-					// Fire webhook to update sample; include Authorization header from Step 1 token
 					const headers = { accept: 'application/json', 'content-type': 'application/json' };
 					if (authToken) headers['Authorization'] = authToken;
 
@@ -1443,20 +1501,29 @@ UAB "Baltijos javai"`;
 							if (!resp.ok) throw new Error('HTTP ' + resp.status);
 							return resp.json().catch(() => ({}));
 						})
-						.then(() => {
-							// No-op UI here to avoid double toggling; UI is handled once below
-						})
+						.then(() => {})
 						.catch(err => {
 							console.error('Nepavyko atnaujinti mėginio per webhook:', err);
 							alert('Nepavyko atnaujinti mėginio. Patikrinkite tokeną ir bandykite dar kartą.');
 						});
 
-					// Show the label and a single success message immediately for UX responsiveness
 					omnivaStickerPreview.classList.remove('hidden');
 					showGenerationSuccessOnce();
-					// Mark as generated and enable Next on Step 4
 					omnivaGenerated = true;
 					if (step4NextBtn) step4NextBtn.disabled = false;
+				});
+
+				// --- NEW: Elevator Event Listener ---
+				elevatorSelect.addEventListener('change', function () {
+					const selectedId = this.value;
+					selectedElevator = elevators.find(e => e.id === selectedId) || null;
+					if (selectedElevator) {
+						elevatorAddressDiv.innerHTML = `<strong>Adresas:</strong> ${selectedElevator.address.street}, ${selectedElevator.address.city}, ${selectedElevator.address.postal_code}`;
+						elevatorAddressDiv.classList.remove('hidden');
+					} else {
+						elevatorAddressDiv.classList.add('hidden');
+					}
+					validateStep2();
 				});
 
 				// --- Autocomplete & Dropdown Logic ---
@@ -1532,19 +1599,20 @@ UAB "Baltijos javai"`;
 								document
 									.querySelectorAll('.label-quantity')
 									.forEach(el => (el.textContent = selectedAnnexData.quantity));
-								// Update variety and address immediately on selection
 								document
 									.querySelectorAll('.label-variety')
 									.forEach(
 										el =>
 											(el.textContent = selectedAnnexData.veisle || selectedAnnexData.variety || '')
 									);
+								// MODIFIED: Location logic moved to updateUIData for consistency
+								const location =
+									selectedScenario === 'elevator-vm' && selectedElevator
+										? selectedElevator.name
+										: selectedSupplier.address || selectedSupplier.location || '';
 								document
 									.querySelectorAll('.label-location')
-									.forEach(
-										el =>
-											(el.textContent = selectedSupplier.address || selectedSupplier.location || '')
-									);
+									.forEach(el => (el.textContent = location));
 							}
 
 							annexDropdown.classList.add('hidden');
