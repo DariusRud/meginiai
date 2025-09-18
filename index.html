@@ -1217,8 +1217,11 @@
 						step.classList.toggle('visible-step', index + 1 === stepNumber);
 						step.classList.toggle('hidden-step', index + 1 !== stepNumber);
 					});
+					
+					if (stepNumber === 1) {
+						omnivaGenerated = false;
+					}
 
-					// Logic specific to step 4
 					if (stepNumber === 4) {
 						omnivaStickerPreview.classList.add('hidden');
 						generationSuccessMsg.classList.add('hidden');
@@ -1235,42 +1238,35 @@
 							omnivaDateEl.textContent = pickupDateInput.value;
 						}
 
-						const isElevatorScenario = selectedScenario === 'elevator-vm';
-						const source =
-							isElevatorScenario && selectedElevator
-								? selectedElevator
-								: selectedSupplier;
-						
-						let addr = null;
-						if (source && typeof source.address === 'object' && source.address !== null) {
-							addr = source.address;
-						} else if (source && typeof source.address === 'string') {
-							const parts = source.address.split(',');
-							addr = {
-								city: parts[0]?.trim() || '',
-								street: parts[1]?.trim() || '',
-								building: '',
-								postal_code: ''
-							};
-						}
-
 						const cityEl = document.getElementById('ship-city');
 						const streetEl = document.getElementById('ship-street');
 						const buildingEl = document.getElementById('ship-building');
 						const postalEl = document.getElementById('ship-postal');
 
-						if (cityEl) cityEl.value = addr ? addr.city || '' : '' ;
-						if (streetEl) streetEl.value = addr ? addr.street || '' : '';
-						if (buildingEl) buildingEl.value = addr ? addr.building || addr.building_number || '' : '';
-						if (postalEl) postalEl.value = addr ? addr.postal_code || '' : '';
+						cityEl.value = '';
+						streetEl.value = '';
+						buildingEl.value = '';
+						postalEl.value = '';
 
-						if (step4NextBtn) step4NextBtn.disabled = !omnivaGenerated;
-						if (!omnivaGenerated && generateLabelsBtn) {
-							generateLabelsBtn.classList.remove('hidden');
+						if (selectedScenario === 'elevator-vm' && selectedElevator) {
+							const addr = selectedElevator.address;
+							if (addr) {
+								if (cityEl) cityEl.value = addr.city || '';
+								if (streetEl) streetEl.value = addr.street || '';
+								if (buildingEl) buildingEl.value = addr.building || addr.building_number || '';
+								if (postalEl) postalEl.value = addr.postal_code || '';
+							}
 						}
+
+						if (omnivaGenerated) {
+							if (generateLabelsBtn) generateLabelsBtn.classList.add('hidden');
+						} else {
+							if (generateLabelsBtn) generateLabelsBtn.classList.remove('hidden');
+						}
+						
+						if (step4NextBtn) step4NextBtn.disabled = !omnivaGenerated;
 					}
 
-					// Logic specific to step 5
 					if (stepNumber === 5) {
 						const step5 = document.getElementById('step-5');
 						if (!omnivaGenerated) {
@@ -1639,12 +1635,12 @@ UAB "Baltijos javai"`;
 					const requiredMap = [
 						{ el: cityEl, label: 'Miestas' },
 						{ el: streetEl, label: 'Gatvė' },
-						{ el: buildingEl, label: 'Pastato nr.' },
+						// { el: buildingEl, label: 'Pastato nr.' }, // Pastato nr. gali būti nebūtinas
 						{ el: postalEl, label: 'Pašto kodas' },
 					];
 					const missing = requiredMap.filter(({ el }) => !el || !el.value || !el.value.trim());
 					if (missing.length > 0) {
-						customAlert('Užpildykite visus adreso laukus: ' + missing.map(m => m.label).join(', '));
+						customAlert('Užpildykite visus privalomus adreso laukus: ' + missing.map(m => m.label).join(', '));
 						if (missing[0] && missing[0].el) missing[0].el.focus();
 						return;
 					}
