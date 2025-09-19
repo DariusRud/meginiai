@@ -384,7 +384,28 @@
 
 				<!-- Omniva Label Section -->
 				<div class="border-2 border-dashed rounded-lg p-4 bg-gray-50">
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 mb-4 pb-4 border-b">
+						<div>
+							<h3 class="text-lg font-semibold text-blue-600">Mėginys bus paimtas iš:</h3>
+							<div id="pickup-display-info" class="mt-2 text-gray-800 text-sm">
+								<p class="font-bold" id="pickup-display-name"></p>
+								<p id="pickup-display-address"></p>
+							</div>
+						</div>
+						<div>
+							<h3 class="text-lg font-semibold text-red-600">Kur pristatyti mėginį</h3>
+							<div id="recipient-display-info" class="mt-2 text-gray-800 text-sm">
+								<p class="font-bold" id="recipient-display-name"></p>
+								<p id="recipient-display-address"></p>
+								<p id="recipient-display-contact-person"></p>
+								<p id="recipient-display-phone"></p>
+							</div>
+						</div>
+					</div>
 					<div class="text-center mb-4 border-b pb-4">
+						<h4 class="text-md font-semibold text-red-600 mb-4">
+							Pristatymo informacija siuntos etiketei
+						</h4>
 						<div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
 							<div>
 								<label for="pickup-date" class="block text-sm font-medium text-gray-700 text-left"
@@ -491,9 +512,11 @@
 									GAVĖJAS
 								</div>
 								<div class="col-span-5 text-xs pl-2">
-									<p class="font-bold">UAB Viking Malt</p>
-									<p>Dovydas</p>
-									<p>Panevėžio m. Pramonės g. 2, LT-35289, Panevėžys</p>
+									<p class="font-bold" id="recipient-name">UAB Viking Malt</p>
+									<p id="recipient-contact">Dovydas</p>
+									<p id="recipient-address-line1">
+										Panevėžio m. Pramonės g. 2, LT-35289, Panevėžys
+									</p>
 									<p class="mt-1">
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
@@ -503,7 +526,7 @@
 											<path
 												d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path>
 										</svg>
-										<span>+370 691 51153</span>
+										<span id="recipient-phone">+370 691 51153</span>
 									</p>
 								</div>
 							</div>
@@ -1214,6 +1237,98 @@
 					const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
 					progressBar.style.width = `${progress}%`;
 				};
+				// ******** NAUJAS BLOKAS: Paėmimo vietos informacijos atnaujinimas ********
+				function updatePickupDetails(scenario) {
+					const pickup = { name: '', address: '' };
+					const nameEl = document.getElementById('pickup-display-name');
+					const addressEl = document.getElementById('pickup-display-address');
+
+					if (!nameEl || !addressEl) return;
+
+					if (scenario === 'farm-vm') {
+						if (selectedSupplier) {
+							pickup.name = selectedSupplier.name || 'Nenurodytas ūkis';
+							let addr = '';
+							if (selectedSupplier.address && typeof selectedSupplier.address === 'object') {
+								const a = selectedSupplier.address;
+								const parts = [a.street, a.building || a.building_number, a.city, a.postal_code].filter(
+									Boolean
+								);
+								addr = parts.join(', ');
+							}
+							pickup.address = addr;
+						}
+					} else if (['elevator-vm', 'elevator-biliunai', 'elevator-office'].includes(scenario)) {
+						if (selectedElevator) {
+							pickup.name = selectedElevator.pavadinimas || 'Nenurodytas elevatorius';
+							let addr = '';
+							const parts = [
+								selectedElevator.gatve,
+								selectedElevator.pastato_nr,
+								selectedElevator.miestas,
+								selectedElevator.pasto_kodas,
+							].filter(Boolean);
+							addr = parts.join(', ');
+							pickup.address = addr;
+						}
+					}
+
+					nameEl.textContent = pickup.name;
+					addressEl.innerHTML = `<span class="font-semibold text-red-600">Adresas:</span> ${
+						pickup.address || ''
+					}`;
+				}
+				// ******** BLOKO PABAIGA ********
+				// ******** NAUJAS BLOKAS: Gavėjo informacijos atnaujinimas ********
+				function updateRecipientDetails(scenario) {
+					const recipient = { name: '', contact: '', address: '', phone: '' };
+
+					switch (scenario) {
+						case 'farm-vm':
+						case 'elevator-vm':
+							recipient.name = 'UAB Viking Malt';
+							recipient.contact = 'Dovydas';
+							recipient.address = 'Panevėžio m. Pramonės g. 2, LT-35289, Panevėžys';
+							recipient.phone = '+370 691 51153';
+							break;
+						case 'elevator-biliunai':
+							recipient.name = 'UAB "Biliūnų grūdai"';
+							recipient.contact = 'Priėmimo skyrius';
+							recipient.address = 'Biliūnai, Raseinių r. sav., LT-60200';
+							recipient.phone = '+370 612 34567'; // Pakeiskite realiu numeriu
+							break;
+						case 'elevator-office':
+							recipient.name = 'UAB "Baltijos javai" (Ofisas)';
+							recipient.contact = 'Renata Bernotienė';
+							recipient.address = 'Svirbygalos g. 19, Kaunas, LT-46280';
+							recipient.phone = '+370 699 99999'; // Pakeiskite realiu numeriu
+							break;
+					}
+
+					// Sticker preview elements
+					const stickerNameEl = document.getElementById('recipient-name');
+					const stickerContactEl = document.getElementById('recipient-contact');
+					const stickerAddressEl = document.getElementById('recipient-address-line1');
+					const stickerPhoneEl = document.getElementById('recipient-phone');
+
+					if (stickerNameEl) stickerNameEl.textContent = recipient.name;
+					if (stickerContactEl) stickerContactEl.textContent = recipient.contact;
+					if (stickerAddressEl) stickerAddressEl.textContent = recipient.address;
+					if (stickerPhoneEl) stickerPhoneEl.textContent = recipient.phone;
+
+					// New display elements in step 4
+					const displayNameEl = document.getElementById('recipient-display-name');
+					const displayAddressEl = document.getElementById('recipient-display-address');
+					const displayContactPersonEl = document.getElementById('recipient-display-contact-person');
+					const displayPhoneEl = document.getElementById('recipient-display-phone');
+
+					if (displayNameEl) displayNameEl.textContent = recipient.name;
+					if (displayAddressEl) displayAddressEl.textContent = `Adresas: ${recipient.address}`;
+					if (displayContactPersonEl)
+						displayContactPersonEl.textContent = `Kontaktinis asmuo: ${recipient.contact}`;
+					if (displayPhoneEl) displayPhoneEl.textContent = `Tel.: ${recipient.phone}`;
+				}
+				// ******** BLOKO PABAIGA ********
 
 				const showStep = stepNumber => {
 					steps.forEach((step, index) => {
@@ -1228,6 +1343,12 @@
 					if (stepNumber === 4) {
 						omnivaStickerPreview.classList.add('hidden');
 						generationSuccessMsg.classList.add('hidden');
+
+						// ******** PAKEITIMAS ČIA ********
+						// Atnaujiname gavėjo ir paėmimo informaciją priklausomai nuo scenarijaus
+						updateRecipientDetails(selectedScenario);
+						updatePickupDetails(selectedScenario);
+						// ******** PAKEITIMO PABAIGA ********
 
 						if (!pickupDateInput.value) {
 							const step3DateEl = document.getElementById('step3-date');
@@ -1251,7 +1372,11 @@
 						buildingEl.value = '';
 						postalEl.value = '';
 
-						if (selectedScenario === 'elevator-vm' && selectedElevator) {
+						// ******** PAKEITIMAS ČIA ********
+						const isElevatorScenario = ['elevator-vm', 'elevator-biliunai', 'elevator-office'].includes(
+							selectedScenario
+						);
+						if (isElevatorScenario && selectedElevator) {
 							// New schema fields on elevator: miestas, gatve, pastato_nr, pasto_kodas
 							if (cityEl) cityEl.value = selectedElevator.miestas || '';
 							if (streetEl) streetEl.value = selectedElevator.gatve || '';
@@ -1260,7 +1385,7 @@
 						}
 
 						// NEW: Hydrate selectedElevator from current select value if missing
-						if (selectedScenario === 'elevator-vm' && !selectedElevator && elevatorSelect) {
+						if (isElevatorScenario && !selectedElevator && elevatorSelect) {
 							const val = elevatorSelect.value;
 							if (val) {
 								selectedElevator =
@@ -1269,6 +1394,7 @@
 									) || null;
 							}
 						}
+						// ******** PAKEITIMO PABAIGA ********
 
 						if (omnivaGenerated) {
 							if (generateLabelsBtn) generateLabelsBtn.classList.add('hidden');
@@ -1327,11 +1453,14 @@
 						const step3DateInputEl = document.getElementById('step3-date');
 						if (step3DateInputEl) step3DateInputEl.value = formattedDateISO;
 						if (pickupDateInput) pickupDateInput.value = formattedDateISO;
-
+						
+						// ******** PAKEITIMAS ČIA ********
+						const isElevatorScenario = ['elevator-vm', 'elevator-biliunai', 'elevator-office'].includes(selectedScenario);
 						const location =
-							selectedScenario === 'elevator-vm' && selectedElevator
+							isElevatorScenario && selectedElevator
 								? selectedElevator.name
 								: selectedSupplier.address || selectedSupplier.location || '';
+						// ******** PAKEITIMO PABAIGA ********
 						document.querySelectorAll('.label-location').forEach(el => (el.textContent = location));
 						document
 							.querySelectorAll('.label-variety')
@@ -1347,7 +1476,11 @@
 
 				const validateStep2 = () => {
 					let isValid = false;
-					if (selectedScenario === 'elevator-vm') {
+					// ******** PAKEITIMAS ČIA ********
+					const isElevatorScenario = ['elevator-vm', 'elevator-biliunai', 'elevator-office'].includes(
+						selectedScenario
+					);
+					if (isElevatorScenario) {
 						// For elevator flow, allow either elevator+annex OR supplier+annex
 						isValid = !!(selectedAnnex && (selectedElevator || selectedSupplier));
 					} else {
@@ -1359,10 +1492,10 @@
 								selectedSupplier.name.trim().toLowerCase()
 						);
 					}
+					// ******** PAKEITIMO PABAIGA ********
 					step2NextBtn.disabled = !isValid;
 					// Enable manager input once core selections are made
 					if (managerInput) managerInput.disabled = !isValid;
-					console.log(isValid);
 				};
 
 				const resetAnnex = () => {
@@ -1560,8 +1693,11 @@ UAB "Baltijos javai"`;
 						document.querySelectorAll('.scenario-display-text').forEach(el => {
 							el.textContent = selectedScenarioText;
 						});
-
-						if (selectedScenario === 'elevator-vm') {
+						
+						// ******** PAKEITIMAS ČIA ********
+						const isElevatorScenario = ['elevator-vm', 'elevator-biliunai', 'elevator-office'].includes(selectedScenario);
+						if (isElevatorScenario) {
+						// ******** PAKEITIMO PABAIGA ********
 							// First load elevators, then suppliers (with annexes)
 							try {
 								await loadElevators(authToken);
@@ -1581,11 +1717,9 @@ UAB "Baltijos javai"`;
 							elevatorContainer.classList.add('hidden');
 							supplierLabel.textContent = 'Iš kur siunčiama (Tiekėjas)';
 						}
-						console.log('jere');
+						
 						validateStep2();
-						console.log('jere');
 						showStep(2);
-						console.log('jere');
 					} catch (e) {
 						console.error('Step 1→2 data load failed:', e);
 						const msg =
@@ -1733,6 +1867,11 @@ UAB "Baltijos javai"`;
 						const shipStreet = (document.getElementById('ship-street') || {}).value || '';
 						const shipBuilding = (document.getElementById('ship-building') || {}).value || '';
 						const shipPostal = (document.getElementById('ship-postal') || {}).value || '';
+						
+						// ******** PAKEITIMAS ČIA ********
+						const isElevatorScenario = ['elevator-vm', 'elevator-biliunai', 'elevator-office'].includes(
+							selectedScenario
+						);
 						const payload = {
 							sampleNumber: currentSampleNumber,
 							pickupDate: formattedDateISO,
@@ -1765,14 +1904,14 @@ UAB "Baltijos javai"`;
 							scenario: selectedScenario,
 							// NEW: elevator identification and details when applicable
 							elevatorId:
-								selectedScenario === 'elevator-vm' && selectedElevator
+								isElevatorScenario && selectedElevator
 									? selectedElevator.Id ||
 									  selectedElevator.id ||
 									  selectedElevator.elevator_id ||
 									  null
 									: null,
 							elevator:
-								selectedScenario === 'elevator-vm' && selectedElevator
+								isElevatorScenario && selectedElevator
 									? {
 											id:
 												selectedElevator.Id ||
@@ -1790,8 +1929,7 @@ UAB "Baltijos javai"`;
 									  }
 									: null,
 						};
-						console.log(payload);
-						console.log(selectedElevator);
+						// ******** PAKEITIMO PABAIGA ********
 
 						const headers = { accept: 'application/json', 'content-type': 'application/json' };
 						if (authToken) headers['Authorization'] = authToken;
@@ -1964,10 +2102,14 @@ UAB "Baltijos javai"`;
 										el =>
 											(el.textContent = selectedAnnexData.veisle || selectedAnnexData.variety || '')
 									);
+								
+								// ******** PAKEITIMAS ČIA ********
+								const isElevatorScenario = ['elevator-vm', 'elevator-biliunai', 'elevator-office'].includes(selectedScenario);
 								const location =
-									selectedScenario === 'elevator-vm' && selectedElevator
+									isElevatorScenario && selectedElevator
 										? selectedElevator.name
 										: selectedSupplier.address || selectedSupplier.location || '';
+								// ******** PAKEITIMO PABAIGA ********
 								document
 									.querySelectorAll('.label-location')
 									.forEach(el => (el.textContent = location));
@@ -2117,3 +2259,9 @@ UAB "Baltijos javai"`;
 		</script>
 	</body>
 </html>
+
+
+
+
+
+
