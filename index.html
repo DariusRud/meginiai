@@ -381,7 +381,7 @@
 					</div>
 					<div class="text-center mb-4 border-b pb-4">
 						<h4 class="text-md font-semibold text-red-600 mb-4">
-							Pristatymo informacija siuntos etiketei
+							Informacija kurjeriui iš kur paimti mėginį
 						</h4>
 						<div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
 							<div>
@@ -429,6 +429,24 @@
 									>
 									<input
 										id="ship-postal"
+										type="text"
+										class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+								</div>
+								<div>
+									<label for="ship-name" class="block text-sm font-medium text-gray-700 text-left"
+										>Vardas</label
+									>
+									<input
+										id="ship-name"
+										type="text"
+										class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+								</div>
+								<div>
+									<label for="ship-phone" class="block text-sm font-medium text-gray-700 text-left"
+										>Telefono Nr.</label
+									>
+									<input
+										id="ship-phone"
 										type="text"
 										class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
 								</div>
@@ -1478,7 +1496,8 @@
 					if (tokenInput) {
 						tokenInput.classList.toggle('border-red-500', tokenInvalid);
 					}
-					step1NextBtn.disabled = !(scenarioChosen && tokenPresent);
+					// Pataisymas: mygtukas aktyvuojamas tik jei nėra negaliojančių simbolių
+					step1NextBtn.disabled = !(scenarioChosen && tokenPresent && !tokenInvalid);
 				};
 
 				function renderHistoryTable(tbodyElement, rows) {}
@@ -2224,3 +2243,4 @@ UAB "Baltijos javai"`;
 		</script>
 	</body>
 </html>
+
