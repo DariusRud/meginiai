@@ -40,15 +40,7 @@
 				background-color: DodgerBlue !important;
 				color: #ffffff;
 			}
-			.barcode {
-				font-family: 'Libre Barcode 39', cursive;
-				font-size: 48px;
-				line-height: 1;
-			}
 		</style>
-		<link
-			href="https://fonts.googleapis.com/css2?family=Libre+Barcode+39&display=swap"
-			rel="stylesheet" />
 	</head>
 	<body class="bg-gray-100 flex items-center justify-center min-h-screen">
 		<div class="w-full max-w-5xl mx-auto p-4" id="main-process-container">
@@ -179,9 +171,21 @@
 				</div>
 				<h2 class="text-xl font-semibold text-gray-700 mb-1">2. Duomenų įvedimas</h2>
 				<p class="text-gray-500 mb-6">
-					Įveskite siuntėjo informaciją ir pasirinkite sutarties priedą.
+					Sudarykite siunčiamų mėginių sąrašą. Galima pridėti kelis mėginius iš skirtingų tiekėjų.
 				</p>
-				<div class="space-y-6">
+
+				<!-- List of added samples -->
+				<h3 class="text-lg font-medium text-gray-800 mb-2">Pridėti mėginiai:</h3>
+				<div
+					id="samples-list"
+					class="space-y-2 mb-6 border p-4 rounded-lg bg-gray-50 min-h-[60px]">
+					<p id="samples-list-placeholder" class="text-gray-500">Mėginių sąrašas tuščias.</p>
+					<!-- JS will populate this -->
+				</div>
+
+				<!-- Form to add a new sample -->
+				<div class="space-y-6 border border-gray-200 p-4 rounded-lg">
+					<h3 class="text-lg font-medium text-gray-800">Įtraukti naują mėginį į siuntą</h3>
 					<div id="elevator-container" class="hidden">
 						<label for="elevator-select" class="block text-sm font-medium text-gray-700 mb-1"
 							>Iš kur siunčiama (Elevatorius)</label
@@ -245,6 +249,14 @@
 							id="annex-details"
 							class="mt-2 text-sm text-gray-600 p-3 bg-gray-50 rounded-md border border-gray-200 hidden"></div>
 					</div>
+					<div class="mt-4 text-right">
+						<button
+							id="btn-add-sample"
+							class="bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
+							disabled>
+							+ Pridėti į sąrašą
+						</button>
+					</div>
 				</div>
 				<div class="mt-8 flex justify-between">
 					<button
@@ -265,10 +277,12 @@
 					<span class="text-red-500 font-semibold">Scenarijus:</span>
 					<span class="text-gray-700 font-medium ml-2 scenario-display-text"></span>
 				</div>
-				<h2 class="text-xl font-semibold text-gray-700 mb-1">3. Lipdukas Mėginiui</h2>
-				<p class="text-gray-500 mb-6">Patikrinkite sugeneruotą lipduką ir įveskite kiekį.</p>
+				<h2 class="text-xl font-semibold text-gray-700 mb-1">3. Lipdukai Mėginiams</h2>
+				<p class="text-gray-500 mb-6">
+					Patikrinkite sugeneruotus lipdukus ir nustatykite paėmimo datą.
+				</p>
 
-				<div class="mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+				<div class="mb-6">
 					<div>
 						<label for="step3-date" class="block text-sm font-medium text-gray-700 font-bold"
 							>Paėmimo data:</label
@@ -278,68 +292,12 @@
 							id="step3-date"
 							class="mt-1 block w-full max-w-xs px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
 					</div>
-					<div>
-						<label for="quantity-input" class="block text-sm font-medium text-gray-700 font-bold"
-							>Kiekis:</label
-						>
-						<input
-							type="text"
-							id="quantity-input"
-							class="mt-1 block w-full max-w-xs px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-							placeholder="pvz., 150t" />
-					</div>
 				</div>
 
-				<div class="space-y-6">
-					<div class="border-2 border-dashed rounded-lg p-4 bg-gray-50">
-						<h3 class="font-bold text-center text-gray-800 mb-2">Mėginio lipdukas</h3>
-						<div class="grid grid-cols-2 gap-0 border bg-white shadow-sm p-2">
-							<div class="p-2 border-r">
-								<div class="text-left mb-2 pb-2">
-									<p class="font-bold text-sm">BALTIJOS JAVAI</p>
-									<p class="text-xs text-gray-600">Siuntėjas: UAB "Baltijos javai"</p>
-									<p class="text-xs text-gray-600">Svirbygalos g. 19, Lithuania</p>
-								</div>
-								<div class="space-y-1 text-xs">
-									<p>
-										<span class="font-semibold">Paėmimo data:</span>
-										<span class="label-date"></span>
-									</p>
-									<p>
-										<span class="font-semibold">Veislė:</span>
-										<span class="label-variety"></span>
-									</p>
-									<p>
-										<span class="font-semibold">Kiekis:</span> <span class="label-quantity"></span>
-									</p>
-								</div>
-								<div class="mt-2 h-16 border-t border-gray-200"></div>
-							</div>
-
-							<div class="p-2">
-								<div class="text-left mb-2 pb-2">
-									<p class="font-bold text-sm">BALTIJOS JAVAI</p>
-									<p class="text-xs text-gray-600">Siuntėjas: UAB "Baltijos javai"</p>
-									<p class="text-xs text-gray-600">Svirbygalos g. 19, Lithuania</p>
-								</div>
-								<div class="space-y-1 text-xs">
-									<p>
-										<span class="font-semibold">Paėmimo data:</span>
-										<span class="label-date"></span>
-									</p>
-									<p>
-										<span class="font-semibold">Veislė:</span>
-										<span class="label-variety"></span>
-									</p>
-									<p>
-										<span class="font-semibold">Kiekis:</span> <span class="label-quantity"></span>
-									</p>
-								</div>
-								<div class="mt-2 h-16 border-t border-gray-200"></div>
-							</div>
-						</div>
-					</div>
+				<div id="sticker-list-container" class="space-y-8">
+					<!-- JS will populate this with sticker previews -->
 				</div>
+
 				<div class="mt-8 flex justify-between">
 					<button
 						class="btn-back bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-300">
@@ -379,6 +337,16 @@
 							</div>
 						</div>
 					</div>
+
+					<div class="mb-4 pb-4 border-b">
+						<h3 class="text-lg font-semibold text-gray-700">Siunčiami mėginiai:</h3>
+						<ul
+							id="samples-summary-list"
+							class="list-disc list-inside mt-2 text-sm text-gray-800 space-y-1">
+							<!-- JS will populate this -->
+						</ul>
+					</div>
+
 					<div class="text-center mb-4 border-b pb-4">
 						<h4 class="text-md font-semibold text-red-600 mb-4">
 							Informacija kurjeriui iš kur paimti mėginį
@@ -713,21 +681,31 @@
 				</h2>
 				<div class="mb-4">
 					<label for="register-annex-filter" class="block text-sm font-medium text-gray-700 mb-1"
-						>Filtruoti pagal "Sutarties priedas"</label
+						>Filtruoti pagal "Tiekėjas"</label
 					>
 					<input
 						id="register-annex-filter"
 						type="text"
-						placeholder="Įveskite priedo numerį ar pavadinimą..."
+						placeholder="Įveskite tiekėjo pavadinimą..."
 						class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
 				</div>
-				<div class="overflow-x-auto border rounded-lg">
+				<div
+					class="overflow-x-auto overflow-y-auto border rounded-lg"
+					style="max-height: 70vh; -webkit-overflow-scrolling: touch; overscroll-behavior: contain">
 					<table class="min-w-full divide-y divide-gray-200 text-sm">
-						<thead class="bg-gray-50">
+						<thead class="bg-gray-50 sticky top-0 z-10">
 							<tr>
 								<th
 									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 									Vadybininkas
+								</th>
+								<th
+									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									Užpildymo data
+								</th>
+								<th
+									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									Rezultatas gautas
 								</th>
 								<th
 									id="th-paemimo-data"
@@ -759,7 +737,13 @@
 								</th>
 								<th
 									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+									Veislė
+								</th>
+								<th
+									id="th-busena"
+									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer select-none">
 									Būsena
+									<span class="inline-block text-gray-400" id="sort-ind-busena">↕</span>
 								</th>
 							</tr>
 						</thead>
@@ -871,7 +855,7 @@
 				let currentStep = 1;
 				const totalSteps = 6;
 				let sampleCounter = 230;
-				let currentSampleNumber = null;
+				let selectedSamples = []; // <-- Array to hold multiple samples
 				let selectedScenario = null;
 				let selectedScenarioText = '';
 
@@ -921,8 +905,9 @@
 						throw err;
 					}
 				};
-				let selectedSupplier = null;
-				let selectedAnnex = null;
+
+				let tempSelectedSupplier = null; // Temporary holder for the add form
+				let tempSelectedAnnex = null; // Temporary holder for the add form
 				let authToken = '';
 
 				function tokenHasInvalidChars(value) {
@@ -991,6 +976,13 @@
 				let attachmentsReadyAt = 0;
 				let attachmentsCooldownTimer = null;
 
+				// New elements for multiple samples
+				const btnAddSample = document.getElementById('btn-add-sample');
+				const samplesList = document.getElementById('samples-list');
+				const samplesListPlaceholder = document.getElementById('samples-list-placeholder');
+				const stickerListContainer = document.getElementById('sticker-list-container');
+				const samplesSummaryList = document.getElementById('samples-summary-list');
+
 				const mainProcessContainer = document.getElementById('main-process-container');
 				const registerView = document.getElementById('register-view');
 				const openRegisterBtn = document.getElementById('btn-open-register');
@@ -1001,6 +993,7 @@
 				const registerAnnexFilterInput = document.getElementById('register-annex-filter');
 				const thPaemimo = document.getElementById('th-paemimo-data');
 				const thMeginio = document.getElementById('th-meginio-nr');
+				const thBusena = document.getElementById('th-busena');
 				const sortIndPaemimo = document.getElementById('sort-ind-paemimo');
 				const sortIndMeginio = document.getElementById('sort-ind-meginio');
 
@@ -1015,6 +1008,13 @@
 					return isNaN(t) ? NaN : t;
 				}
 
+				function formatDateYYYYMMDD(value) {
+					if (!value) return 'N/A';
+					const s = value.toString();
+					const datePart = s.includes('T') ? s.split('T')[0] : s.split(' ')[0];
+					return datePart || s;
+				}
+
 				function compareValues(a, b, key) {
 					const va = a && a[key];
 					const vb = b && b[key];
@@ -1022,6 +1022,14 @@
 						const da = parseDateSafe(va);
 						const db = parseDateSafe(vb);
 						if (!isNaN(da) && !isNaN(db)) return da - db;
+					}
+					if (key === 'busena') {
+						const order = { Išsiųsta: 0, Atsakyta: 1 };
+						const sa = (a && a._busenaText) || (order[va] !== undefined ? va : '');
+						const sb = (b && b._busenaText) || (order[vb] !== undefined ? vb : '');
+						const oa = order[sa] !== undefined ? order[sa] : 0;
+						const ob = order[sb] !== undefined ? order[sb] : 0;
+						if (oa !== ob) return oa - ob;
 					}
 					const sa = (va ?? '').toString().toLowerCase();
 					const sb = (vb ?? '').toString().toLowerCase();
@@ -1037,6 +1045,10 @@
 					if (sortIndMeginio)
 						sortIndMeginio.textContent =
 							registerSortKey === 'kodas' ? (registerSortDir === 'asc' ? '↑' : '↓') : '↕';
+					const sortIndBusena = document.getElementById('sort-ind-busena');
+					if (sortIndBusena)
+						sortIndBusena.textContent =
+							registerSortKey === 'busena' ? (registerSortDir === 'asc' ? '↑' : '↓') : '↕';
 				}
 
 				function renderRegisterTable(tbodyElement) {
@@ -1045,7 +1057,9 @@
 
 					if (registerAnnexFilter) {
 						const q = registerAnnexFilter.toLowerCase();
-						rows = rows.filter(r => ((r && r.priedo_pavadinimas) || '').toLowerCase().includes(q));
+						rows = rows.filter(r =>
+							((r && r.klientas && r.klientas.pavadinimas) || '').toLowerCase().includes(q)
+						);
 					}
 
 					if (registerSortKey) {
@@ -1056,30 +1070,44 @@
 					tbodyElement.innerHTML = '';
 					if (rows.length === 0) {
 						tbodyElement.innerHTML =
-							'<tr><td colspan="8" class="text-center p-4">Duomenų nerasta.</td></tr>';
+							'<tr><td colspan="11" class="text-center p-4">Duomenų nerasta.</td></tr>';
 						return;
 					}
 
 					rows.forEach(r => {
 						const vadybininkas = (r && r.vadybininkas) || 'N/A';
+						const uzpildymo_raw = (r && (r.CreatedAt || r.createdAt || r.created_at)) || '';
+						const uzpildymo_data = formatDateYYYYMMDD(uzpildymo_raw) || 'N/A';
+						const yraAtsakymas = !!(r && r.atsakymas);
+						const busenaText = yraAtsakymas ? 'Atsakyta' : 'Išsiųsta';
+						const busenaClass = yraAtsakymas
+							? 'bg-blue-100 text-blue-800'
+							: 'bg-green-100 text-green-800';
+						const rezultatas_gautas = (r && r.atsakymo_data) || '';
 						const paemimo_data = (r && r.paemimo_data) || 'N/A';
 						const kodas = (r && r.kodas) || 'N/A';
 						const tiekejas = (r && r.klientas && r.klientas.pavadinimas) || 'N/A';
 						const paemimo_vieta = (r && r.sandelys) || 'N/A';
 						const siunciama_i = (r && r.pristatymo_vieta) || 'N/A';
 						const sutarties_priedas = (r && r.priedo_pavadinimas) || 'N/A';
+						const veisle = (r && (r.veisle || r.variety)) || '';
 						const tr = document.createElement('tr');
 						tr.innerHTML = `
 							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${vadybininkas}</td>
+								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${uzpildymo_data}</td>
+								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${rezultatas_gautas || '–'}</td>
 							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${paemimo_data}</td>
 							<td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">${kodas}</td>
 							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${tiekejas}</td>
 							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${paemimo_vieta}</td>
 							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${siunciama_i}</td>
 							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${sutarties_priedas}</td>
-							<td class="px-6 py-4 whitespace-nowrap text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Išsiųsta</span></td>
+								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${veisle || '–'}</td>
+								<td class="px-6 py-4 whitespace-nowrap text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${busenaClass}">${busenaText}</span></td>
 						`;
 						tbodyElement.appendChild(tr);
+						r._busena = yraAtsakymas ? 1 : 0;
+						r._busenaText = busenaText;
 					});
 
 					setSortIndicators();
@@ -1164,16 +1192,15 @@
 					return Date.now() >= attachmentsReadyAt;
 				}
 
-				// --- Download helpers for attachments in Step 5 ---
 				async function downloadWithAuth(url, filename) {
 					try {
 						const headers = { accept: 'application/pdf', 'content-type': 'application/json' };
 						if (authToken) headers['Authorization'] = authToken;
-						const clientId = selectedSupplier
-							? selectedSupplier.Id ?? selectedSupplier.id ?? null
-							: null;
-						if (!clientId) {
-							customAlert('Nepasirinktas klientas – negalima atsisiųsti failo.');
+						const clientIds = [
+							...new Set(selectedSamples.map(s => s.supplier?.Id ?? s.supplier?.id).filter(Boolean)),
+						];
+						if (clientIds.length === 0) {
+							customAlert('Nepasirinktas joks klientas – negalima atsisiųsti failo.');
 							return;
 						}
 						if (!attachmentsAvailable()) {
@@ -1184,7 +1211,7 @@
 						const resp = await fetch(url, {
 							method: 'POST',
 							headers,
-							body: JSON.stringify({ clientId, scenario: selectedScenario || null }),
+							body: JSON.stringify({ clientIds, scenario: selectedScenario || null }),
 						});
 						if (!resp.ok) throw new Error('HTTP ' + resp.status);
 						const blob = await resp.blob();
@@ -1233,11 +1260,12 @@
 					if (!nameEl || !addressEl) return;
 
 					if (scenario === 'farm-vm') {
-						if (selectedSupplier) {
-							pickup.name = selectedSupplier.name || 'Nenurodytas ūkis';
+						if (selectedSamples.length > 0 && selectedSamples[0].supplier) {
+							const firstSupplier = selectedSamples[0].supplier;
+							pickup.name = firstSupplier.name || 'Nenurodytas ūkis';
 							let addr = '';
-							if (selectedSupplier.address && typeof selectedSupplier.address === 'object') {
-								const a = selectedSupplier.address;
+							if (firstSupplier.address && typeof firstSupplier.address === 'object') {
+								const a = firstSupplier.address;
 								const parts = [
 									a.street,
 									a.building || a.building_number,
@@ -1328,12 +1356,73 @@
 						omnivaGenerated = false;
 					}
 
+					if (stepNumber === 3) {
+						stickerListContainer.innerHTML = '';
+						const dateValue = document.getElementById('step3-date').value;
+						const dateText = dateValue
+							? new Date(dateValue).toLocaleDateString('lt-LT')
+							: new Date().toLocaleDateString('lt-LT');
+
+						selectedSamples.forEach(sample => {
+							const quantityValue = sample.annex.quantity || 'N/A';
+							const stickerHTML = `
+                        <div class="border-2 border-dashed rounded-lg p-4 bg-gray-50">
+                            <h3 class="font-bold text-center text-gray-800 mb-2">Mėginio lipdukas (${
+															sample.supplier.name
+														})</h3>
+                            <div class="grid grid-cols-2 gap-0 border bg-white shadow-sm p-2">
+                                <div class="p-2 border-r">
+                                    <div class="text-left mb-2 pb-2">
+                                        <p class="font-bold text-sm">BALTIJOS JAVAI</p>
+                                        <p class="text-xs text-gray-600">Tiekėjas: ${
+																					sample.supplier.name
+																				}</p>
+                                    </div>
+                                    <div class="space-y-1 text-xs">
+                                        <p><span class="font-semibold">Paėmimo data:</span> <span>${dateText}</span></p>
+                                        <p><span class="font-semibold">Veislė:</span> <span>${
+																					sample.annex.veisle || sample.annex.variety || ''
+																				}</span></p>
+                                        <p><span class="font-semibold">Kiekis:</span> <span>${quantityValue}</span></p>
+                                    </div>
+                                    <div class="mt-2 h-16 border-t border-gray-200"></div>
+                                </div>
+
+                                <div class="p-2">
+                                   <div class="text-left mb-2 pb-2">
+                                        <p class="font-bold text-sm">BALTIJOS JAVAI</p>
+                                        <p class="text-xs text-gray-600">Tiekėjas: ${
+																					sample.supplier.name
+																				}</p>
+                                    </div>
+                                    <div class="space-y-1 text-xs">
+                                        <p><span class="font-semibold">Paėmimo data:</span> <span>${dateText}</span></p>
+                                        <p><span class="font-semibold">Veislė:</span> <span>${
+																					sample.annex.veisle || sample.annex.variety || ''
+																				}</span></p>
+                                        <p><span class="font-semibold">Kiekis:</span> <span>${quantityValue}</span></p>
+                                    </div>
+                                    <div class="mt-2 h-16 border-t border-gray-200"></div>
+                                </div>
+                            </div>
+                        </div>`;
+							stickerListContainer.insertAdjacentHTML('beforeend', stickerHTML);
+						});
+					}
+
 					if (stepNumber === 4) {
 						omnivaStickerPreview.classList.add('hidden');
 						generationSuccessMsg.classList.add('hidden');
 
 						updateRecipientDetails(selectedScenario);
 						updatePickupDetails(selectedScenario);
+
+						samplesSummaryList.innerHTML = '';
+						selectedSamples.forEach(sample => {
+							const li = document.createElement('li');
+							li.textContent = `Tiekėjas: ${sample.supplier.name}, Priedas: ${sample.annex.nr}`;
+							samplesSummaryList.appendChild(li);
+						});
 
 						if (!pickupDateInput.value) {
 							const step3DateEl = document.getElementById('step3-date');
@@ -1369,16 +1458,6 @@
 							if (postalEl) postalEl.value = selectedElevator.pasto_kodas || '';
 						}
 
-						if (isElevatorScenario && !selectedElevator && elevatorSelect) {
-							const val = elevatorSelect.value;
-							if (val) {
-								selectedElevator =
-									(elevators || []).find(
-										e => String(e.id ?? e.Id ?? e.ID ?? e.kodas ?? '').trim() === String(val).trim()
-									) || null;
-							}
-						}
-
 						if (omnivaGenerated) {
 							if (generateLabelsBtn) generateLabelsBtn.classList.add('hidden');
 						} else {
@@ -1405,88 +1484,96 @@
 					updateProgressBar();
 				};
 
-				const updateUIData = () => {
-					if (!selectedSupplier || !selectedAnnex) return;
-
-					if (currentStep === 2) {
-						currentSampleNumber = 'BJ25 M' + sampleCounter++;
-						const selectedAnnexData = (
-							selectedSupplier.priedai ||
-							selectedSupplier.annexes ||
-							[]
-						).find(a => a.nr === selectedAnnex);
-						const initialQuantity = selectedAnnexData ? selectedAnnexData.quantity : 'N/A';
-						quantityInput.value = initialQuantity;
-						document
-							.querySelectorAll('.label-quantity')
-							.forEach(el => (el.textContent = initialQuantity));
-
-						const today = new Date();
-						const deliveryDate = new Date();
-						deliveryDate.setDate(today.getDate() + 3);
-						const formattedDateLT = deliveryDate.toLocaleDateString('lt-LT');
-						const formattedDateISO = deliveryDate.toISOString().split('T')[0];
-
-						document
-							.querySelectorAll('.label-sample-nr')
-							.forEach(el => (el.textContent = currentSampleNumber));
-						document
-							.querySelectorAll('.label-date')
-							.forEach(el => (el.textContent = formattedDateLT));
-						const step3DateInputEl = document.getElementById('step3-date');
-						if (step3DateInputEl) step3DateInputEl.value = formattedDateISO;
-						if (pickupDateInput) pickupDateInput.value = formattedDateISO;
-
-						const isElevatorScenario = [
-							'elevator-vm',
-							'elevator-biliunai',
-							'elevator-office',
-						].includes(selectedScenario);
-						const location =
-							isElevatorScenario && selectedElevator
-								? selectedElevator.name
-								: selectedSupplier.address || selectedSupplier.location || '';
-						// ******** PAKEITIMO PABAIGA ********
-						document.querySelectorAll('.label-location').forEach(el => (el.textContent = location));
-						document
-							.querySelectorAll('.label-variety')
-							.forEach(
-								el =>
-									(el.textContent =
-										(selectedAnnexData &&
-											(selectedAnnexData.veisle || selectedAnnexData.variety || '')) ||
-										'')
-							);
-					}
+				const validateAddSampleButton = () => {
+					btnAddSample.disabled = !(tempSelectedSupplier && tempSelectedAnnex);
 				};
 
 				const validateStep2 = () => {
-					let isValid = false;
-					const isElevatorScenario = [
-						'elevator-vm',
-						'elevator-biliunai',
-						'elevator-office',
-					].includes(selectedScenario);
-					if (isElevatorScenario) {
-						isValid = !!(selectedAnnex && (selectedElevator || selectedSupplier));
-					} else {
-						isValid = !!(
-							selectedSupplier &&
-							selectedAnnex &&
-							supplierInput.value.trim().toLowerCase() ===
-								selectedSupplier.name.trim().toLowerCase()
-						);
-					}
-					step2NextBtn.disabled = !isValid;
+					step2NextBtn.disabled = selectedSamples.length === 0;
 				};
 
 				const resetAnnex = () => {
 					annexContainer.classList.add('hidden');
 					annexDetailsDiv.classList.add('hidden');
 					annexSearchInput.value = '';
-					selectedAnnex = null;
+					tempSelectedAnnex = null;
+					validateAddSampleButton();
+				};
+
+				const resetSampleInputs = () => {
+					supplierInput.value = '';
+					tempSelectedSupplier = null;
+					supplierAddressDiv.classList.add('hidden');
+					supplierAddressDiv.innerHTML = '';
+					resetAnnex();
+				};
+
+				const removeSample = index => {
+					selectedSamples.splice(index, 1);
+					renderSamplesList();
 					validateStep2();
 				};
+
+				const renderSamplesList = () => {
+					samplesList.innerHTML = '';
+					if (selectedSamples.length === 0) {
+						samplesList.appendChild(samplesListPlaceholder);
+						samplesListPlaceholder.classList.remove('hidden');
+					} else {
+						samplesListPlaceholder.classList.add('hidden');
+						selectedSamples.forEach((sample, index) => {
+							const item = document.createElement('div');
+							item.className =
+								'flex justify-between items-center p-3 bg-white border border-gray-300 rounded-lg shadow-sm';
+							item.innerHTML = `
+                        <div class="text-sm">
+                            <p class="font-bold text-gray-800">${sample.supplier.name}</p>
+                            <p class="text-gray-600">Priedas: <span class="font-medium text-red-600">${
+															sample.annex.nr
+														}</span> | Veislė: ${
+								sample.annex.veisle || sample.annex.variety || 'N/A'
+							}</p>
+                        </div>
+                        <button data-index="${index}" class="btn-remove-sample text-red-500 hover:text-red-700 font-semibold py-1 px-2">&times; Pašalinti</button>
+                    `;
+							samplesList.appendChild(item);
+						});
+
+						document.querySelectorAll('.btn-remove-sample').forEach(button => {
+							button.addEventListener('click', e => {
+								const index = parseInt(e.target.getAttribute('data-index'), 10);
+								removeSample(index);
+							});
+						});
+					}
+				};
+
+				btnAddSample.addEventListener('click', () => {
+					if (!tempSelectedSupplier || !tempSelectedAnnex) return;
+
+					const annexData = (tempSelectedSupplier.priedai || []).find(
+						a => a.nr === tempSelectedAnnex
+					);
+					if (!annexData) return;
+
+					const isDuplicate = selectedSamples.some(
+						s => s.supplier.Id === tempSelectedSupplier.Id && s.annex.nr === annexData.nr
+					);
+					if (isDuplicate) {
+						customAlert('Šis mėginys jau pridėtas į sąrašą.');
+						return;
+					}
+
+					selectedSamples.push({
+						supplier: tempSelectedSupplier,
+						annex: annexData,
+						sampleNumber: 'BJ25 M' + sampleCounter++,
+					});
+
+					renderSamplesList();
+					resetSampleInputs();
+					validateStep2();
+				});
 
 				const validateStep1 = () => {
 					const scenarioChosen = !!document.querySelector('input[name="scenario"]:checked');
@@ -1496,18 +1583,13 @@
 					if (tokenInput) {
 						tokenInput.classList.toggle('border-red-500', tokenInvalid);
 					}
-					// Pataisymas: mygtukas aktyvuojamas tik jei nėra negaliojančių simbolių
 					step1NextBtn.disabled = !(scenarioChosen && tokenPresent && !tokenInvalid);
 				};
-
-				function renderHistoryTable(tbodyElement, rows) {}
 
 				nextButtons.forEach(button => {
 					button.addEventListener('click', () => {
 						if (currentStep < totalSteps) {
-							if (currentStep === 2) {
-								updateUIData();
-							} else if (currentStep === 4) {
+							if (currentStep === 4) {
 								if (!omnivaGenerated) {
 									customAlert('Pirma sugeneruokite siuntos etiketę.');
 									return;
@@ -1516,8 +1598,13 @@
 								const emailSubjectInput = document.getElementById('email-subject-input');
 								const emailBodyInput = document.getElementById('email-body-input');
 
-								emailToInput.value = selectedSupplier.email;
-								emailSubjectInput.value = `Mėginio paėmimas pagal sutartį ${selectedAnnex}`;
+								const uniqueEmails = [
+									...new Set(
+										selectedSamples.map(s => s.supplier.email).filter(Boolean)
+									),
+								];
+								emailToInput.value = uniqueEmails.join(', ');
+								emailSubjectInput.value = `Mėginių paėmimas`;
 
 								let formattedDateLT;
 								if (pickupDateInput.value) {
@@ -1537,7 +1624,16 @@
 								const addressLine =
 									`${shipStreet} ${shipBuilding}, ${shipCity}, ${shipPostal}`.trim();
 
+								const samplesListForEmail = selectedSamples
+									.map(
+										s => `- ${s.supplier.name} (Sutarties priedas: ${s.annex.nr})`
+									)
+									.join('\n');
+
 								const bodyText = `Sveiki,
+
+Informuojame, kad ${formattedDateLT} bus paimami šie miežių mėginiai:
+${samplesListForEmail}
 
 Kurjeris atvyks ${formattedDateLT} | 12:00-13:30 | ${addressLine}.
 
@@ -1567,58 +1663,52 @@ UAB "Baltijos javai"`;
 									emailToInput.focus();
 									return;
 								}
-								const clientId = selectedSupplier
-									? selectedSupplier.Id ?? selectedSupplier.id ?? null
-									: null;
-								const payload = {
-									to: emailToInput.value.trim(),
-									subject: emailSubjectInput.value || '',
-									body: emailBodyInput.value || '',
-									clientId,
-									sampleNumber: currentSampleNumber,
-									annex: selectedAnnex || null,
-									pickupDate: pickupDateInput.value || null,
-									scenario: selectedScenario || null,
-									vadybininkas: (function () {
-										const list = selectedSupplier
-											? selectedSupplier.priedai || selectedSupplier.annexes || []
-											: [];
-										const a = list.find(x => x && x.nr === selectedAnnex);
-										return (
-											(a && (a.vadybininkas || a.manager)) ||
-											(selectedSupplier &&
-												(selectedSupplier.vadybininkas || selectedSupplier.manager)) ||
-											''
-										);
-									})(),
-								};
+
+								const emailPayloads = selectedSamples.map(sample => {
+									const supplier = sample.supplier;
+									const annex = sample.annex;
+									return {
+										to: emailToInput.value.trim(),
+										subject: emailSubjectInput.value || '',
+										body: emailBodyInput.value || '',
+										clientId: supplier ? supplier.Id ?? supplier.id ?? null : null,
+										sampleNumber: sample.sampleNumber,
+										annex: annex ? annex.nr : null,
+										pickupDate: pickupDateInput.value || null,
+										scenario: selectedScenario || null,
+										vadybininkas:
+											(annex && (annex.vadybininkas || annex.manager)) ||
+											(supplier && (supplier.vadybininkas || supplier.manager)) ||
+											'',
+									};
+								});
 
 								const headers = { accept: 'application/json', 'content-type': 'application/json' };
 								if (authToken) headers['Authorization'] = authToken;
 								if (sendBtn) sendBtn.disabled = true;
 								if (sendingIndicator) sendingIndicator.classList.remove('hidden');
-								fetch('https://operations.baltijosjavai.lt/webhook/send-email', {
-									method: 'POST',
-									headers,
-									body: JSON.stringify(payload),
-								})
-									.then(resp => {
-										if (!resp.ok) throw new Error('HTTP ' + resp.status);
+
+								const emailPromises = emailPayloads.map(payload =>
+									fetch('https://operations.baltijosjavai.lt/webhook/send-email', {
+										method: 'POST',
+										headers,
+										body: JSON.stringify(payload),
+									}).then(resp => {
+										if (!resp.ok) {
+											console.error(`Failed to send email for sample ${payload.sampleNumber}`);
+											throw new Error(`HTTP error ${resp.status} for sample ${payload.sampleNumber}`);
+										}
 										return resp.json().catch(() => ({}));
 									})
-									.then(data => {
-										const rows = Array.isArray(data?.samples)
-											? data.samples
-											: Array.isArray(data)
-											? data
-											: [];
-										const tbody = document.getElementById('history-table-body');
-										renderHistoryTable(tbody, rows);
+								);
+
+								Promise.all(emailPromises)
+									.then(() => {
 										showStep(currentStep + 1);
 									})
 									.catch(err => {
 										console.error('Siuntimo klaida:', err);
-										customAlert('Nepavyko išsiųsti el. laiško. Bandykite dar kartą.');
+										customAlert('Nepavyko išsiųsti vieno ar kelių el. laiškų. Bandykite dar kartą.');
 									})
 									.finally(() => {
 										if (sendBtn) sendBtn.disabled = false;
@@ -1702,16 +1792,16 @@ UAB "Baltijos javai"`;
 				});
 
 				document.getElementById('btn-restart').addEventListener('click', () => {
-					selectedSupplier = null;
+					selectedSamples = [];
+					renderSamplesList();
+					resetSampleInputs();
 					selectedElevator = null;
 					elevatorSelect.value = '';
 					elevatorContainer.classList.add('hidden');
 					elevatorAddressDiv.classList.add('hidden');
 					supplierLabel.textContent = 'Iš kur siunčiama (Tiekėjas)';
 
-					currentSampleNumber = null;
 					supplierInput.value = '';
-					supplierAddressDiv.classList.add('hidden');
 					autocompleteList.classList.add('hidden');
 					resetAnnex();
 					scenarioRadios.forEach(r => (r.checked = false));
@@ -1723,7 +1813,7 @@ UAB "Baltijos javai"`;
 					});
 					omnivaStickerPreview.classList.add('hidden');
 					pickupDateInput.value = '';
-					quantityInput.value = '';
+					if (quantityInput) quantityInput.value = '';
 					generationSuccessMsg.classList.add('hidden');
 					omnivaGenerated = false;
 					if (step4NextBtn) step4NextBtn.disabled = true;
@@ -1738,24 +1828,12 @@ UAB "Baltijos javai"`;
 					showStep(1);
 				});
 
-				quantityInput.addEventListener('input', () => {
-					const quantityValue = quantityInput.value.trim() ? quantityInput.value : '0t';
-					document
-						.querySelectorAll('.label-quantity')
-						.forEach(el => (el.textContent = quantityValue));
-				});
-
 				const step3DateInput = document.getElementById('step3-date');
 				if (step3DateInput) {
 					step3DateInput.addEventListener('change', () => {
 						const val = step3DateInput.value;
 						if (!val) return;
-						const d = new Date(val);
-						const adjusted = new Date(d.getTime() + d.getTimezoneOffset() * 60000);
-						const formattedDateLT = adjusted.toLocaleDateString('lt-LT');
-						document
-							.querySelectorAll('.label-date')
-							.forEach(el => (el.textContent = formattedDateLT));
+						showStep(3); // Re-render stickers
 						if (pickupDateInput) pickupDateInput.value = val;
 						const omnivaDateEl = document.getElementById('omniva-date');
 						if (omnivaDateEl) omnivaDateEl.textContent = val;
@@ -1765,29 +1843,19 @@ UAB "Baltijos javai"`;
 					pickupDateInput.addEventListener('change', () => {
 						const val = pickupDateInput.value;
 						if (!val) return;
-						const d = new Date(val);
-						const adjusted = new Date(d.getTime() + d.getTimezoneOffset() * 60000);
-						const formattedDateLT = adjusted.toLocaleDateString('lt-LT');
-						document
-							.querySelectorAll('.label-date')
-							.forEach(el => (el.textContent = formattedDateLT));
 						const step3DateEl = document.getElementById('step3-date');
 						if (step3DateEl) step3DateEl.value = val;
+						showStep(3); // Re-render stickers
 						const omnivaDateEl = document.getElementById('omniva-date');
 						if (omnivaDateEl) omnivaDateEl.textContent = val;
 					});
 				}
 
 				generateLabelsBtn.addEventListener('click', () => {
-					const cityEl = document.getElementById('ship-city');
-					const streetEl = document.getElementById('ship-street');
-					const buildingEl = document.getElementById('ship-building');
-					const postalEl = document.getElementById('ship-postal');
 					const requiredMap = [
-						{ el: cityEl, label: 'Miestas' },
-						{ el: streetEl, label: 'Gatvė' },
-						// { el: buildingEl, label: 'Pastato nr.' }, // Pastato nr. gali būti nebūtinas
-						{ el: postalEl, label: 'Pašto kodas' },
+						{ el: document.getElementById('ship-city'), label: 'Miestas' },
+						{ el: document.getElementById('ship-street'), label: 'Gatvė' },
+						{ el: document.getElementById('ship-postal'), label: 'Pašto kodas' },
 					];
 					const missing = requiredMap.filter(({ el }) => !el || !el.value || !el.value.trim());
 					if (missing.length > 0) {
@@ -1806,135 +1874,66 @@ UAB "Baltijos javai"`;
 					}
 
 					customConfirm('Ar tikrai norite generuoti siuntos etiketę?', confirmed => {
-						if (!confirmed) {
-							return;
-						}
+						if (!confirmed) return;
 
 						generateLabelsBtn.classList.add('hidden');
-
 						const dateObj = new Date(selectedDate);
 						const userTimezoneOffset = dateObj.getTimezoneOffset() * 60000;
 						const adjustedDate = new Date(dateObj.getTime() + userTimezoneOffset);
-
-						const formattedDateLT = adjustedDate.toLocaleDateString('lt-LT');
 						const formattedDateISO = adjustedDate.toISOString().split('T')[0];
-
-						document
-							.querySelectorAll('.label-date')
-							.forEach(el => (el.textContent = formattedDateLT));
 						document.getElementById('omniva-date').textContent = formattedDateISO;
-						const step3DateEl = document.getElementById('step3-date');
-						if (step3DateEl) step3DateEl.value = formattedDateISO;
 
-						const resolveSelectedAnnex = () => {
-							if (!selectedSupplier) return null;
-							const list = selectedSupplier.priedai || selectedSupplier.annexes || [];
-							return list.find(a => a.nr === selectedAnnex) || null;
-						};
-						const selectedAnnexObj = resolveSelectedAnnex();
-						const shipCity = (document.getElementById('ship-city') || {}).value || '';
-						const shipStreet = (document.getElementById('ship-street') || {}).value || '';
-						const shipBuilding = (document.getElementById('ship-building') || {}).value || '';
-						const shipPostal = (document.getElementById('ship-postal') || {}).value || '';
-
-						// ******** PAKEITIMAS ČIA ********
 						const isElevatorScenario = [
 							'elevator-vm',
 							'elevator-biliunai',
 							'elevator-office',
 						].includes(selectedScenario);
-						const payload = {
-							sampleNumber: currentSampleNumber,
-							pickupDate: formattedDateISO,
-							supplierId: selectedSupplier
-								? selectedSupplier.Id ?? selectedSupplier.id ?? null
-								: null,
-							annexId: selectedAnnexObj ? selectedAnnexObj.Id ?? selectedAnnexObj.id ?? null : null,
-							supplier: selectedSupplier
-								? {
-										name: selectedSupplier.name,
-										address: selectedSupplier.address || '',
-										email: selectedSupplier.email || '',
-										location: selectedSupplier.location || '',
-								  }
-								: null,
-							annex: selectedAnnex || null,
-							quantity: quantityInput && quantityInput.value ? quantityInput.value : '',
-							variety: selectedAnnexObj
-								? selectedAnnexObj.veisle || selectedAnnexObj.variety || ''
-								: '',
-							vadybininkas: (function () {
-								const list = selectedSupplier
-									? selectedSupplier.priedai || selectedSupplier.annexes || []
-									: [];
-								const a = list.find(x => x && x.nr === selectedAnnex);
-								return (
-									(a && (a.vadybininkas || a.manager)) ||
-									(selectedSupplier &&
-										(selectedSupplier.vadybininkas || selectedSupplier.manager)) ||
-									''
-								);
-							})(),
-							pristatymas_nuo: selectedAnnexObj ? selectedAnnexObj.pristatymas_nuo || '' : '',
-							pristatymas_iki: selectedAnnexObj ? selectedAnnexObj.pristatymas_iki || '' : '',
-							pickupAddress: {
-								city: shipCity,
-								street: shipStreet,
-								building_number: shipBuilding,
-								postal_code: shipPostal,
-							},
-							scenario: selectedScenario,
-							elevatorId:
-								isElevatorScenario && selectedElevator
-									? selectedElevator.Id ||
-									  selectedElevator.id ||
-									  selectedElevator.elevator_id ||
-									  null
-									: null,
-							elevator:
-								isElevatorScenario && selectedElevator
-									? {
-											id:
-												selectedElevator.Id ||
-												selectedElevator.id ||
-												selectedElevator.elevator_id ||
-												null,
-											kodas: selectedElevator.kodas || '',
-											pavadinimas: selectedElevator.pavadinimas || '',
-											address: {
-												street: selectedElevator.gatve || '',
-												building_number: selectedElevator.pastato_nr || '',
-												city: selectedElevator.miestas || '',
-												postal_code: selectedElevator.pasto_kodas || '',
-											},
-									  }
-									: null,
-						};
 
-						const headers = { accept: 'application/json', 'content-type': 'application/json' };
-						if (authToken) headers['Authorization'] = authToken;
+						const updatePromises = selectedSamples.map(sample => {
+							const payload = {
+								sampleNumber: sample.sampleNumber,
+								pickupDate: formattedDateISO,
+								supplierId: sample.supplier ? sample.supplier.Id ?? sample.supplier.id ?? null : null,
+								annexId: sample.annex ? sample.annex.Id ?? sample.annex.id ?? null : null,
+								annex: sample.annex ? sample.annex.nr : null,
+								quantity: sample.annex ? sample.annex.quantity || '' : '',
+								variety: sample.annex ? sample.annex.veisle || sample.annex.variety || '' : '',
+								scenario: selectedScenario,
+								elevatorId:
+									isElevatorScenario && selectedElevator
+										? selectedElevator.Id || selectedElevator.id || null
+										: null,
+							};
 
-						fetch(UPDATE_ENDPOINT, {
-							method: 'POST',
-							headers,
-							body: JSON.stringify(payload),
-						})
-							.then(resp => {
-								if (!resp.ok) throw new Error('HTTP ' + resp.status);
-								return resp.json().catch(() => ({}));
-							})
-							.then(() => {})
-							.catch(err => {
-								console.error('Nepavyko atnaujinti mėginio per webhook:', err);
-								customAlert(
-									'Nepavyko atnaujinti mėginio. Patikrinkite prieigos žetoną ir bandykite dar kartą.'
-								);
+							const headers = {
+								accept: 'application/json',
+								'content-type': 'application/json',
+							};
+							if (authToken) headers['Authorization'] = authToken;
+
+							return fetch(UPDATE_ENDPOINT, {
+								method: 'POST',
+								headers,
+								body: JSON.stringify(payload),
+							}).then(resp => {
+								if (!resp.ok) throw new Error(`Update failed for ${sample.sampleNumber}`);
 							});
+						});
 
-						omnivaStickerPreview.classList.remove('hidden');
-						showGenerationSuccessOnce();
-						omnivaGenerated = true;
-						if (step4NextBtn) step4NextBtn.disabled = false;
+						Promise.all(updatePromises)
+							.then(() => {
+								omnivaStickerPreview.classList.remove('hidden');
+								showGenerationSuccessOnce();
+								omnivaGenerated = true;
+								if (step4NextBtn) step4NextBtn.disabled = false;
+							})
+							.catch(err => {
+								console.error('Nepavyko atnaujinti mėginių per webhook:', err);
+								customAlert(
+									'Nepavyko atnaujinti vieno ar kelių mėginių. Patikrinkite prieigos žetoną ir bandykite dar kartą.'
+								);
+								generateLabelsBtn.classList.remove('hidden');
+							});
 					});
 				});
 
@@ -1952,16 +1951,9 @@ UAB "Baltijos javai"`;
 						typeof selectedElevator.address === 'object'
 					) {
 						const a = selectedElevator.address;
-						const street = a.street || '';
-						const building = a.building || a.building_number || '';
-						const city = a.city || '';
-						const postal = a.postal_code || '';
-						const parts = [];
-						if (street) parts.push(street);
-						if (building) parts.push(building);
-						const line1 = parts.join(' ').trim();
-						const line2 = [city, postal].filter(Boolean).join(', ');
-						const full = [line1, line2].filter(Boolean).join(', ');
+						const full = [a.street, a.building || a.building_number, a.city, a.postal_code]
+							.filter(Boolean)
+							.join(', ');
 						if (full) {
 							elevatorAddressDiv.innerHTML = `<strong>Adresas:</strong> ${full}`;
 							elevatorAddressDiv.classList.remove('hidden');
@@ -1973,15 +1965,15 @@ UAB "Baltijos javai"`;
 						elevatorAddressDiv.classList.add('hidden');
 						elevatorAddressDiv.innerHTML = '';
 					}
-					validateStep2();
+					validateAddSampleButton();
 				});
 
 				supplierInput.addEventListener('input', function () {
 					const val = this.value;
 					closeAllLists();
 					resetAnnex();
-					selectedSupplier = null;
-					validateStep2();
+					tempSelectedSupplier = null;
+					validateAddSampleButton();
 
 					if (!val) return false;
 
@@ -1997,20 +1989,13 @@ UAB "Baltijos javai"`;
 							)}</strong>${supplier.name.substr(val.length)}`;
 							item.addEventListener('click', function () {
 								supplierInput.value = supplier.name;
-								selectedSupplier = supplier;
+								tempSelectedSupplier = supplier;
 								let hasAddress = false;
 								if (supplier && supplier.address && typeof supplier.address === 'object') {
 									const a = supplier.address;
-									const street = a.street || '';
-									const building = a.building || a.building_number || '';
-									const city = a.city || '';
-									const postal = a.postal_code || '';
-									const parts = [];
-									if (street) parts.push(street);
-									if (building) parts.push(building);
-									const line1 = parts.join(' ').trim();
-									const line2 = [city, postal].filter(Boolean).join(', ');
-									const full = [line1, line2].filter(Boolean).join(', ');
+									const full = [a.street, a.building || a.building_number, a.city, a.postal_code]
+										.filter(Boolean)
+										.join(', ');
 									if (full) {
 										supplierAddressDiv.innerHTML = `<strong>Adresas:</strong> ${full}`;
 										supplierAddressDiv.classList.remove('hidden');
@@ -2025,7 +2010,7 @@ UAB "Baltijos javai"`;
 
 								annexContainer.classList.remove('hidden');
 								populateAnnexDropdown(supplier.priedai || supplier.annexes || []);
-								validateStep2();
+								validateAddSampleButton();
 							});
 							autocompleteList.appendChild(item);
 						}
@@ -2049,49 +2034,26 @@ UAB "Baltijos javai"`;
 						);
 						item.innerHTML = `
                 <span class="font-semibold text-red-500 w-1/4">${annex.nr}</span>
-                <span class="text-gray-600 w-1/4"><strong class="font-medium">Priedo data:</strong> ${annex.date}</span>
-                <span class="text-gray-600 w-1/4"><strong class="font-medium">Kiekis:</strong> ${annex.quantity}</span>
+                <span class="text-gray-600 w-1/4"><strong class="font-medium">Priedo data:</strong> ${
+									annex.date
+								}</span>
+                <span class="text-gray-600 w-1/4"><strong class="font-medium">Kiekis:</strong> ${
+									annex.quantity
+								}</span>
+                <span class="text-gray-600 w-1/4"><strong class="font-medium">Veislė:</strong> ${
+									annex.veisle || annex.variety || 'Nenurodyta'
+								}</span>
             `;
 						item.addEventListener('click', function () {
 							annexSearchInput.value = annex.nr;
-							selectedAnnex = annex.nr;
-
-							const selectedAnnexData = (
-								selectedSupplier.priedai ||
-								selectedSupplier.annexes ||
-								[]
-							).find(a => a.nr === selectedAnnex);
-							if (selectedAnnexData) {
-								annexDetailsDiv.innerHTML = `
-                        <strong>Priedo data:</strong> ${selectedAnnexData.date} |
-                        <strong>Kiekis:</strong> ${selectedAnnexData.quantity} `;
-								annexDetailsDiv.classList.remove('hidden');
-								quantityInput.value = selectedAnnexData.quantity;
-								document
-									.querySelectorAll('.label-quantity')
-									.forEach(el => (el.textContent = selectedAnnexData.quantity));
-								document
-									.querySelectorAll('.label-variety')
-									.forEach(
-										el =>
-											(el.textContent = selectedAnnexData.veisle || selectedAnnexData.variety || '')
-									);
-								const isElevatorScenario = [
-									'elevator-vm',
-									'elevator-biliunai',
-									'elevator-office',
-								].includes(selectedScenario);
-								const location =
-									isElevatorScenario && selectedElevator
-										? selectedElevator.name
-										: selectedSupplier.address || selectedSupplier.location || '';
-								document
-									.querySelectorAll('.label-location')
-									.forEach(el => (el.textContent = location));
-							}
-
+							tempSelectedAnnex = annex.nr;
+							annexDetailsDiv.innerHTML = `
+                        <strong>Priedo data:</strong> ${annex.date} |
+                        <strong>Kiekis:</strong> ${annex.quantity} |
+                        <strong>Veislė:</strong> ${annex.veisle || annex.variety || 'Nenurodyta'}`;
+							annexDetailsDiv.classList.remove('hidden');
 							annexDropdown.classList.add('hidden');
-							validateStep2();
+							validateAddSampleButton();
 						});
 						annexDropdown.appendChild(item);
 					});
@@ -2129,14 +2091,14 @@ UAB "Baltijos javai"`;
 					const tbody = document.getElementById('register-table-body');
 					if (!tbody) return;
 
-					tbody.innerHTML = '<tr><td colspan="8" class="text-center p-4">Kraunama...</td></tr>';
+					tbody.innerHTML = '<tr><td colspan="11" class="text-center p-4">Kraunama...</td></tr>';
 
 					if (!authToken) {
 						customAlert(
-							'Norėdami peržiūrėti registrą, pirmame žingsnyje įveskite galiojantį prieigos žetoną.'
+							'Norėdami peržiūrėti registrą, pirmame žingsnyje įveskite galiojantį prieigos raktą.'
 						);
 						tbody.innerHTML =
-							'<tr><td colspan="8" class="text-center p-4">Reikalingas prieigos žetonas.</td></tr>';
+							'<tr><td colspan="11" class="text-center p-4">Reikalingas prieigos raktas.</td></tr>';
 						return;
 					}
 
@@ -2149,7 +2111,7 @@ UAB "Baltijos javai"`;
 						if (!resp.ok) {
 							if (resp.status === 400) {
 								tbody.innerHTML =
-									'<tr><td colspan="8" class="text-center p-4">Duomenų bazėje mėginių nėra.</td></tr>';
+									'<tr><td colspan="11" class="text-center p-4">Duomenų bazėje mėginių nėra.</td></tr>';
 								return;
 							}
 
@@ -2168,7 +2130,7 @@ UAB "Baltijos javai"`;
 						renderRegisterTable(tbody);
 					} catch (err) {
 						console.error('Klaida gaunant registrą:', err);
-						tbody.innerHTML = `<tr><td colspan="8" class="text-center p-4 text-red-500">Nepavyko užkrauti registro duomenų. Klaida: ${err.message}</td></tr>`;
+						tbody.innerHTML = `<tr><td colspan="11" class="text-center p-4 text-red-500">Nepavyko užkrauti registro duomenų. Klaida: ${err.message}</td></tr>`;
 					}
 				};
 
@@ -2232,6 +2194,18 @@ UAB "Baltijos javai"`;
 						renderRegisterTable(tbody);
 					});
 				}
+				if (thBusena) {
+					thBusena.addEventListener('click', () => {
+						const tbody = document.getElementById('register-table-body');
+						if (registerSortKey === 'busena') {
+							registerSortDir = registerSortDir === 'asc' ? 'desc' : 'asc';
+						} else {
+							registerSortKey = 'busena';
+							registerSortDir = 'asc';
+						}
+						renderRegisterTable(tbody);
+					});
+				}
 				if (registerAnnexFilterInput) {
 					registerAnnexFilterInput.addEventListener('input', () => {
 						registerAnnexFilter = registerAnnexFilterInput.value.trim();
@@ -2239,6 +2213,11 @@ UAB "Baltijos javai"`;
 						renderRegisterTable(tbody);
 					});
 				}
+
+				// Set initial date for step 3
+				const today = new Date();
+				const formattedDateISO = today.toISOString().split('T')[0];
+				if (step3DateInput) step3DateInput.value = formattedDateISO;
 			});
 		</script>
 	</body>
