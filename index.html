@@ -98,6 +98,15 @@
 						<input
 							type="radio"
 							name="scenario"
+							value="farm-biliunai"
+							class="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500" />
+						<span class="ml-4 text-gray-800 font-medium">Ūkis -&gt; BILIŪNAI Elevatorius</span>
+					</label>
+					<label
+						class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-500 transition-all">
+						<input
+							type="radio"
+							name="scenario"
 							value="elevator-vm"
 							class="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500" />
 						<span class="ml-4 text-gray-800 font-medium">Elevatorius -&gt; Viking Malt (VM)</span>
@@ -121,6 +130,15 @@
 							value="elevator-office"
 							class="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500" />
 						<span class="ml-4 text-gray-800 font-medium">Elevatorius -&gt; Ofisas</span>
+					</label>
+					<label
+						class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-500 transition-all">
+						<input
+							type="radio"
+							name="scenario"
+							value="office-vm"
+							class="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500" />
+						<span class="ml-4 text-gray-800 font-medium">Ofisas -&gt; Viking Malt (VM)</span>
 					</label>
 				</div>
 				<div class="mt-4">
@@ -1271,7 +1289,7 @@
 
 					if (!nameEl || !addressEl) return;
 
-					if (scenario === 'farm-vm') {
+					if (scenario === 'farm-vm' || scenario === 'farm-biliunai') {
 						if (selectedSamples.length > 0 && selectedSamples[0].supplier) {
 							const firstSupplier = selectedSamples[0].supplier;
 							pickup.name = firstSupplier.name || 'Nenurodytas ūkis';
@@ -1288,7 +1306,7 @@
 							}
 							pickup.address = addr;
 						}
-					} else if (['elevator-vm', 'elevator-biliunai', 'elevator-office'].includes(scenario)) {
+					} else if (scenario.startsWith('elevator-')) {
 						if (selectedElevator) {
 							pickup.name = selectedElevator.pavadinimas || 'Nenurodytas elevatorius';
 							let addr = '';
@@ -1301,6 +1319,9 @@
 							addr = parts.join(', ');
 							pickup.address = addr;
 						}
+					} else if (scenario === 'office-vm') {
+						pickup.name = 'UAB "Baltijos javai" (Ofisas)';
+						pickup.address = 'Svirbygalos g. 19, Kaunas, LT-46280';
 					}
 
 					nameEl.textContent = pickup.name;
@@ -1315,12 +1336,14 @@
 					switch (scenario) {
 						case 'farm-vm':
 						case 'elevator-vm':
+						case 'office-vm':
 							recipient.name = 'UAB Viking Malt';
 							recipient.contact = 'Dovydas';
 							recipient.address = 'Panevėžio m. Pramonės g. 2, LT-35289, Panevėžys';
 							recipient.phone = '+370 691 51153';
 							break;
 						case 'elevator-biliunai':
+						case 'farm-biliunai':
 							recipient.name = 'UAB "Biliūnų grūdai"';
 							recipient.contact = 'Priėmimo skyrius';
 							recipient.address = 'Biliūnai, Raseinių r. sav., LT-60200';
@@ -1466,11 +1489,7 @@
 						buildingEl.value = '';
 						postalEl.value = '';
 
-						const isElevatorScenario = [
-							'elevator-vm',
-							'elevator-biliunai',
-							'elevator-office',
-						].includes(selectedScenario);
+						const isElevatorScenario = selectedScenario.startsWith('elevator-');
 						if (isElevatorScenario && selectedElevator) {
 							if (cityEl) cityEl.value = selectedElevator.miestas || '';
 							if (streetEl) streetEl.value = selectedElevator.gatve || '';
@@ -1782,28 +1801,25 @@ UAB "Baltijos javai"`;
 						document.querySelectorAll('.scenario-display-text').forEach(el => {
 							el.textContent = selectedScenarioText;
 						});
-						const isElevatorScenario = [
-							'elevator-vm',
-							'elevator-biliunai',
-							'elevator-office',
-						].includes(selectedScenario);
+
+						const isElevatorScenario = selectedScenario.startsWith('elevator-');
+
 						if (isElevatorScenario) {
-							try {
-								await loadElevators(authToken);
-								populateElevatorDropdown();
-								elevatorContainer.classList.remove('hidden');
-								supplierLabel.textContent = 'Iš kur atvežta (Tiekėjas)';
-							} catch (e) {
-								console.error('Nepavyko užkrauti elevatorių:', e);
-								customAlert('Nepavyko užkrauti elevatorių sąrašo.');
-								return;
-							}
-							await loadSuppliers(authToken);
+							await loadElevators(authToken);
+							populateElevatorDropdown();
+							elevatorContainer.classList.remove('hidden');
+							supplierLabel.textContent = 'Iš kur atvežta (Tiekėjas)';
 						} else {
-							await loadSuppliers(authToken);
 							elevatorContainer.classList.add('hidden');
-							supplierLabel.textContent = 'Iš kur siunčiama (Tiekėjas)';
+							if (selectedScenario === 'office-vm') {
+								supplierLabel.textContent = 'Tiekėjas (kieno mėginys)';
+							} else {
+								// farm scenarios
+								supplierLabel.textContent = 'Iš kur siunčiama (Tiekėjas)';
+							}
 						}
+
+						await loadSuppliers(authToken);
 
 						validateStep2();
 						showStep(2);
@@ -1911,11 +1927,7 @@ UAB "Baltijos javai"`;
 						const formattedDateISO = adjustedDate.toISOString().split('T')[0];
 						document.getElementById('omniva-date').textContent = formattedDateISO;
 
-						const isElevatorScenario = [
-							'elevator-vm',
-							'elevator-biliunai',
-							'elevator-office',
-						].includes(selectedScenario);
+						const isElevatorScenario = selectedScenario.startsWith('elevator-');
 
 						const updatePromises = selectedSamples.map(sample => {
 							const payload = {
