@@ -249,6 +249,17 @@
 							id="annex-details"
 							class="mt-2 text-sm text-gray-600 p-3 bg-gray-50 rounded-md border border-gray-200 hidden"></div>
 					</div>
+					<div id="sample-count-container" class="hidden">
+						<label for="sample-count-input" class="block text-sm font-medium text-gray-700"
+							>Mėginių skaičius</label
+						>
+						<input
+							type="number"
+							id="sample-count-input"
+							value="1"
+							min="1"
+							class="mt-1 block w-full max-w-xs px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+					</div>
 					<div class="mt-4 text-right">
 						<button
 							id="btn-add-sample"
@@ -967,7 +978,6 @@
 				const pickupDateInput = document.getElementById('pickup-date');
 				const generateLabelsBtn = document.getElementById('generate-labels-btn');
 				const omnivaStickerPreview = document.getElementById('omniva-sticker-preview');
-				const quantityInput = document.getElementById('quantity-input');
 				const generationSuccessMsg = document.getElementById('generation-success-msg');
 				const step4NextBtn = document.querySelector('#step-4 .btn-next');
 				const step5SendBtn = document.querySelector('#step-5 .btn-next');
@@ -982,6 +992,8 @@
 				const samplesListPlaceholder = document.getElementById('samples-list-placeholder');
 				const stickerListContainer = document.getElementById('sticker-list-container');
 				const samplesSummaryList = document.getElementById('samples-summary-list');
+				const sampleCountContainer = document.getElementById('sample-count-container');
+				const sampleCountInput = document.getElementById('sample-count-input');
 
 				const mainProcessContainer = document.getElementById('main-process-container');
 				const registerView = document.getElementById('register-view');
@@ -1364,12 +1376,16 @@
 							: new Date().toLocaleDateString('lt-LT');
 
 						selectedSamples.forEach(sample => {
+							let groupIndicator = '';
+							if (sample.groupTotal > 1) {
+								groupIndicator = ` (${sample.groupIndex}/${sample.groupTotal})`;
+							}
 							const quantityValue = sample.annex.quantity || 'N/A';
 							const stickerHTML = `
                         <div class="border-2 border-dashed rounded-lg p-4 bg-gray-50">
                             <h3 class="font-bold text-center text-gray-800 mb-2">Mėginio lipdukas (${
 															sample.supplier.name
-														})</h3>
+														})${groupIndicator}</h3>
                             <div class="grid grid-cols-2 gap-0 border bg-white shadow-sm p-2">
                                 <div class="p-2 border-r">
                                     <div class="text-left mb-2 pb-2">
@@ -1420,7 +1436,11 @@
 						samplesSummaryList.innerHTML = '';
 						selectedSamples.forEach(sample => {
 							const li = document.createElement('li');
-							li.textContent = `Tiekėjas: ${sample.supplier.name}, Priedas: ${sample.annex.nr}`;
+							let groupText = '';
+							if (sample.groupTotal > 1) {
+								groupText = ` (${sample.groupIndex}/${sample.groupTotal})`;
+							}
+							li.textContent = `Tiekėjas: ${sample.supplier.name}, Priedas: ${sample.annex.nr}${groupText}`;
 							samplesSummaryList.appendChild(li);
 						});
 
@@ -1497,6 +1517,8 @@
 					annexDetailsDiv.classList.add('hidden');
 					annexSearchInput.value = '';
 					tempSelectedAnnex = null;
+					sampleCountContainer.classList.add('hidden');
+					sampleCountInput.value = '1';
 					validateAddSampleButton();
 				};
 
@@ -1525,9 +1547,13 @@
 							const item = document.createElement('div');
 							item.className =
 								'flex justify-between items-center p-3 bg-white border border-gray-300 rounded-lg shadow-sm';
+							let groupText = '';
+							if (sample.groupTotal > 1) {
+								groupText = ` <span class="text-xs text-gray-500 font-normal">(${sample.groupIndex}/${sample.groupTotal})</span>`;
+							}
 							item.innerHTML = `
                         <div class="text-sm">
-                            <p class="font-bold text-gray-800">${sample.supplier.name}</p>
+                            <p class="font-bold text-gray-800">${sample.supplier.name}${groupText}</p>
                             <p class="text-gray-600">Priedas: <span class="font-medium text-red-600">${
 															sample.annex.nr
 														}</span> | Veislė: ${
@@ -1556,19 +1582,17 @@
 					);
 					if (!annexData) return;
 
-					const isDuplicate = selectedSamples.some(
-						s => s.supplier.Id === tempSelectedSupplier.Id && s.annex.nr === annexData.nr
-					);
-					if (isDuplicate) {
-						customAlert('Šis mėginys jau pridėtas į sąrašą.');
-						return;
-					}
+					const count = parseInt(sampleCountInput.value, 10) || 1;
 
-					selectedSamples.push({
-						supplier: tempSelectedSupplier,
-						annex: annexData,
-						sampleNumber: 'BJ25 M' + sampleCounter++,
-					});
+					for (let i = 0; i < count; i++) {
+						selectedSamples.push({
+							supplier: tempSelectedSupplier,
+							annex: annexData,
+							sampleNumber: 'BJ25 M' + sampleCounter++,
+							groupIndex: i + 1,
+							groupTotal: count,
+						});
+					}
 
 					renderSamplesList();
 					resetSampleInputs();
@@ -1625,9 +1649,13 @@
 									`${shipStreet} ${shipBuilding}, ${shipCity}, ${shipPostal}`.trim();
 
 								const samplesListForEmail = selectedSamples
-									.map(
-										s => `- ${s.supplier.name} (Sutarties priedas: ${s.annex.nr})`
-									)
+									.map(s => {
+										let groupText = '';
+										if (s.groupTotal > 1) {
+											groupText = ` (${s.groupIndex}/${s.groupTotal})`;
+										}
+										return `- ${s.supplier.name} (Sutarties priedas: ${s.annex.nr})${groupText}`;
+									})
 									.join('\n');
 
 								const bodyText = `Sveiki,
@@ -1813,7 +1841,7 @@ UAB "Baltijos javai"`;
 					});
 					omnivaStickerPreview.classList.add('hidden');
 					pickupDateInput.value = '';
-					if (quantityInput) quantityInput.value = '';
+					if (sampleCountInput) sampleCountInput.value = '1';
 					generationSuccessMsg.classList.add('hidden');
 					omnivaGenerated = false;
 					if (step4NextBtn) step4NextBtn.disabled = true;
@@ -2052,6 +2080,7 @@ UAB "Baltijos javai"`;
                         <strong>Kiekis:</strong> ${annex.quantity} |
                         <strong>Veislė:</strong> ${annex.veisle || annex.variety || 'Nenurodyta'}`;
 							annexDetailsDiv.classList.remove('hidden');
+							sampleCountContainer.classList.remove('hidden');
 							annexDropdown.classList.add('hidden');
 							validateAddSampleButton();
 						});
