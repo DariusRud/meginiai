@@ -193,7 +193,13 @@
 				</p>
 
 				<!-- List of added samples -->
-				<h3 class="text-lg font-medium text-gray-800 mb-2">Pridėti mėginiai:</h3>
+				<div class="flex justify-between items-center mb-2">
+					<h3 class="text-lg font-medium text-gray-800">Pridėti mėginiai:</h3>
+					<div id="shipping-from-info" class="hidden text-sm">
+						<span class="font-medium text-gray-600">Siunčiama iš:</span>
+						<span id="shipping-from-location" class="font-bold text-red-600 ml-1"></span>
+					</div>
+				</div>
 				<div
 					id="samples-list"
 					class="space-y-2 mb-6 border p-4 rounded-lg bg-gray-50 min-h-[60px]">
@@ -1026,6 +1032,8 @@
 				const btnAddSample = document.getElementById('btn-add-sample');
 				const samplesList = document.getElementById('samples-list');
 				const samplesListPlaceholder = document.getElementById('samples-list-placeholder');
+				const shippingFromInfo = document.getElementById('shipping-from-info');
+				const shippingFromLocation = document.getElementById('shipping-from-location');
 				const stickerListContainer = document.getElementById('sticker-list-container');
 				const samplesSummaryList = document.getElementById('samples-summary-list');
 				const sampleCountContainer = document.getElementById('sample-count-container');
@@ -1542,7 +1550,9 @@
 				};
 
 				const validateAddSampleButton = () => {
-					btnAddSample.disabled = !(tempSelectedSupplier && tempSelectedAnnex);
+					const isElevatorScenario = selectedScenario && selectedScenario.startsWith('elevator-');
+					const elevatorOk = !isElevatorScenario || (isElevatorScenario && selectedElevator);
+					btnAddSample.disabled = !(tempSelectedSupplier && tempSelectedAnnex && elevatorOk);
 				};
 
 				const validateStep2 = () => {
@@ -1578,8 +1588,46 @@
 					if (selectedSamples.length === 0) {
 						samplesList.appendChild(samplesListPlaceholder);
 						samplesListPlaceholder.classList.remove('hidden');
+
+						// Hide info and re-enable inputs
+						if (shippingFromInfo) shippingFromInfo.classList.add('hidden');
+						if (elevatorSelect) elevatorSelect.disabled = false;
+						if (supplierInput) {
+							supplierInput.disabled = false;
+							supplierInput.value = '';
+						}
+						tempSelectedSupplier = null; // Clear temp supplier when list is empty
+						resetAnnex();
 					} else {
 						samplesListPlaceholder.classList.add('hidden');
+
+						// Show info and set location text
+						if (shippingFromInfo) shippingFromInfo.classList.remove('hidden');
+						const isElevatorSource = selectedScenario.startsWith('elevator-');
+
+						if (isElevatorSource) {
+							if (shippingFromLocation && selectedElevator) {
+								shippingFromLocation.textContent = selectedElevator.pavadinimas;
+							}
+							if (elevatorSelect) elevatorSelect.disabled = true;
+							// supplierInput remains enabled to add from other suppliers
+						} else {
+							// Farm or Office scenario
+							const lockedSupplier = selectedSamples[0].supplier;
+							if (shippingFromLocation && lockedSupplier) {
+								shippingFromLocation.textContent = lockedSupplier.name;
+							}
+							if (supplierInput && lockedSupplier) {
+								supplierInput.value = lockedSupplier.name;
+								supplierInput.disabled = true;
+								tempSelectedSupplier = lockedSupplier; // Lock the supplier for next add
+
+								// Show and populate annexes for the locked supplier
+								annexContainer.classList.remove('hidden');
+								populateAnnexDropdown(lockedSupplier.priedai || lockedSupplier.annexes || []);
+							}
+						}
+
 						selectedSamples.forEach((sample, index) => {
 							const item = document.createElement('div');
 							item.className =
@@ -1614,6 +1662,12 @@
 				btnAddSample.addEventListener('click', () => {
 					if (!tempSelectedSupplier || !tempSelectedAnnex) return;
 
+					const isElevatorScenario = selectedScenario.startsWith('elevator-');
+					if (isElevatorScenario && !selectedElevator) {
+						customAlert('Pasirinkite elevatorių, iš kurio siunčiama.');
+						return;
+					}
+
 					const annexData = (tempSelectedSupplier.priedai || []).find(
 						a => a.nr === tempSelectedAnnex
 					);
@@ -1631,9 +1685,23 @@
 						});
 					}
 
-					renderSamplesList();
-					resetSampleInputs();
-					validateStep2();
+					renderSamplesList(); // This will set up the state correctly (e.g., lock supplier input)
+
+					// After adding, clear the inputs for the *next* sample.
+					if (isElevatorScenario) {
+						// For elevator, clear supplier and annex to add a new one from scratch.
+						resetSampleInputs();
+					} else {
+						// For farm, the supplier is locked by renderSamplesList. Just clear the annex selection.
+						annexSearchInput.value = '';
+						annexDetailsDiv.classList.add('hidden');
+						tempSelectedAnnex = null;
+						sampleCountContainer.classList.add('hidden');
+						sampleCountInput.value = '1';
+					}
+
+					validateAddSampleButton(); // Re-validate the button. It should be disabled now.
+					validateStep2(); // Validate the "Next" button.
 				});
 
 				const validateStep1 = () => {
@@ -2281,3 +2349,6 @@ UAB "Baltijos javai"`;
 		</script>
 	</body>
 </html>
+
+
+
