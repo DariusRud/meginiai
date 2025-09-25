@@ -140,6 +140,15 @@
 							class="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500" />
 						<span class="ml-4 text-gray-800 font-medium">Ofisas -&gt; Viking Malt (VM)</span>
 					</label>
+					<label
+						class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-amber-50 hover:border-amber-500 transition-all">
+						<input
+							type="radio"
+							name="scenario"
+							value="manual"
+							class="h-5 w-5 text-amber-600 border-gray-300 focus:ring-amber-500" />
+						<span class="ml-4 text-gray-800 font-medium">Rankinis būdas (kai sutarties nėra DB)</span>
+					</label>
 				</div>
 				<div class="mt-4">
 					<label for="auth-token" class="block text-sm font-medium text-gray-700"
@@ -150,7 +159,9 @@
 						id="auth-token"
 						class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
 						placeholder="Įveskite raktą duomenų užklausai" />
-					<p class="text-xs text-gray-500 mt-1">Raktas naudojamas vartotojo atpažinimui.</p>
+					<p class="text-xs text-gray-500 mt-1">
+						Privalomas visiems scenarijams, išskyrus rankinį.
+					</p>
 				</div>
 				<div class="mt-8 text-right">
 					<button
@@ -301,6 +312,81 @@
 					<button
 						id="btn-step2-next"
 						class="btn-next bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400"
+						disabled>
+						Toliau
+					</button>
+				</div>
+			</div>
+
+			<div id="step-2-manual" class="step-card bg-white p-8 rounded-xl shadow-lg hidden-step">
+				<div class="mb-4">
+					<span class="text-red-500 font-semibold">Scenarijus:</span>
+					<span class="text-gray-700 font-medium ml-2 scenario-display-text"
+						>Rankinis būdas (kai sutarties nėra DB)</span
+					>
+				</div>
+				<h2 class="text-xl font-semibold text-gray-700 mb-1">2. Duomenų įvedimas (Rankinis)</h2>
+				<p class="text-gray-500 mb-6">Rankiniu būdu įveskite visą mėginio informaciją.</p>
+
+				<h3 class="text-lg font-medium text-gray-800 mb-2">Pridėti mėginiai:</h3>
+				<div
+					id="manual-samples-list"
+					class="space-y-2 mb-6 border p-4 rounded-lg bg-gray-50 min-h-[60px]">
+					<p id="manual-samples-list-placeholder" class="text-gray-500">Mėginių sąrašas tuščias.</p>
+				</div>
+
+				<div class="space-y-4 border border-gray-200 p-4 rounded-lg">
+					<div>
+						<label for="manual-supplier" class="block text-sm font-medium text-gray-700"
+							>Tiekėjas (Iš kur siunčiama)</label
+						>
+						<input
+							type="text"
+							id="manual-supplier"
+							class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+					</div>
+					<div>
+						<label for="manual-annex" class="block text-sm font-medium text-gray-700"
+							>Sutarties Priedas</label
+						>
+						<input
+							type="text"
+							id="manual-annex"
+							class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+					</div>
+					<div>
+						<label for="manual-variety" class="block text-sm font-medium text-gray-700">Veislė</label>
+						<input
+							type="text"
+							id="manual-variety"
+							class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+					</div>
+					<div>
+						<label for="manual-quantity" class="block text-sm font-medium text-gray-700"
+							>Kiekis (t)</label
+						>
+						<input
+							type="text"
+							id="manual-quantity"
+							class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+					</div>
+					<div class="mt-4 text-right">
+						<button
+							id="btn-add-manual-sample"
+							class="bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+							+ Pridėti į sąrašą
+						</button>
+					</div>
+				</div>
+
+				<div class="mt-8 flex justify-between">
+					<button
+						class="btn-back bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-lg hover:bg-gray-300">
+						Atgal
+					</button>
+					<button
+						id="btn-manual-step2-next"
+						class="btn-next bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
 						disabled>
 						Toliau
 					</button>
@@ -1039,6 +1125,17 @@
 				const sampleCountContainer = document.getElementById('sample-count-container');
 				const sampleCountInput = document.getElementById('sample-count-input');
 
+				// Manual mode elements
+				const step2Manual = document.getElementById('step-2-manual');
+				const manualSupplierInput = document.getElementById('manual-supplier');
+				const manualAnnexInput = document.getElementById('manual-annex');
+				const manualVarietyInput = document.getElementById('manual-variety');
+				const manualQuantityInput = document.getElementById('manual-quantity');
+				const btnAddManualSample = document.getElementById('btn-add-manual-sample');
+				const manualSamplesList = document.getElementById('manual-samples-list');
+				const manualSamplesListPlaceholder = document.getElementById('manual-samples-list-placeholder');
+				const btnManualStep2Next = document.getElementById('btn-manual-step2-next');
+
 				const mainProcessContainer = document.getElementById('main-process-container');
 				const registerView = document.getElementById('register-view');
 				const openRegisterBtn = document.getElementById('btn-open-register');
@@ -1315,7 +1412,12 @@
 
 					if (!nameEl || !addressEl) return;
 
-					if (scenario === 'farm-vm' || scenario === 'farm-biliunai') {
+					if (scenario === 'manual') {
+						if (selectedSamples.length > 0) {
+							pickup.name = selectedSamples[0].supplier.name;
+							pickup.address = 'Adresas bus įvestas rankiniu būdu šiame žingsnyje.';
+						}
+					} else if (scenario === 'farm-vm' || scenario === 'farm-biliunai') {
 						if (selectedSamples.length > 0 && selectedSamples[0].supplier) {
 							const firstSupplier = selectedSamples[0].supplier;
 							pickup.name = firstSupplier.name || 'Nenurodytas ūkis';
@@ -1363,6 +1465,7 @@
 						case 'farm-vm':
 						case 'elevator-vm':
 						case 'office-vm':
+						case 'manual': // Manual mode defaults to VM
 							recipient.name = 'UAB Viking Malt';
 							recipient.contact = 'Dovydas';
 							recipient.address = 'Panevėžio m. Pramonės g. 2, LT-35289, Panevėžys';
@@ -1408,10 +1511,26 @@
 				}
 
 				const showStep = stepNumber => {
-					steps.forEach((step, index) => {
-						step.classList.toggle('visible-step', index + 1 === stepNumber);
-						step.classList.toggle('hidden-step', index + 1 !== stepNumber);
+					document.querySelectorAll('.step-card').forEach(card => {
+						card.classList.add('hidden-step');
+						card.classList.remove('visible-step');
 					});
+
+					let targetStepDiv;
+					if (stepNumber === 2) {
+						if (selectedScenario === 'manual') {
+							targetStepDiv = document.getElementById('step-2-manual');
+						} else {
+							targetStepDiv = document.getElementById('step-2');
+						}
+					} else {
+						targetStepDiv = document.getElementById(`step-${stepNumber}`);
+					}
+
+					if (targetStepDiv) {
+						targetStepDiv.classList.remove('hidden-step');
+						targetStepDiv.classList.add('visible-step');
+					}
 
 					if (stepNumber === 1) {
 						omnivaGenerated = false;
@@ -1430,6 +1549,8 @@
 								groupIndicator = ` (${sample.groupIndex}/${sample.groupTotal})`;
 							}
 							const quantityValue = sample.annex.quantity || 'N/A';
+							const varietyValue = sample.annex.veisle || sample.annex.variety || '';
+
 							const stickerHTML = `
                         <div class="border-2 border-dashed rounded-lg p-4 bg-gray-50">
                             <h3 class="font-bold text-center text-gray-800 mb-2">Mėginio lipdukas (${
@@ -1445,9 +1566,7 @@
                                     </div>
                                     <div class="space-y-1 text-xs">
                                         <p><span class="font-semibold">Paėmimo data:</span> <span>${dateText}</span></p>
-                                        <p><span class="font-semibold">Veislė:</span> <span>${
-																					sample.annex.veisle || sample.annex.variety || ''
-																				}</span></p>
+                                        <p><span class="font-semibold">Veislė:</span> <span>${varietyValue}</span></p>
                                         <p><span class="font-semibold">Kiekis:</span> <span>${quantityValue}</span></p>
                                     </div>
                                     <div class="mt-2 h-16 border-t border-gray-200"></div>
@@ -1462,9 +1581,7 @@
                                     </div>
                                     <div class="space-y-1 text-xs">
                                         <p><span class="font-semibold">Paėmimo data:</span> <span>${dateText}</span></p>
-                                        <p><span class="font-semibold">Veislė:</span> <span>${
-																					sample.annex.veisle || sample.annex.variety || ''
-																				}</span></p>
+                                        <p><span class="font-semibold">Veislė:</span> <span>${varietyValue}</span></p>
                                         <p><span class="font-semibold">Kiekis:</span> <span>${quantityValue}</span></p>
                                     </div>
                                     <div class="mt-2 h-16 border-t border-gray-200"></div>
@@ -1704,15 +1821,89 @@
 					validateStep2(); // Validate the "Next" button.
 				});
 
+				function renderManualSamplesList() {
+					manualSamplesList.innerHTML = '';
+					if (selectedSamples.length === 0) {
+						manualSamplesList.appendChild(manualSamplesListPlaceholder);
+						manualSamplesListPlaceholder.classList.remove('hidden');
+						manualSupplierInput.disabled = false;
+						btnManualStep2Next.disabled = true;
+					} else {
+						manualSamplesListPlaceholder.classList.add('hidden');
+						selectedSamples.forEach((sample, index) => {
+							const item = document.createElement('div');
+							item.className =
+								'flex justify-between items-center p-3 bg-white border border-gray-300 rounded-lg shadow-sm';
+							item.innerHTML = `
+                    <div class="text-sm">
+                        <p class="font-bold text-gray-800">${sample.supplier.name}</p>
+                        <p class="text-gray-600">Priedas: <span class="font-medium text-red-600">${
+													sample.annex.nr
+												}</span> | Veislė: ${sample.annex.veisle || 'N/A'}</p>
+                    </div>
+                    <button data-index="${index}" class="btn-remove-manual-sample text-red-500 hover:text-red-700 font-semibold py-1 px-2">&times; Pašalinti</button>
+                `;
+							manualSamplesList.appendChild(item);
+						});
+
+						document.querySelectorAll('.btn-remove-manual-sample').forEach(button => {
+							button.addEventListener('click', e => {
+								const index = parseInt(e.target.getAttribute('data-index'), 10);
+								selectedSamples.splice(index, 1);
+								renderManualSamplesList();
+							});
+						});
+					}
+				}
+
+				btnAddManualSample.addEventListener('click', () => {
+					const supplier = manualSupplierInput.value.trim();
+					const annex = manualAnnexInput.value.trim();
+					const variety = manualVarietyInput.value.trim();
+					const quantity = manualQuantityInput.value.trim();
+
+					if (!supplier || !annex) {
+						customAlert('Tiekėjas ir Sutarties Priedas yra privalomi laukai.');
+						return;
+					}
+
+					selectedSamples.push({
+						isManual: true,
+						supplier: { name: supplier },
+						annex: {
+							nr: annex,
+							veisle: variety,
+							quantity: quantity,
+						},
+						sampleNumber: 'BJ25 M' + sampleCounter++,
+						groupIndex: 1,
+						groupTotal: 1,
+					});
+
+					renderManualSamplesList();
+					manualSupplierInput.disabled = true; // Lock after first entry
+					manualAnnexInput.value = '';
+					manualVarietyInput.value = '';
+					manualQuantityInput.value = '';
+					btnManualStep2Next.disabled = false;
+				});
+
 				const validateStep1 = () => {
 					const scenarioChosen = !!document.querySelector('input[name="scenario"]:checked');
+					const isManual = scenarioChosen && document.querySelector('input[name="scenario"]:checked').value === 'manual';
+
 					const tokenVal = tokenInput ? tokenInput.value.trim() : '';
 					const tokenPresent = !!tokenVal;
 					const tokenInvalid = tokenHasInvalidChars(tokenVal);
 					if (tokenInput) {
 						tokenInput.classList.toggle('border-red-500', tokenInvalid);
 					}
-					step1NextBtn.disabled = !(scenarioChosen && tokenPresent && !tokenInvalid);
+					
+					if (isManual) {
+						step1NextBtn.disabled = false;
+					} else {
+						step1NextBtn.disabled = !(scenarioChosen && tokenPresent && !tokenInvalid);
+					}
 				};
 
 				nextButtons.forEach(button => {
@@ -1727,11 +1918,14 @@
 								const emailSubjectInput = document.getElementById('email-subject-input');
 								const emailBodyInput = document.getElementById('email-body-input');
 
-								const uniqueEmails = [
-									...new Set(
-										selectedSamples.map(s => s.supplier.email).filter(Boolean)
-									),
-								];
+								const uniqueEmails =
+									selectedScenario === 'manual'
+										? ['']
+										: [
+												...new Set(
+													selectedSamples.map(s => s.supplier.email).filter(Boolean)
+												),
+										  ];
 								emailToInput.value = uniqueEmails.join(', ');
 								emailSubjectInput.value = `Mėginių paėmimas`;
 
@@ -1786,7 +1980,7 @@ UAB "Baltijos javai"`;
 								const emailBodyInput = document.getElementById('email-body-input');
 								const sendBtn = document.querySelector('#step-5 .btn-next');
 								const sendingIndicator = document.getElementById('step5-sending');
-								if (!attachmentsAvailable()) {
+								if (selectedScenario !== 'manual' && !attachmentsAvailable()) {
 									const remain = Math.max(0, Math.ceil((attachmentsReadyAt - Date.now()) / 1000));
 									customAlert('Failai ruošiami. Siuntimas galimas po ' + remain + ' s.');
 									return;
@@ -1804,15 +1998,20 @@ UAB "Baltijos javai"`;
 										to: emailToInput.value.trim(),
 										subject: emailSubjectInput.value || '',
 										body: emailBodyInput.value || '',
-										clientId: supplier ? supplier.Id ?? supplier.id ?? null : null,
+										clientId:
+											!sample.isManual && supplier
+												? supplier.Id ?? supplier.id ?? null
+												: null,
 										sampleNumber: sample.sampleNumber,
 										annex: annex ? annex.nr : null,
 										pickupDate: pickupDateInput.value || null,
 										scenario: selectedScenario || null,
 										vadybininkas:
-											(annex && (annex.vadybininkas || annex.manager)) ||
-											(supplier && (supplier.vadybininkas || supplier.manager)) ||
-											'',
+											!sample.isManual && annex
+												? (annex && (annex.vadybininkas || annex.manager)) ||
+												  (supplier && (supplier.vadybininkas || supplier.manager)) ||
+												  ''
+												: '',
 									};
 								});
 
@@ -1829,7 +2028,9 @@ UAB "Baltijos javai"`;
 									}).then(resp => {
 										if (!resp.ok) {
 											console.error(`Failed to send email for sample ${payload.sampleNumber}`);
-											throw new Error(`HTTP error ${resp.status} for sample ${payload.sampleNumber}`);
+											throw new Error(
+												`HTTP error ${resp.status} for sample ${payload.sampleNumber}`
+											);
 										}
 										return resp.json().catch(() => ({}));
 									})
@@ -1841,7 +2042,9 @@ UAB "Baltijos javai"`;
 									})
 									.catch(err => {
 										console.error('Siuntimo klaida:', err);
-										customAlert('Nepavyko išsiųsti vieno ar kelių el. laiškų. Bandykite dar kartą.');
+										customAlert(
+											'Nepavyko išsiųsti vieno ar kelių el. laiškų. Bandykite dar kartą.'
+										);
 									})
 									.finally(() => {
 										if (sendBtn) sendBtn.disabled = false;
@@ -1862,10 +2065,10 @@ UAB "Baltijos javai"`;
 
 				scenarioRadios.forEach(radio => {
 					radio.addEventListener('change', () => {
-						validateStep1();
 						const checkedRadio = document.querySelector('input[name="scenario"]:checked');
 						selectedScenario = checkedRadio.value;
 						selectedScenarioText = checkedRadio.nextElementSibling.textContent.trim();
+						validateStep1();
 					});
 				});
 				if (tokenInput) {
@@ -1876,6 +2079,14 @@ UAB "Baltijos javai"`;
 				}
 
 				step1NextBtn.addEventListener('click', async () => {
+					if (selectedScenario === 'manual') {
+						document.querySelectorAll('.scenario-display-text').forEach(el => {
+							el.textContent = selectedScenarioText;
+						});
+						showStep(2);
+						return;
+					}
+
 					const tokenVal = tokenInput ? tokenInput.value.trim() : '';
 					if (tokenHasInvalidChars(tokenVal)) {
 						customAlert('Rakte negalima lietuviškų raidžių!');
@@ -1934,8 +2145,18 @@ UAB "Baltijos javai"`;
 					supplierInput.value = '';
 					autocompleteList.classList.add('hidden');
 					resetAnnex();
+
+					// Reset manual form
+					manualSupplierInput.value = '';
+					manualSupplierInput.disabled = false;
+					manualAnnexInput.value = '';
+					manualVarietyInput.value = '';
+					manualQuantityInput.value = '';
+					renderManualSamplesList(); // This will reset the list view
+					if (btnManualStep2Next) btnManualStep2Next.disabled = true;
+
 					scenarioRadios.forEach(r => (r.checked = false));
-					step1NextBtn.disabled = true;
+					validateStep1();
 					selectedScenario = null;
 					selectedScenarioText = '';
 					document.querySelectorAll('.scenario-display-text').forEach(el => {
@@ -2005,6 +2226,19 @@ UAB "Baltijos javai"`;
 
 					customConfirm('Ar tikrai norite generuoti siuntos etiketę?', confirmed => {
 						if (!confirmed) return;
+						if (selectedScenario === 'manual') {
+							// For manual mode, just show the sticker preview without calling DB
+							const dateObj = new Date(selectedDate);
+							const userTimezoneOffset = dateObj.getTimezoneOffset() * 60000;
+							const adjustedDate = new Date(dateObj.getTime() + userTimezoneOffset);
+							const formattedDateISO = adjustedDate.toISOString().split('T')[0];
+							document.getElementById('omniva-date').textContent = formattedDateISO;
+							omnivaStickerPreview.classList.remove('hidden');
+							showGenerationSuccessOnce();
+							omnivaGenerated = true;
+							if (step4NextBtn) step4NextBtn.disabled = false;
+							return;
+						}
 
 						generateLabelsBtn.classList.add('hidden');
 						const dateObj = new Date(selectedDate);
@@ -2349,6 +2583,4 @@ UAB "Baltijos javai"`;
 		</script>
 	</body>
 </html>
-
-
 
