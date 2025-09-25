@@ -683,6 +683,14 @@
 								class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
 						</div>
 						<div>
+							<label for="email-cc-input" class="text-sm font-medium text-gray-500">CC:</label>
+							<input
+								type="email"
+								id="email-cc-input"
+								class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+								placeholder="Papildomi gavėjai, atskirti kableliu" />
+						</div>
+						<div>
 							<label for="email-subject-input" class="text-sm font-medium text-gray-500"
 								>Tema:</label
 							>
@@ -2019,6 +2027,7 @@ UAB "Baltijos javai"`;
 								emailBodyInput.value = bodyText;
 							} else if (currentStep === 5) {
 								const emailToInput = document.getElementById('email-to-input');
+								const emailCcInput = document.getElementById('email-cc-input');
 								const emailSubjectInput = document.getElementById('email-subject-input');
 								const emailBodyInput = document.getElementById('email-body-input');
 								const sendBtn = document.querySelector('#step-5 .btn-next');
@@ -2039,6 +2048,7 @@ UAB "Baltijos javai"`;
 									const annex = sample.annex;
 									return {
 										to: emailToInput.value.trim(),
+										cc: emailCcInput.value.trim(),
 										subject: emailSubjectInput.value || '',
 										body: emailBodyInput.value || '',
 										clientId:
@@ -2629,4 +2639,5 @@ UAB "Baltijos javai"`;
 		</script>
 	</body>
 </html>
+"
 
