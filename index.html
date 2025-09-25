@@ -1603,49 +1603,56 @@
 							const quantityValue = sample.annex.quantity || 'N/A';
 							const varietyValue = sample.annex.veisle || sample.annex.variety || '';
 							const sampleNumberValue = sample.sampleNumber || 'N/A';
+							const annexNrValue = sample.annex.nr || 'N/A';
 							const noteHTML = sample.note
 								? `<span class="font-bold text-red-500 ml-2">${sample.note}</span>`
 								: '';
 
 							const stickerHTML = `
-                        <div class="border-2 border-dashed rounded-lg p-4 bg-gray-50">
-                            <h3 class="font-bold text-center text-gray-800 mb-2">Mėginio lipdukas (${
-															sample.supplier.name
-														})${groupIndicator}</h3>
-                            <div class="grid grid-cols-2 gap-0 border bg-white shadow-sm p-2">
-                                <div class="p-2 border-r">
-                                    <div class="text-left mb-2 pb-2">
-                                        <p class="font-bold text-sm">BALTIJOS JAVAI</p>
-                                        <p class="text-xs text-gray-600">Tiekėjas: ${
-																					sample.supplier.name
-																				}</p>
-                                    </div>
-                                    <div class="space-y-1 text-xs">
-                                        <p><span class="font-semibold">Paėmimo data:</span> <span>${dateText}</span></p>
-                                        <p><span class="font-semibold">Veislė:</span> <span>${varietyValue}</span></p>
-                                        <p><span class="font-semibold">Kiekis:</span> <span>${quantityValue}</span></p>
-										<p><span class="font-semibold">Pavyzdžio Nr:</span> <span class="font-bold text-black">${sampleNumberValue}</span>${noteHTML}</p>
-                                    </div>
-                                    <div class="mt-2 h-16 border-t border-gray-200"></div>
-                                </div>
+								<div class="border-2 border-dashed rounded-lg p-4 bg-gray-50">
+									<div class="flex justify-between items-center mb-2">
+										<h3 class="font-bold text-gray-800">Mėginio lipdukas (${
+											sample.supplier.name
+										})${groupIndicator}</h3>
+										<div class="text-sm">
+											<span class="font-semibold text-gray-700">Priedo Nr.</span>
+											<span class="font-bold text-red-500 ml-1">${annexNrValue}</span>
+										</div>
+									</div>
+									<div class="grid grid-cols-2 gap-0 border bg-white shadow-sm p-2">
+										<div class="p-2 border-r">
+											<div class="text-left mb-2 pb-2">
+												<p class="font-bold text-sm">BALTIJOS JAVAI</p>
+												<p class="text-xs text-gray-600">Tiekėjas: ${
+													sample.supplier.name
+												}</p>
+											</div>
+											<div class="space-y-1 text-xs">
+												<p><span class="font-semibold">Paėmimo data:</span> <span>${dateText}</span></p>
+												<p><span class="font-semibold">Veislė:</span> <span>${varietyValue}</span></p>
+												<p><span class="font-semibold">Kiekis:</span> <span>${quantityValue}</span></p>
+												<p><span class="font-semibold">Pavyzdžio Nr:</span> <span class="font-bold text-black">${sampleNumberValue}</span>${noteHTML}</p>
+											</div>
+											<div class="mt-2 h-16 border-t border-gray-200"></div>
+										</div>
 
-                                <div class="p-2">
-                                   <div class="text-left mb-2 pb-2">
-                                        <p class="font-bold text-sm">BALTIJOS JAVAI</p>
-                                        <p class="text-xs text-gray-600">Tiekėjas: ${
-																					sample.supplier.name
-																				}</p>
-                                    </div>
-                                    <div class="space-y-1 text-xs">
-                                        <p><span class="font-semibold">Paėmimo data:</span> <span>${dateText}</span></p>
-                                        <p><span class="font-semibold">Veislė:</span> <span>${varietyValue}</span></p>
-                                        <p><span class="font-semibold">Kiekis:</span> <span>${quantityValue}</span></p>
-										<p><span class="font-semibold">Pavyzdžio Nr:</span> <span class="font-bold text-black">${sampleNumberValue}</span>${noteHTML}</p>
-                                    </div>
-                                    <div class="mt-2 h-16 border-t border-gray-200"></div>
-                                </div>
-                            </div>
-                        </div>`;
+										<div class="p-2">
+										<div class="text-left mb-2 pb-2">
+												<p class="font-bold text-sm">BALTIJOS JAVAI</p>
+												<p class="text-xs text-gray-600">Tiekėjas: ${
+													sample.supplier.name
+												}</p>
+											</div>
+											<div class="space-y-1 text-xs">
+												<p><span class="font-semibold">Paėmimo data:</span> <span>${dateText}</span></p>
+												<p><span class="font-semibold">Veislė:</span> <span>${varietyValue}</span></p>
+												<p><span class="font-semibold">Kiekis:</span> <span>${quantityValue}</span></p>
+												<p><span class="font-semibold">Pavyzdžio Nr:</span> <span class="font-bold text-black">${sampleNumberValue}</span>${noteHTML}</p>
+											</div>
+											<div class="mt-2 h-16 border-t border-gray-200"></div>
+										</div>
+									</div>
+								</div>`;
 							stickerListContainer.insertAdjacentHTML('beforeend', stickerHTML);
 						});
 					}
@@ -2713,4 +2720,3 @@ UAB "Baltijos javai"`;
 		</script>
 	</body>
 </html>
-
