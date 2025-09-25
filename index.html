@@ -353,6 +353,13 @@
 							class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
 					</div>
 					<div>
+						<label for="manual-address" class="block text-sm font-medium text-gray-700">Adresas</label>
+						<input
+							type="text"
+							id="manual-address"
+							class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+					</div>
+					<div>
 						<label for="manual-annex" class="block text-sm font-medium text-gray-700"
 							>Sutarties Priedas</label
 						>
@@ -1151,6 +1158,7 @@
 				// Manual mode elements
 				const step2Manual = document.getElementById('step-2-manual');
 				const manualSupplierInput = document.getElementById('manual-supplier');
+				const manualAddressInput = document.getElementById('manual-address');
 				const manualAnnexInput = document.getElementById('manual-annex');
 				const manualVarietyInput = document.getElementById('manual-variety');
 				const manualQuantityInput = document.getElementById('manual-quantity');
@@ -1439,7 +1447,9 @@
 					if (scenario === 'manual') {
 						if (selectedSamples.length > 0) {
 							pickup.name = selectedSamples[0].supplier.name;
-							pickup.address = 'Adresas bus įvestas rankiniu būdu šiame žingsnyje.';
+							pickup.address =
+								selectedSamples[0].supplier.address ||
+								'Adresas bus įvestas rankiniu būdu šiame žingsnyje.';
 						}
 					} else if (scenario === 'farm-vm' || scenario === 'farm-biliunai') {
 						if (selectedSamples.length > 0 && selectedSamples[0].supplier) {
@@ -1659,12 +1669,16 @@
 						buildingEl.value = '';
 						postalEl.value = '';
 
-						const isElevatorScenario = selectedScenario.startsWith('elevator-');
-						if (isElevatorScenario && selectedElevator) {
-							if (cityEl) cityEl.value = selectedElevator.miestas || '';
-							if (streetEl) streetEl.value = selectedElevator.gatve || '';
-							if (buildingEl) buildingEl.value = selectedElevator.pastato_nr || '';
-							if (postalEl) postalEl.value = selectedElevator.pasto_kodas || '';
+						if (selectedScenario === 'manual' && selectedSamples.length > 0) {
+							if (streetEl) streetEl.value = selectedSamples[0].supplier.address || '';
+						} else {
+							const isElevatorScenario = selectedScenario.startsWith('elevator-');
+							if (isElevatorScenario && selectedElevator) {
+								if (cityEl) cityEl.value = selectedElevator.miestas || '';
+								if (streetEl) streetEl.value = selectedElevator.gatve || '';
+								if (buildingEl) buildingEl.value = selectedElevator.pastato_nr || '';
+								if (postalEl) postalEl.value = selectedElevator.pasto_kodas || '';
+							}
 						}
 
 						if (omnivaGenerated) {
@@ -1863,6 +1877,7 @@
 						manualSamplesList.appendChild(manualSamplesListPlaceholder);
 						manualSamplesListPlaceholder.classList.remove('hidden');
 						manualSupplierInput.disabled = false;
+						manualAddressInput.disabled = false;
 						btnManualStep2Next.disabled = true;
 					} else {
 						manualSamplesListPlaceholder.classList.add('hidden');
@@ -1903,19 +1918,20 @@
 
 				btnAddManualSample.addEventListener('click', () => {
 					const supplier = manualSupplierInput.value.trim();
+					const address = manualAddressInput.value.trim();
 					const annex = manualAnnexInput.value.trim();
 					const variety = manualVarietyInput.value.trim();
 					const quantity = manualQuantityInput.value.trim();
 					const note = manualNoteInput.value.trim();
 
-					if (!supplier || !annex) {
-						customAlert('Tiekėjas ir Sutarties Priedas yra privalomi laukai.');
+					if (!supplier || !address || !annex) {
+						customAlert('Tiekėjas, Adresas, ir Sutarties Priedas yra privalomi laukai.');
 						return;
 					}
 
 					selectedSamples.push({
 						isManual: true,
-						supplier: { name: supplier },
+						supplier: { name: supplier, address: address },
 						annex: {
 							nr: annex,
 							veisle: variety,
@@ -1929,6 +1945,7 @@
 
 					renderManualSamplesList();
 					manualSupplierInput.disabled = true; // Lock after first entry
+					manualAddressInput.disabled = true; // Lock address too
 					manualAnnexInput.value = '';
 					manualVarietyInput.value = '';
 					manualQuantityInput.value = '';
@@ -2202,6 +2219,8 @@ UAB "Baltijos javai"`;
 					// Reset manual form
 					manualSupplierInput.value = '';
 					manualSupplierInput.disabled = false;
+					manualAddressInput.value = '';
+					manualAddressInput.disabled = false;
 					manualAnnexInput.value = '';
 					manualVarietyInput.value = '';
 					manualQuantityInput.value = '';
@@ -2639,5 +2658,4 @@ UAB "Baltijos javai"`;
 		</script>
 	</body>
 </html>
-"
 
