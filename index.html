@@ -471,6 +471,23 @@
 						</div>
 						<div>
 							<h3 class="text-lg font-semibold text-red-600">Kur pristatyti mėginį</h3>
+							<!-- Manual Recipient Dropdown -->
+							<div id="manual-recipient-selector" class="hidden mt-2">
+								<label
+									for="manual-recipient-select"
+									class="block text-sm font-medium text-gray-700"
+									>Pasirinkite gavėją:</label
+								>
+								<select
+									id="manual-recipient-select"
+									class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+									<option value="" disabled selected>-- Pasirinkite --</option>
+									<option value="biliunai">BILIŪNAI Elevatorius</option>
+									<option value="viking_malt">Viking Malt (VM)</option>
+									<option value="ofisas">Ofisas</option>
+								</select>
+							</div>
+
 							<div id="recipient-display-info" class="mt-2 text-gray-800 text-sm">
 								<p class="font-bold" id="recipient-display-name"></p>
 								<p id="recipient-display-address"></p>
@@ -1167,6 +1184,8 @@
 				const manualSamplesList = document.getElementById('manual-samples-list');
 				const manualSamplesListPlaceholder = document.getElementById('manual-samples-list-placeholder');
 				const btnManualStep2Next = document.getElementById('btn-manual-step2-next');
+				const manualRecipientSelector = document.getElementById('manual-recipient-selector');
+				const manualRecipientSelect = document.getElementById('manual-recipient-select');
 
 				const mainProcessContainer = document.getElementById('main-process-container');
 				const registerView = document.getElementById('register-view');
@@ -1499,7 +1518,6 @@
 						case 'farm-vm':
 						case 'elevator-vm':
 						case 'office-vm':
-						case 'manual': // Manual mode defaults to VM
 							recipient.name = 'UAB Viking Malt';
 							recipient.contact = 'Dovydas';
 							recipient.address = 'Panevėžio m. Pramonės g. 2, LT-35289, Panevėžys';
@@ -1632,8 +1650,18 @@
 					if (stepNumber === 4) {
 						omnivaStickerPreview.classList.add('hidden');
 						generationSuccessMsg.classList.add('hidden');
+						const recipientDisplayInfo = document.getElementById('recipient-display-info');
 
-						updateRecipientDetails(selectedScenario);
+						if (selectedScenario === 'manual') {
+							manualRecipientSelector.classList.remove('hidden');
+							recipientDisplayInfo.classList.add('hidden');
+							manualRecipientSelect.value = '';
+						} else {
+							manualRecipientSelector.classList.add('hidden');
+							recipientDisplayInfo.classList.remove('hidden');
+							updateRecipientDetails(selectedScenario);
+						}
+
 						updatePickupDetails(selectedScenario);
 
 						samplesSummaryList.innerHTML = '';
@@ -2370,6 +2398,30 @@ UAB "Baltijos javai"`;
 								generateLabelsBtn.classList.remove('hidden');
 							});
 					});
+				});
+
+				manualRecipientSelect.addEventListener('change', function () {
+					const selection = this.value;
+					const recipientDisplayInfo = document.getElementById('recipient-display-info');
+					if (!selection) {
+						recipientDisplayInfo.classList.add('hidden');
+						return;
+					}
+
+					let fakeScenario = '';
+					switch (selection) {
+						case 'biliunai':
+							fakeScenario = 'farm-biliunai'; // any biliunai scenario will work
+							break;
+						case 'viking_malt':
+							fakeScenario = 'farm-vm'; // any vm scenario will work
+							break;
+						case 'ofisas':
+							fakeScenario = 'elevator-office'; // any office scenario will work
+							break;
+					}
+					updateRecipientDetails(fakeScenario);
+					recipientDisplayInfo.classList.remove('hidden');
 				});
 
 				elevatorSelect.addEventListener('change', function () {
