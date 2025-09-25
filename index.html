@@ -1603,6 +1603,9 @@
 							const quantityValue = sample.annex.quantity || 'N/A';
 							const varietyValue = sample.annex.veisle || sample.annex.variety || '';
 							const sampleNumberValue = sample.sampleNumber || 'N/A';
+							const noteHTML = sample.note
+								? `<span class="font-bold text-red-500 ml-2">${sample.note}</span>`
+								: '';
 
 							const stickerHTML = `
                         <div class="border-2 border-dashed rounded-lg p-4 bg-gray-50">
@@ -1621,7 +1624,7 @@
                                         <p><span class="font-semibold">Paėmimo data:</span> <span>${dateText}</span></p>
                                         <p><span class="font-semibold">Veislė:</span> <span>${varietyValue}</span></p>
                                         <p><span class="font-semibold">Kiekis:</span> <span>${quantityValue}</span></p>
-										<p><span class="font-semibold">Pavyzdžio Nr:</span> <span class="font-bold text-black">${sampleNumberValue}</span></p>
+										<p><span class="font-semibold">Pavyzdžio Nr:</span> <span class="font-bold text-black">${sampleNumberValue}</span>${noteHTML}</p>
                                     </div>
                                     <div class="mt-2 h-16 border-t border-gray-200"></div>
                                 </div>
@@ -1637,7 +1640,7 @@
                                         <p><span class="font-semibold">Paėmimo data:</span> <span>${dateText}</span></p>
                                         <p><span class="font-semibold">Veislė:</span> <span>${varietyValue}</span></p>
                                         <p><span class="font-semibold">Kiekis:</span> <span>${quantityValue}</span></p>
-										<p><span class="font-semibold">Pavyzdžio Nr:</span> <span class="font-bold text-black">${sampleNumberValue}</span></p>
+										<p><span class="font-semibold">Pavyzdžio Nr:</span> <span class="font-bold text-black">${sampleNumberValue}</span>${noteHTML}</p>
                                     </div>
                                     <div class="mt-2 h-16 border-t border-gray-200"></div>
                                 </div>
