@@ -295,6 +295,13 @@
 							min="1"
 							class="mt-1 block w-full max-w-xs px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
 					</div>
+					<div id="note-container">
+						<label for="sample-note" class="block text-sm font-medium text-gray-700">Pastaba</label>
+						<textarea
+							id="sample-note"
+							rows="2"
+							class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
+					</div>
 					<div class="mt-4 text-right">
 						<button
 							id="btn-add-sample"
@@ -369,6 +376,13 @@
 							type="text"
 							id="manual-quantity"
 							class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" />
+					</div>
+					<div>
+						<label for="manual-note" class="block text-sm font-medium text-gray-700">Pastaba</label>
+						<textarea
+							id="manual-note"
+							rows="2"
+							class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"></textarea>
 					</div>
 					<div class="mt-4 text-right">
 						<button
@@ -1124,6 +1138,7 @@
 				const samplesSummaryList = document.getElementById('samples-summary-list');
 				const sampleCountContainer = document.getElementById('sample-count-container');
 				const sampleCountInput = document.getElementById('sample-count-input');
+				const sampleNoteInput = document.getElementById('sample-note');
 
 				// Manual mode elements
 				const step2Manual = document.getElementById('step-2-manual');
@@ -1131,6 +1146,7 @@
 				const manualAnnexInput = document.getElementById('manual-annex');
 				const manualVarietyInput = document.getElementById('manual-variety');
 				const manualQuantityInput = document.getElementById('manual-quantity');
+				const manualNoteInput = document.getElementById('manual-note');
 				const btnAddManualSample = document.getElementById('btn-add-manual-sample');
 				const manualSamplesList = document.getElementById('manual-samples-list');
 				const manualSamplesListPlaceholder = document.getElementById('manual-samples-list-placeholder');
@@ -1550,6 +1566,7 @@
 							}
 							const quantityValue = sample.annex.quantity || 'N/A';
 							const varietyValue = sample.annex.veisle || sample.annex.variety || '';
+							const sampleNumberValue = sample.sampleNumber || 'N/A';
 
 							const stickerHTML = `
                         <div class="border-2 border-dashed rounded-lg p-4 bg-gray-50">
@@ -1568,6 +1585,7 @@
                                         <p><span class="font-semibold">Paėmimo data:</span> <span>${dateText}</span></p>
                                         <p><span class="font-semibold">Veislė:</span> <span>${varietyValue}</span></p>
                                         <p><span class="font-semibold">Kiekis:</span> <span>${quantityValue}</span></p>
+										<p><span class="font-semibold">Pavyzdžio Nr:</span> <span class="font-bold text-black">${sampleNumberValue}</span></p>
                                     </div>
                                     <div class="mt-2 h-16 border-t border-gray-200"></div>
                                 </div>
@@ -1583,6 +1601,7 @@
                                         <p><span class="font-semibold">Paėmimo data:</span> <span>${dateText}</span></p>
                                         <p><span class="font-semibold">Veislė:</span> <span>${varietyValue}</span></p>
                                         <p><span class="font-semibold">Kiekis:</span> <span>${quantityValue}</span></p>
+										<p><span class="font-semibold">Pavyzdžio Nr:</span> <span class="font-bold text-black">${sampleNumberValue}</span></p>
                                     </div>
                                     <div class="mt-2 h-16 border-t border-gray-200"></div>
                                 </div>
@@ -1747,23 +1766,29 @@
 
 						selectedSamples.forEach((sample, index) => {
 							const item = document.createElement('div');
-							item.className =
-								'flex justify-between items-center p-3 bg-white border border-gray-300 rounded-lg shadow-sm';
+							item.className = 'p-3 bg-white border border-gray-300 rounded-lg shadow-sm';
+							const noteHTML = sample.note
+								? `<p class="text-xs text-gray-500 mt-1"><span class="font-medium">Pastaba:</span> ${sample.note}</p>`
+								: '';
 							let groupText = '';
 							if (sample.groupTotal > 1) {
 								groupText = ` <span class="text-xs text-gray-500 font-normal">(${sample.groupIndex}/${sample.groupTotal})</span>`;
 							}
 							item.innerHTML = `
-                        <div class="text-sm">
-                            <p class="font-bold text-gray-800">${sample.supplier.name}${groupText}</p>
-                            <p class="text-gray-600">Priedas: <span class="font-medium text-red-600">${
-															sample.annex.nr
-														}</span> | Veislė: ${
-								sample.annex.veisle || sample.annex.variety || 'N/A'
-							}</p>
-                        </div>
-                        <button data-index="${index}" class="btn-remove-sample text-red-500 hover:text-red-700 font-semibold py-1 px-2">&times; Pašalinti</button>
-                    `;
+								<div class="flex justify-between items-start">
+									<div class="text-sm">
+										<p class="font-bold text-gray-800">${sample.supplier.name}${groupText}</p>
+										<p class="text-gray-600">Priedas: <span class="font-medium text-red-600">${
+											sample.annex.nr
+										}</span> | Veislė: ${sample.annex.veisle || sample.annex.variety || 'N/A'}</p>
+									</div>
+									<button data-index="${index}" class="btn-remove-sample text-red-500 hover:text-red-700 font-semibold py-1 px-2 ml-4 flex-shrink-0">&times; Pašalinti</button>
+								</div>
+								<div class="mt-2 pt-2 border-t border-gray-200 text-sm">
+									<p class="font-semibold text-blue-700">Mėginio Nr: ${sample.sampleNumber}</p>
+									${noteHTML}
+								</div>
+							`;
 							samplesList.appendChild(item);
 						});
 
@@ -1791,6 +1816,7 @@
 					if (!annexData) return;
 
 					const count = parseInt(sampleCountInput.value, 10) || 1;
+					const note = sampleNoteInput.value.trim();
 
 					for (let i = 0; i < count; i++) {
 						selectedSamples.push({
@@ -1799,6 +1825,7 @@
 							sampleNumber: 'BJ25 M' + sampleCounter++,
 							groupIndex: i + 1,
 							groupTotal: count,
+							note: note,
 						});
 					}
 
@@ -1816,6 +1843,7 @@
 						sampleCountContainer.classList.add('hidden');
 						sampleCountInput.value = '1';
 					}
+					if (sampleNoteInput) sampleNoteInput.value = '';
 
 					validateAddSampleButton(); // Re-validate the button. It should be disabled now.
 					validateStep2(); // Validate the "Next" button.
@@ -1832,17 +1860,26 @@
 						manualSamplesListPlaceholder.classList.add('hidden');
 						selectedSamples.forEach((sample, index) => {
 							const item = document.createElement('div');
-							item.className =
-								'flex justify-between items-center p-3 bg-white border border-gray-300 rounded-lg shadow-sm';
+							item.className = 'p-3 bg-white border border-gray-300 rounded-lg shadow-sm';
+							const noteHTML = sample.note
+								? `<p class="text-xs text-gray-500 mt-1"><span class="font-medium">Pastaba:</span> ${sample.note}</p>`
+								: '';
+
 							item.innerHTML = `
-                    <div class="text-sm">
-                        <p class="font-bold text-gray-800">${sample.supplier.name}</p>
-                        <p class="text-gray-600">Priedas: <span class="font-medium text-red-600">${
-													sample.annex.nr
-												}</span> | Veislė: ${sample.annex.veisle || 'N/A'}</p>
-                    </div>
-                    <button data-index="${index}" class="btn-remove-manual-sample text-red-500 hover:text-red-700 font-semibold py-1 px-2">&times; Pašalinti</button>
-                `;
+								<div class="flex justify-between items-start">
+									<div class="text-sm">
+										<p class="font-bold text-gray-800">${sample.supplier.name}</p>
+										<p class="text-gray-600">Priedas: <span class="font-medium text-red-600">${
+											sample.annex.nr
+										}</span> | Veislė: ${sample.annex.veisle || 'N/A'}</p>
+									</div>
+									<button data-index="${index}" class="btn-remove-manual-sample text-red-500 hover:text-red-700 font-semibold py-1 px-2 ml-4 flex-shrink-0">&times; Pašalinti</button>
+								</div>
+								<div class="mt-2 pt-2 border-t border-gray-200 text-sm">
+									<p class="font-semibold text-blue-700">Mėginio Nr: ${sample.sampleNumber}</p>
+									${noteHTML}
+								</div>
+							`;
 							manualSamplesList.appendChild(item);
 						});
 
@@ -1861,6 +1898,7 @@
 					const annex = manualAnnexInput.value.trim();
 					const variety = manualVarietyInput.value.trim();
 					const quantity = manualQuantityInput.value.trim();
+					const note = manualNoteInput.value.trim();
 
 					if (!supplier || !annex) {
 						customAlert('Tiekėjas ir Sutarties Priedas yra privalomi laukai.');
@@ -1878,6 +1916,7 @@
 						sampleNumber: 'BJ25 M' + sampleCounter++,
 						groupIndex: 1,
 						groupTotal: 1,
+						note: note,
 					});
 
 					renderManualSamplesList();
@@ -1885,12 +1924,15 @@
 					manualAnnexInput.value = '';
 					manualVarietyInput.value = '';
 					manualQuantityInput.value = '';
+					manualNoteInput.value = '';
 					btnManualStep2Next.disabled = false;
 				});
 
 				const validateStep1 = () => {
 					const scenarioChosen = !!document.querySelector('input[name="scenario"]:checked');
-					const isManual = scenarioChosen && document.querySelector('input[name="scenario"]:checked').value === 'manual';
+					const isManual =
+						scenarioChosen &&
+						document.querySelector('input[name="scenario"]:checked').value === 'manual';
 
 					const tokenVal = tokenInput ? tokenInput.value.trim() : '';
 					const tokenPresent = !!tokenVal;
@@ -1898,7 +1940,7 @@
 					if (tokenInput) {
 						tokenInput.classList.toggle('border-red-500', tokenInvalid);
 					}
-					
+
 					if (isManual) {
 						step1NextBtn.disabled = false;
 					} else {
@@ -1953,7 +1995,8 @@
 										if (s.groupTotal > 1) {
 											groupText = ` (${s.groupIndex}/${s.groupTotal})`;
 										}
-										return `- ${s.supplier.name} (Sutarties priedas: ${s.annex.nr})${groupText}`;
+										const noteText = s.note ? ` (Pastaba: ${s.note})` : '';
+										return `- ${s.supplier.name} (Sutarties priedas: ${s.annex.nr})${groupText}${noteText}`;
 									})
 									.join('\n');
 
@@ -2152,6 +2195,7 @@ UAB "Baltijos javai"`;
 					manualAnnexInput.value = '';
 					manualVarietyInput.value = '';
 					manualQuantityInput.value = '';
+					manualNoteInput.value = '';
 					renderManualSamplesList(); // This will reset the list view
 					if (btnManualStep2Next) btnManualStep2Next.disabled = true;
 
@@ -2165,6 +2209,7 @@ UAB "Baltijos javai"`;
 					omnivaStickerPreview.classList.add('hidden');
 					pickupDateInput.value = '';
 					if (sampleCountInput) sampleCountInput.value = '1';
+					if (sampleNoteInput) sampleNoteInput.value = '';
 					generationSuccessMsg.classList.add('hidden');
 					omnivaGenerated = false;
 					if (step4NextBtn) step4NextBtn.disabled = true;
@@ -2259,6 +2304,7 @@ UAB "Baltijos javai"`;
 								quantity: sample.annex ? sample.annex.quantity || '' : '',
 								variety: sample.annex ? sample.annex.veisle || sample.annex.variety || '' : '',
 								scenario: selectedScenario,
+								note: sample.note || '',
 								elevatorId:
 									isElevatorScenario && selectedElevator
 										? selectedElevator.Id || selectedElevator.id || null
